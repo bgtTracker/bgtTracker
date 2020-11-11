@@ -39,3 +39,7 @@ out/
 
 ### node_modules ###
 node_modules/
+package-lock.json
+
+### forlder where react complites to so we don't have to send this ####
+src/main/resources/static/built/
