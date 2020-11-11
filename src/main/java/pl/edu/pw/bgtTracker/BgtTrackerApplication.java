@@ -15,10 +15,10 @@ public class BgtTrackerApplication {
 		SpringApplication.run(BgtTrackerApplication.class, args);
 	}
 
-	@GetMapping("/")
-	public String hello(@RequestParam(value = "name", defaultValue = "World") String name) {
-	return String.format("Welcome on Pap project site", name);
-	}
+	// @GetMapping("/")
+	// public String hello(@RequestParam(value = "name", defaultValue = "World") String name) {
+	// 	return String.format("Welcome on Pap project site", name);
+	// }
 
 
 }
