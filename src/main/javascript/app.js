@@ -1,56 +1,28 @@
 import React, { Component } from "react";
 import ReactDOM from 'react-dom';
+import { Route, BrowserRouter as Router } from "react-router-dom";
 import client from './client';
+import Users from './Components/Users.js';
+import Charts from './Components/Charts/Charts.js'
 
-class User extends Component {
-    render() {
-        return (
-            <tr>
-                <td>{this.props.user.login}</td>
-                <td>{this.props.user.password}</td>
-            </tr>
-        );
-    }
-}
 
-class UserList extends Component {
-    render() {
-        const users = this.props.users.map(user => <User key={user._links.self.href} user={user}/>);
+class App extends Component{
 
-        return (
-            <table>
-                <tbody>
-                    <tr>
-                        <th>Login</th>
-                        <th>Password</th>
-                    </tr>
-                    {users}
-                </tbody>
-            </table>
-        );
-    }
-}
-
-class Main extends Component {
-    constructor(props) {
-        super(props);
-        this.state = {users: []};
-    }
-
-    componentDidMount() {
-        client({method: 'GET', path: '/api/users'}).done(
-            response => this.setState({users: response.entity._embedded.users})
-        );
-    }
 
     render() {
-        return (
-            <UserList users={this.state.users}/>
-        );
-    }
-}
+        return (<Router>
+        <div className='luuul'>
+            <div className = ' lul'>
+            <Route path="/" exact component = {Users}/>
+            <Route path="/charts" exact component={Charts}/>
+            </div>
+        </div>
+        </Router>
+        )}
+}   
+
 
 ReactDOM.render(
-    <Main />,
+    <App />,
     document.getElementById('react')
 );
