@@ -14,7 +14,7 @@ export default class CategoryAmountPrinter extends Component {
     }
     render() {
         return (
-            <Grid container direction="row" justify="center" alignItems="center">
+            <Grid container spacing={2} direction="row" justify="center" alignItems="center">
                 <CAG/>
             </Grid>    
         )

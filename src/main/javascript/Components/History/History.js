@@ -1,11 +1,10 @@
 import React, { Component } from 'react'
-import Paper from '@material-ui/core/Paper';
 
-export default class CategoryAmountItem extends Component {
+export default class History extends Component {
     render() {
         return (
             <div>
-                
+                <p1>History</p1>
             </div>
         )
     }

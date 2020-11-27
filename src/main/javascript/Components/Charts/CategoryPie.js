@@ -32,7 +32,7 @@ export default class CategoryPie extends Component {
                       size: 200
                     },
                     donut: {
-                        size: '65%'
+                        size: '55%'
                       },
                     expandOnClick: true  
                   },
