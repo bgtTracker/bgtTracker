@@ -1,4 +1,4 @@
-package pl.edu.pw.bgtTracker.Entities;
+package pl.edu.pw.bgtTracker.db;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
@@ -14,7 +14,5 @@ public class DatabaseLoader implements CommandLineRunner {
 	}
 
 	@Override
-	public void run(String... strings) throws Exception {
-		// this.repository.save(new User("admin", "admin123"));
-	}
+	public void run(String... strings) throws Exception {}
 }
