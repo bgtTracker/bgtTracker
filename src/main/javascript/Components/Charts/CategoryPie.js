@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import ApexChart from "react-apexcharts";
 import config from "./config.js";
+import PropTypes from 'prop-types';
 
 const colors = config.chartColors;
 
@@ -20,9 +21,9 @@ export default class CategoryPie extends Component {
         super(probs)
 
         this.state = {
-            series: [1000, 400, 500, 150, 400],
+            series: this.props.data,
             options : {
-                labels: ['Food', 'Home', 'Car', 'Commute', 'Luxuries'],
+                labels: this.props.labels,
                 chart: {
                     size: 350,
                     type: 'donut'
@@ -67,4 +68,9 @@ export default class CategoryPie extends Component {
             </div>
         )
     }
+}
+
+CategoryPie.propTypes ={
+  labes: PropTypes.array.isRequired,
+  data: PropTypes.array.isRequired
 }

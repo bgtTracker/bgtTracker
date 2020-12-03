@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import ApexChart from "react-apexcharts";
 import config from "./config.js";
+import PropTypes from 'prop-types';
 
 const colors = config.chartColors;
 
@@ -15,11 +16,10 @@ let columnColors = [
     colors.pink,
   ];  
 
-class MonthChart extends Component {
-    
-    constructor(probs){
-        super(probs);
-        
+class BarChart extends Component {
+    constructor(props){
+        super(props);
+        console.log(this.props);
         this.state = {
             options: {
                 chart: {
@@ -37,8 +37,7 @@ class MonthChart extends Component {
                   enabled: false,
                 },
                 xaxis: {
-                  categories: ['January', 'February', 'March', 'April', 'May', 'June', 'July',
-                  'August', 'September', 'October', 'November', 'December'],
+                  categories: this.props.labels,
                   labels: {
                     style: {
                       colors: columnColors,
@@ -68,14 +67,16 @@ class MonthChart extends Component {
             },
             series: [
               {
-                name: "Previous Year",
-                data: [3000, 3000, 4000, 5000, 1200, 3000, 5000, 3000, 4032, 5255, 3232, 3131]
+                name: this.props.name,
+                data: this.props.data
               }
             ],
             
     }
     }
 
+    // ['January', 'February', 'March', 'April', 'May', 'June', 'July',
+    // 'August', 'September', 'October', 'November', 'December'],
  
 
     render() {
@@ -92,4 +93,10 @@ class MonthChart extends Component {
     }
 }
 
-export default MonthChart;
+BarChart.propTypes = {
+  lables: PropTypes.array.isRequired,
+  data: PropTypes.array.isRequired,
+  name: PropTypes.string.isRequired
+}
+
+export default BarChart;

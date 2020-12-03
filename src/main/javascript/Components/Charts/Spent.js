@@ -15,15 +15,11 @@ export default class Spent extends Component {
       values: []
     }
     let sum = this.state.data.reduce((a,b)=> a+b, 0);
-    console.log(sum);
     for(let i = 0; i<this.state.data.length; i++)
     {
       let value = (this.state.data[i]/sum) * 100;
-      console.log(this.state.data[i]);
-      console.log(value);
       this.state.values.push(value);
     }
-    console.log(this.state.values)
   }
 
 
@@ -47,7 +43,6 @@ class SpentBarGetter extends Component{
     for(let i = 1; i<this.props.values.length; i++)
     {
       let newTag = <Progress bar animated color={this.props.colors[cIndex]} value={this.props.values[i]}> {this.props.categories[i]}</Progress>;
-      console.log(ret);
       ret = [ret, newTag];
       cIndex++;
       if(cIndex >= this.props.colors.length){
