@@ -20,9 +20,10 @@ function Charts (){
     let CategoryAmountFixedHeight = clsx(classes.paper, classes.fixedHeightCategory)
     let SpentFixedHeight = clsx(classes.paper, classes.fixedHeight50)
 
+    let months = ['January', 'February', 'March', 'April', 'May', 'June', 'July',
+    'August', 'September', 'October', 'November', 'December'];
     let monthChartData = {
-        labels : ['January', 'February', 'March', 'April', 'May', 'June', 'July',
-        'August', 'September', 'October', 'November', 'December'],
+        labels : months,
         data: [3000, 3000, 4000, 5000, 1200, 3000, 5000, 3000, 4032, 5255, 3232, 3131],
         name: "Expenses"
     }
@@ -92,3 +93,6 @@ function Charts (){
 }
 
 export default Charts;
+
+
+

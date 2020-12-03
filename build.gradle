@@ -31,6 +31,11 @@ dependencies {
     testImplementation('org.springframework.boot:spring-boot-starter-test') {
         exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
     }
+
+    // json-p specification
+    implementation 'org.json:json:20201115'
+
+
 }
 
 node {
