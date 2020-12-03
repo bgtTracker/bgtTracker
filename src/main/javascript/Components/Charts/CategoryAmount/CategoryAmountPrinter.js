@@ -7,15 +7,11 @@ export default class CategoryAmountPrinter extends Component {
     constructor(probs){
         super(probs)
         
-        this.state = {
-            categories: ['Food', 'Home', 'Car', 'Commute', 'Luxuries'],
-            data: [1000, 400, 500, 150, 400]
-        }
     }
     render() {
         return (
             <Grid container spacing={2} direction="row" justify="center" alignItems="center">
-                <CAG/>
+                <CAG labels={this.props.labels} data={this.props.data}/>
             </Grid>    
         )
     }

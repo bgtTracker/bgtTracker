@@ -37,8 +37,10 @@ class BarChart extends Component {
                   enabled: false,
                 },
                 xaxis: {
+                  type: this.props.labelsType,
                   categories: this.props.labels,
                   labels: {
+                    rotate: this.props.labelsRotate,
                     style: {
                       colors: columnColors,
                       fontSize: "14px",
@@ -94,9 +96,14 @@ class BarChart extends Component {
 }
 
 BarChart.propTypes = {
-  lables: PropTypes.array.isRequired,
+  labels: PropTypes.array.isRequired,
   data: PropTypes.array.isRequired,
   name: PropTypes.string.isRequired
+}
+
+BarChart.defaultProps = {
+  labelsType: 'category',
+  labelsRotate: -45,
 }
 
 export default BarChart;

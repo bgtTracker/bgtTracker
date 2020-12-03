@@ -7,8 +7,8 @@ export default class CategoryAmountGettet extends Component {
         super(probs)
         
         this.state = {
-            categories: ['Food', 'Home', 'Car', 'Commute', 'Luxuries', "Left to Spent"],
-            data: [1000, 400, 500, 150, 400, 3000]
+            categories: this.props.labels,
+            data: this.props.data
         }
     }
     render() {
