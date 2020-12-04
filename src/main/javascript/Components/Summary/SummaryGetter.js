@@ -1,9 +1,10 @@
-import React from 'react';
+import React, {useState, useEffect} from 'react';
 import Charts from '../Charts/Charts.js';
-import client from '../../client.js';
+import clientJson from '../../clientJson.js';
 
 export default function SummaryGetter(props) {
 
+    const [state, setState] = useState();
 
     let months = ['January', 'February', 'March', 'April', 'May', 'June', 'July',
     'August', 'September', 'October', 'November', 'December'];
@@ -37,9 +38,16 @@ export default function SummaryGetter(props) {
         name: "Balance for day: "
     }
 
+    useEffect(() =>{
+        clientJson({method: 'GET', path: '/testapi/summary/'}).done((response) => {
+            setState(response.entity);
+            console.log(response.entity);       
+        })
+    }, []);
+
     return (
         <div>
-            <Charts categoryData={CategoryData} balanceData = {BalanceData} monthChartData={monthChartData}/>
+            {state === undefined ? <h1>Loading...</h1> : <Charts categoryData={state.CategoryData} balanceData = {state.BalanceData} monthChartData={state.expenses}/> }
         </div>
     )
 }

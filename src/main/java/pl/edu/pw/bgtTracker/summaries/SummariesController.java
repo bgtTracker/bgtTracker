@@ -47,15 +47,15 @@ public class SummariesController {
         JSONObject balance = new JSONObject();
         balance.put("labels", days);
         balance.put("data", balancePerDay);
-        thisMonth.put("balance", balance);
+        thisMonth.put("BalanceData", balance);
 
         JSONObject category = new JSONObject();
         category.put("labels", categories);
         category.put("data", categoryData);
-        thisMonth.put("categories", category);
+        thisMonth.put("CategoryData", category);
 
         JSONObject expenses = new JSONObject();
-        expenses.put("lables", days);
+        expenses.put("labels", days);
         expenses.put("data", daylyExpenses);
         thisMonth.put("expenses", expenses);
 
