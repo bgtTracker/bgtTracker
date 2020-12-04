@@ -22,11 +22,11 @@ function Charts (props){
             <div className="Charts">
                 <Container maxWidth="xl">
                     <Grid container spacing={4}>
-                        <Grid item xs={12}>
+                        {/* <Grid item xs={12}>
                              <Paper className={CategoryAmountFixedHeight}>
                                 <CAP labels={props.categoryData.labels} data={props.categoryData.data}/> 
                              </Paper>
-                        </Grid>      
+                        </Grid>       */}
                         {/* <Grid item xs = {12}>
                           <Paper className={SpentFixedHeight}>
                             <Spent/>

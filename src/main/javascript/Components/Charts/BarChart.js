@@ -19,7 +19,6 @@ let columnColors = [
 class BarChart extends Component {
     constructor(props){
         super(props);
-        console.log(this.props);
         this.state = {
             options: {
                 chart: {

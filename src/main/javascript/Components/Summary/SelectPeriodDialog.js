@@ -44,9 +44,8 @@ export default function SelectPeriodDialog(props) {
   const classes = useStyles();
   const maxWidth = 400;
   const [open, setOpen] = useState(true);
-  const [fromDate, setFromDate] = useState(new Date('2014-08-18T21:11:54'));
-  const [toDate, setToDate] = useState(new Date('2016-08-18T21:11:54'));
-
+  const [toDate, setToDate] = useState(new Date());
+  const [fromDate, setFromDate] = useState(new Date(toDate.getFullYear(), toDate.getMonth(), 1));
   const handleFromDataChange = (date) => {
     setFromDate(date);
   };

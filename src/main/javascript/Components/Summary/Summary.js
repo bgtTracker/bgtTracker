@@ -1,4 +1,4 @@
-import React, {useState} from 'react'
+import React, {useState, useEffect} from 'react'
 import clsx from 'clsx';
 import { makeStyles, createMuiTheme } from '@material-ui/core/styles';
 import Drawer from '@material-ui/core/Drawer';
@@ -14,6 +14,7 @@ import SelectPeriodDialog from './SelectPeriodDialog.js';
 import Grid from '@material-ui/core/Grid';
 import SpentCirce from '../Charts/SpentCirce.js';
 import Paper from '@material-ui/core/Paper';
+import clientJson from '../../clientJson.js';
 
 const theme = createMuiTheme();
 
@@ -28,8 +29,11 @@ const useStyles = makeStyles({
         height: 50,
       },
     fixedHeight450: {
-        height: 450,
+        height: 480,
       },
+    fixedHeight4: {
+        height: 4,
+      },      
     paper: {
         padding: theme.spacing(2),
         display: 'flex',
@@ -38,11 +42,16 @@ const useStyles = makeStyles({
       },     
   });
 
+const fromatData = (date) => {
+    let dataStr = date.getFullYear()+'-'+(date.getMonth()+1)+'-'+(date.getDate());
+    return dataStr
+}
+
+
 export default function Summary() {
-    let SpentCirceData = {
-        labels: ["Spent This Month"],
-        data: [87]
-    }
+    let userID = 1;
+
+    const [SpentCirceData, setSpentCirceData] = useState();
 
     const classes = useStyles();
     let spentPercentage = clsx(classes.paper, classes.fixedHeight450);
@@ -98,6 +107,27 @@ export default function Summary() {
         setToDate(tData);
         setcustomPeriodDialogOpen(false);
       }
+    
+    let nowDate = new Date();
+    let toDateForQuerry = fromatData(nowDate);
+    let fromDateForQuerry  = fromatData(new Date(nowDate.getFullYear(), nowDate.getMonth(), 1));
+
+    useEffect(() =>{
+    clientJson({method: 'GET', path: '/testapi/summary/', params: {
+        from: fromDateForQuerry,
+        to: toDateForQuerry,
+        usrid: userID
+    }}).done((response) => {
+        
+        let sum = response.entity.expenses.data.reduce((a, b) => a + b, 0);
+        let spent = (sum/response.entity.goal) * 100;
+        setSpentCirceData({
+            labels: ["Spent This Month"],
+            data: [spent]
+        });       
+    })
+}, []);
+
 
 
     const list = () => (
@@ -130,9 +160,10 @@ export default function Summary() {
     return (
         <div>
             <Grid container spacing={4}>
+                    <div className={classes.fixedHeight4}></div>
                     <Grid item xs={12}>
                         <Paper className={spentPercentage}>
-                            <SpentCirce labels={SpentCirceData.labels} data={SpentCirceData.data}/>
+                            {SpentCirceData === undefined ? <h1>Loading...</h1>:  <SpentCirce labels={SpentCirceData.labels} data={SpentCirceData.data}/>}
                             {customPeriodDialogOpened === true ? <SelectPeriodDialog changeCustomPeriodSelected={openCustiomPeriodChange} saveData={saveDates} /> : <div/>}
                             <div >
                             <React.Fragment key={"bottom"}>

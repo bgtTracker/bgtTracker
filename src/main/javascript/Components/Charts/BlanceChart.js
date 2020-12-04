@@ -19,7 +19,7 @@ let columnColors = [
 class BalanceChart extends Component {
     constructor(props){
         super(props);
-        console.log(this.props);
+
 
         this.state = {
           
