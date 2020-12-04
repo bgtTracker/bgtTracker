@@ -7,6 +7,7 @@ import com.fasterxml.jackson.core.JsonFactoryBuilder;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import net.minidev.json.JSONObject;
@@ -16,10 +17,27 @@ import net.minidev.json.JSONObject;
 @RequestMapping(value = {"/testapi/summary"})
 public class SummariesController {
     
-    @GetMapping(value = {"/"}, produces=MediaType.APPLICATION_JSON_VALUE)
-    public String getUserExpanse()
-    {
+    public enum PossiblePeriods {
+        data, 
+    }
 
+    String[] months = {"January", "February", "March", "April", "May", "June", "July",
+    "August", "September", "October", "November", "December"};
+
+    @GetMapping(value = {"/"}, produces=MediaType.APPLICATION_JSON_VALUE)
+    public String getUserExpanse(@RequestParam(value = "from", defaultValue="2017-10-01") String from, 
+    @RequestParam(value = "to", defaultValue="2017-11-01") String to,
+    @RequestParam(value = "usrid", defaultValue="1") String usrID)
+    {
+        System.out.println("from: " + from);
+        System.out.println("to: " + to);
+        System.out.println("userId: " + usrID);
+        int userid = Integer.parseInt(usrID);
+        return getSummaryData(userid, from, to).toString();
+    }
+
+    public JSONObject getSummaryData(int userID, String from, String to)
+    {
         int goal = 5000;
         String[] days = {"2020-11-00", "2020-11-01", "2020-11-02", "2020-11-03", "2020-11-04", "2020-11-05", "2020-11-06", "2020-11-07", 
         "2020-11-08", "2020-11-09", "2020-11-10", "2020-11-11", "2020-11-12", "2020-11-13", "2020-11-14", "2020-11-15", 
@@ -33,32 +51,29 @@ public class SummariesController {
         int [] daylyExpenses = {1814, 500, 1605, 822, 299, 991, 1307, 53, 138, 881, 869, 1325, 936, 93, 1795, 1766, 1219, 1379, 313, 752, 867, 859, 448, 610, 990, 1739, 750, 470, 593, 446};
 
 
-        int [] yearlyExpenses = {3000, 3000, 4000, 5000, 1200, 3000, 5000, 3000, 4032, 5255, 3232, 3131};
-        String[] months = {"January", "February", "March", "April", "May", "June", "July",
-        "August", "September", "October", "November", "December"};
+        // int [] yearlyExpenses = {3000, 3000, 4000, 5000, 1200, 3000, 5000, 3000, 4032, 5255, 3232, 3131};
 
+        JSONObject data = new JSONObject();
 
-        JSONObject res = new JSONObject();
-        JSONObject thisMonth = new JSONObject();
-        JSONObject yearly = new JSONObject();
-
-        thisMonth.put("goal", goal);
+        data.put("goal", goal);
 
         JSONObject balance = new JSONObject();
         balance.put("labels", days);
         balance.put("data", balancePerDay);
-        thisMonth.put("BalanceData", balance);
+        data.put("BalanceData", balance);
 
         JSONObject category = new JSONObject();
         category.put("labels", categories);
         category.put("data", categoryData);
-        thisMonth.put("CategoryData", category);
+        data.put("CategoryData", category);
 
         JSONObject expenses = new JSONObject();
         expenses.put("labels", days);
         expenses.put("data", daylyExpenses);
-        thisMonth.put("expenses", expenses);
+        data.put("expenses", expenses);
 
-        return thisMonth.toString();
+        return data;
     }
+
 }
+

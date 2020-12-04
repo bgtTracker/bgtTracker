@@ -26,16 +26,16 @@ const useStyles = makeStyles({
 
 export default function Summary() {
     const classes = useStyles();
-    const periods = ['month', 'thisYear', 'lastYear', 'customPeriod'];
+    const periods = ['thisMonth', 'thisYear', 'lastYear', 'customPeriod'];
     const [period, setPeriod] = useState({
-        month: true,
+        thisMonth: true,
         thisYear: false,
         lastYear: false,
         customPeriod: false,
     });
 
     const defaultPeriod = {
-        month: false,
+        thisMonth: false,
         thisYear: false,
         lastYear: false,
         customPeriod: false,
@@ -95,7 +95,7 @@ export default function Summary() {
                     </Drawer>
                 </React.Fragment>
             </div>
-            {period.month  === true ? <SummaryGetter/> : <div/>}
+            {period.thisMonth  === true ? <SummaryGetter period={'thisMonth'}/> : <div/>}
             {period.thisYear  === true ? <h1>this year</h1> : <div/>}
             {period.lastYear  === true ? <h1>last year</h1> : <div/>}
             {period.customPeriod  === true ? <h1>custom period</h1> : <div/>}

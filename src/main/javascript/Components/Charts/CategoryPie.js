@@ -71,6 +71,6 @@ export default class CategoryPie extends Component {
 }
 
 CategoryPie.propTypes ={
-  labes: PropTypes.array.isRequired,
+  labels: PropTypes.array.isRequired,
   data: PropTypes.array.isRequired
 }
