@@ -5,6 +5,7 @@ import client from './client';
 import Users from './Components/Users.js';
 import Charts from './Components/Charts/Charts.js'
 import History from './Components/History/History.js';
+import Summary from './Components/Summary/Summary.js'
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 class App extends Component{
@@ -17,6 +18,7 @@ class App extends Component{
             <Route path="/" exact component = {Users}/>
             <Route path="/charts" exact component={Charts}/>
             <Route path="/history" exact component={History}/>
+            <Route path="/summary" exact component={Summary}/>
             </div>
         </div>
         </Router>
