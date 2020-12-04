@@ -8,7 +8,6 @@ import BarChart from './BarChart.js'
 import CAP from './CategoryAmount/CategoryAmountPrinter.js';
 import CategoryPie from './CategoryPie.js';
 import {useStyles} from '../Theme.js';
-import Spent from "./Spent.js";
 import SpentCircle from "./SpentCirce.js";
 import BalanceChart from "./BlanceChart.js";
 
@@ -57,11 +56,6 @@ function Charts (props){
                             <Grid item  xs={12}>
                                 <Paper className={fixedHeightPaperChart}>
                                     <BarChart labels={props.monthChartData.labels} data={props.monthChartData.data} name={"Expenses"} labelsType={'datatime'}/>
-                                </Paper>
-                            </Grid>
-                            <Grid item  xs={6}>
-                                <Paper className={fixedHeightPaperChart}>
-                                    <SpentCircle labels={SpentCirceData.labels} data={SpentCirceData.data}/>
                                 </Paper>
                             </Grid>
                         </Grid>

@@ -1,6 +1,6 @@
 import React, {useState} from 'react'
 import clsx from 'clsx';
-import { makeStyles } from '@material-ui/core/styles';
+import { makeStyles, createMuiTheme } from '@material-ui/core/styles';
 import Drawer from '@material-ui/core/Drawer';
 import Button from '@material-ui/core/Button';
 import List from '@material-ui/core/List';
@@ -10,10 +10,12 @@ import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 import InboxIcon from '@material-ui/icons/MoveToInbox';
 import SummaryGetter from './SummaryGetter.js';
+import SelectPeriodDialog from './SelectPeriodDialog.js';
+import Grid from '@material-ui/core/Grid';
+import SpentCirce from '../Charts/SpentCirce.js';
+import Paper from '@material-ui/core/Paper';
 
-
-
-var firstRender = 0;
+const theme = createMuiTheme();
 
 const useStyles = makeStyles({
     list: {
@@ -22,10 +24,31 @@ const useStyles = makeStyles({
     fullList: {
       width: 'auto',
     },
+    fixedHeight50: {
+        height: 50,
+      },
+    fixedHeight450: {
+        height: 450,
+      },
+    paper: {
+        padding: theme.spacing(2),
+        display: 'flex',
+        overflow: 'auto',
+        flexDirection: 'column',
+      },     
   });
 
 export default function Summary() {
+    let SpentCirceData = {
+        labels: ["Spent This Month"],
+        data: [87]
+    }
+
     const classes = useStyles();
+    let spentPercentage = clsx(classes.paper, classes.fixedHeight450);
+    const [fromDate, setFromDate] = useState(new Date('2014-08-18T21:11:54'));
+    const [toDate, setToDate] = useState(new Date('2014-08-18T21:11:54'));
+    
     const periods = ['thisMonth', 'thisYear', 'lastYear', 'customPeriod'];
     const [period, setPeriod] = useState({
         thisMonth: true,
@@ -41,7 +64,10 @@ export default function Summary() {
         customPeriod: false,
     }
 
+    
     const [drawerOpened, setDrawerOpened] = useState(false);
+    const [customPeriodDialogOpened, setcustomPeriodDialogOpen] = useState(false);
+
 
     const toggleDrawer = (open) => (event) => {
         if (event.type === 'keydown' && (event.key === 'Tab' || event.key === 'Shift')) {
@@ -55,8 +81,19 @@ export default function Summary() {
     }
 
     const handleCustomPeriodChange = (p) => (event) => {
-        setPeriod({ ...defaultPeriod, [p]: true})
+        setcustomPeriodDialogOpen(true);
     }
+
+    const openCustiomPeriodChange = () => {
+        setPeriod({ ...defaultPeriod, ['customPeriod']: true})
+    }
+
+    const saveDates = (fData, tData) => {
+        setFromDate(fData);
+        setToDate(tData);
+        setcustomPeriodDialogOpen(false);
+      }
+
 
     const list = () => (
     <div
@@ -87,18 +124,34 @@ export default function Summary() {
 
     return (
         <div>
-            <div >
-                <React.Fragment key={"bottom"}>
-                    <Button onClick={toggleDrawer(true)}>Select Period</Button>
-                    <Drawer anchor={"bottom"} open={drawerOpened} onClose={toggleDrawer(false)}>
-                        {list()}
-                    </Drawer>
-                </React.Fragment>
-            </div>
-            {period.thisMonth  === true ? <SummaryGetter period={'thisMonth'}/> : <div/>}
-            {period.thisYear  === true ? <h1>this year</h1> : <div/>}
-            {period.lastYear  === true ? <h1>last year</h1> : <div/>}
-            {period.customPeriod  === true ? <h1>custom period</h1> : <div/>}
+            <Grid container spacing={4}>
+                    <Grid item xs={12}>
+                        <Paper className={spentPercentage}>
+                            <SpentCirce labels={SpentCirceData.labels} data={SpentCirceData.data}/>
+                            {customPeriodDialogOpened === true ? <SelectPeriodDialog changeCustomPeriodSelected={openCustiomPeriodChange} saveData={saveDates} /> : <div/>}
+                            <div >
+                            <React.Fragment key={"bottom"}>
+                                <div style={{
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    justifyContent: 'center',
+                                    }}>
+                                    <Button onClick={toggleDrawer(true)}>Select Period</Button>
+                                </div>
+                                <Drawer anchor={"bottom"} open={drawerOpened} onClose={toggleDrawer(false)}>
+                                    {list()}
+                                </Drawer>
+                            </React.Fragment>
+                            </div>
+                        </Paper>
+                    </Grid> 
+                <Grid item xs={12}>    
+                    {period.thisMonth  === true ? <SummaryGetter period={'thisMonth'}/> : <div/>}
+                    {period.thisYear  === true ? <SummaryGetter period={'thisYear'}/> : <div/>}
+                    {period.lastYear  === true ? <SummaryGetter period={'lastYear'}/> : <div/>}
+                    {period.customPeriod  === true ? <SummaryGetter period={'customPeriod'} to={toDate} from={fromDate}/> : <div/>}
+                </Grid>
+            </Grid>
         </div>
     )
 }
