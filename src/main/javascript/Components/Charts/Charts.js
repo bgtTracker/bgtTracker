@@ -8,7 +8,6 @@ import BarChart from './BarChart.js'
 import CAP from './CategoryAmount/CategoryAmountPrinter.js';
 import CategoryPie from './CategoryPie.js';
 import {useStyles} from '../Theme.js';
-import SpentCircle from "./SpentCirce.js";
 import BalanceChart from "./BlanceChart.js";
 
 const theme = createMuiTheme();
@@ -17,15 +16,6 @@ function Charts (props){
     let classes = useStyles();
     let fixedHeightPaperChart = clsx(classes.paper, classes.fixedHeightChart);
     let CategoryAmountFixedHeight = clsx(classes.paper, classes.fixedHeightCategory)
-    let SpentFixedHeight = clsx(classes.paper, classes.fixedHeight50)
-
-    let months = ['January', 'February', 'March', 'April', 'May', 'June', 'July',
-    'August', 'September', 'October', 'November', 'December'];
-
-    let SpentCirceData = {
-        labels: ["Spent This Month"],
-        data: [87]
-    }
 
     // render() {
         return (

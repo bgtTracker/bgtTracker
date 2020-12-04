@@ -49,7 +49,9 @@ export default function Summary() {
     const [fromDate, setFromDate] = useState(new Date('2014-08-18T21:11:54'));
     const [toDate, setToDate] = useState(new Date('2014-08-18T21:11:54'));
     
+    const [curPeriod, setcurPeriod] = useState('This Month');
     const periods = ['thisMonth', 'thisYear', 'lastYear', 'customPeriod'];
+    const nicelyWirtenPeriods = ['This Month', 'This Year', 'Last Year'];
     const [period, setPeriod] = useState({
         thisMonth: true,
         thisYear: false,
@@ -77,6 +79,8 @@ export default function Summary() {
       };
 
     const handlePeriodChange = (p) => (event) => {
+        let i = periods.indexOf(p);
+        setcurPeriod(nicelyWirtenPeriods[i]);
         setPeriod({ ...defaultPeriod, [p]: true})
     }
 
@@ -86,6 +90,7 @@ export default function Summary() {
 
     const openCustiomPeriodChange = () => {
         setPeriod({ ...defaultPeriod, ['customPeriod']: true})
+        setcurPeriod('Custom Period');
     }
 
     const saveDates = (fData, tData) => {
@@ -103,7 +108,7 @@ export default function Summary() {
         onKeyDown={toggleDrawer(false)}
     >
         <List>
-        {['This Month', 'This Year', 'Last Year'].map((text, index) => (
+        {nicelyWirtenPeriods.map((text, index) => (
             <ListItem button key={text} onClick={handlePeriodChange(periods[index])}>
             <ListItemIcon><InboxIcon /></ListItemIcon>
             <ListItemText primary={text} />
@@ -131,12 +136,14 @@ export default function Summary() {
                             {customPeriodDialogOpened === true ? <SelectPeriodDialog changeCustomPeriodSelected={openCustiomPeriodChange} saveData={saveDates} /> : <div/>}
                             <div >
                             <React.Fragment key={"bottom"}>
-                                <div style={{
+                                <div className="wrap" style={{
                                     display: 'flex',
                                     alignItems: 'center',
                                     justifyContent: 'center',
+                                    flexDirection: 'column',
                                     }}>
-                                    <Button onClick={toggleDrawer(true)}>Select Period</Button>
+                                    <div className='cur' ><p>Current Period: {curPeriod}</p></div>
+                                    <div className='button' ><Button onClick={toggleDrawer(true)}>Select Period</Button></div>
                                 </div>
                                 <Drawer anchor={"bottom"} open={drawerOpened} onClose={toggleDrawer(false)}>
                                     {list()}

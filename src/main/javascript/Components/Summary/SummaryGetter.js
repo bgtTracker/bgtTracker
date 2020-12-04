@@ -1,7 +1,6 @@
 import React, {useState, useEffect} from 'react';
 import Charts from '../Charts/Charts.js';
 import clientJson from '../../clientJson.js';
-import { SystemUpdate } from '@material-ui/icons';
 
 const fromatData = (date) => {
     let dataStr = date.getFullYear()+'-'+(date.getMonth()+1)+'-'+(date.getDate());
@@ -25,7 +24,7 @@ export default function SummaryGetter(props) {
             break;
         case 'thisYear':
             toDate = fromatData(new Date(now.getFullYear(), now.getMonth(), now.getDate()));
-            fromDate = fromatData(new Date(fromDate.getFullYear(), 0, 1));
+            fromDate = fromatData(new Date(now.getFullYear(), 0, 1));
             break;
         case 'lastYear':
             toDate = fromatData(new Date(now.getFullYear(), 11, 31));
