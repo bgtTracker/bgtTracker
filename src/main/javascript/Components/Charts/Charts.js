@@ -9,6 +9,7 @@ import CAP from './CategoryAmount/CategoryAmountPrinter.js';
 import CategoryPie from './CategoryPie.js';
 import {useStyles} from '../Theme.js';
 import BalanceChart from "./BlanceChart.js";
+import LPCH from "./LinePlusColumnChart.js";
 
 const theme = createMuiTheme();
 
@@ -35,7 +36,7 @@ function Charts (props){
                             <Grid container spacing={2} direction="row" justify="center" alignItems="center">
                             <Grid item  xs={6}>
                                 <Paper className={fixedHeightPaperChart}>
-                                    <CategoryPie labels={props.categoryData.labels} data={props.categoryData.data}/>
+                                    <CategoryPie labels={props.categoryData.labels} data={props.categoryData.data} title={"Spendings per category"}/>
                                 </Paper>
                             </Grid>
                             <Grid item xs={6}>
@@ -45,7 +46,7 @@ function Charts (props){
                             </Grid>       
                             <Grid item  xs={12}>
                                 <Paper className={fixedHeightPaperChart}>
-                                    <BarChart labels={props.monthChartData.labels} data={props.monthChartData.data} name={"Expenses"} labelsType={'datatime'}/>
+                                    <BarChart labels={props.monthChartData.labels} data={props.monthChartData.data} name={"Expenses"} labelsType={'datetime'} title={"Expenses"}/>
                                 </Paper>
                             </Grid>
                         </Grid>
