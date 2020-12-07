@@ -23,6 +23,9 @@ export default class CategoryPie extends Component {
         this.state = {
             series: this.props.data,
             options : {
+                title: {
+                  text: this.props.title,
+                },
                 labels: this.props.labels,
                 chart: {
                     size: 350,
@@ -72,5 +75,6 @@ export default class CategoryPie extends Component {
 
 CategoryPie.propTypes ={
   labels: PropTypes.array.isRequired,
-  data: PropTypes.array.isRequired
+  data: PropTypes.array.isRequired,
+  title: PropTypes.string.isRequired,
 }

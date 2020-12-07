@@ -15,6 +15,7 @@ import Grid from '@material-ui/core/Grid';
 import SpentCirce from '../Charts/SpentCirce.js';
 import Paper from '@material-ui/core/Paper';
 import clientJson from '../../clientJson.js';
+import History from '../History/History.js';
 
 const theme = createMuiTheme();
 
@@ -28,7 +29,7 @@ const useStyles = makeStyles({
     fixedHeight50: {
         height: 50,
       },
-    fixedHeight450: {
+    fixedHeight480: {
         height: 480,
       },
     fixedHeight4: {
@@ -54,7 +55,7 @@ export default function Summary() {
     const [SpentCirceData, setSpentCirceData] = useState();
 
     const classes = useStyles();
-    let spentPercentage = clsx(classes.paper, classes.fixedHeight450);
+    let spentPercentage = clsx(classes.paper, classes.fixedHeight480);
     const [fromDate, setFromDate] = useState(new Date('2014-08-18T21:11:54'));
     const [toDate, setToDate] = useState(new Date('2014-08-18T21:11:54'));
     
@@ -189,6 +190,11 @@ export default function Summary() {
                     {period.lastYear  === true ? <SummaryGetter period={'lastYear'}/> : <div/>}
                     {period.customPeriod  === true ? <SummaryGetter period={'customPeriod'} to={toDate} from={fromDate}/> : <div/>}
                 </Grid>
+                <Grid item xs={12}> 
+                    <Paper className={classes.paper}>
+                       <History/>
+                   </Paper>         
+                </Grid>  
             </Grid>
         </div>
     )

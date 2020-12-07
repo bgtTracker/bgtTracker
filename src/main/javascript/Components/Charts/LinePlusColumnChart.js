@@ -16,34 +16,26 @@ let columnColors = [
     colors.pink,
   ];  
 
-class BarChart extends Component {
+class LinePlusColumnChart extends Component {
     constructor(props){
         super(props);
         this.state = {
             options: {
                 chart: {
                   height: 350,
-                  type: "bar",
+                  type: "line",
                 },
-                title: {
-                  text: this.props.title,
+                fill: {
+                  type: 'gradient',
                 },
                 colors: columnColors,
-                plotOptions: {
-                  bar: {
-                    columnWidth: "45%",
-                    distributed: true,
-                  },
-                },
                 dataLabels: {
-                  enabled: this.props.dataLabelsShow,
+                  enabled: true,
+                  enabledOnSeries: [1]
                 },
-                legend: {
-                  show: this.props.legendShow,
-                },
+                lables: this.props.labels,
                 xaxis: {
                   type: this.props.labelsType,
-                  categories: this.props.labels,
                   labels: {
                     rotate: this.props.labelsRotate,
                     style: {
@@ -58,24 +50,17 @@ class BarChart extends Component {
                     show: false,
                   },
                 },
-            //     yaxis: {
-            //       labels: {
-            //         style: {
-            //           color: colors.textColor,
-            //         },
-            //       },
-            //     },
-            //     tooltip: {
-            //       theme: "dark",
-            //   },
-            //   grid: {
-            //     borderColor: colors.gridLineColor,
-            //   },
             },
             series: [
               {
                 name: this.props.name,
-                data: this.props.data
+                data: this.props.data,
+                type: 'line',
+              },
+              {
+                name: this.props.name,
+                data: this.props.data,
+                type: 'column',
               }
             ],
             
@@ -93,26 +78,22 @@ class BarChart extends Component {
                   height="350"
                   series={this.state.series}
                   options={this.state.options}
-                  type="bar"
+                  type="line"
                 />              
             </div>
         )
     }
 }
 
-BarChart.propTypes = {
+LinePlusColumnChart.propTypes = {
   labels: PropTypes.array.isRequired,
   data: PropTypes.array.isRequired,
-  name: PropTypes.string.isRequired,
-  title: PropTypes.string.isRequired,
+  name: PropTypes.string.isRequired
 }
 
-BarChart.defaultProps = {
-  labelsType: 'category',
+LinePlusColumnChart.defaultProps = {
+  labelsType: 'datetime',
   labelsRotate: -45,
-  legendShow: false,
-  dataLabelsShow: false,
-  colors: columnColors,
 }
 
-export default BarChart;
+export default LinePlusColumnChart;

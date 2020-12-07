@@ -1,11 +1,10 @@
-import React, { Component } from 'react'
+import React from 'react'
+import HistoryTable from './HistoryTable.js'
 
-export default class History extends Component {
-    render() {
-        return (
-            <div>
-                <p1>History</p1>
-            </div>
-        )
-    }
+export default function History() {
+    return (
+        <div>
+            <HistoryTable/>            
+        </div>
+    )
 }

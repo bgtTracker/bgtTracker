@@ -20,14 +20,15 @@ class BalanceChart extends Component {
     constructor(props){
         super(props);
 
-
         this.state = {
-          
           series: [{
             name: this.props.name,
             data: this.props.data
           }],
           options: {
+            title: {
+              text: 'Balance',
+            },
             chart: {
               type: 'bar',
               height: 350
