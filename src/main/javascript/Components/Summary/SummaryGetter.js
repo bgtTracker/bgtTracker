@@ -49,7 +49,7 @@ export default function SummaryGetter(props) {
             from: fromDate,
             to: toDate,
             usrid: props.userID
-        }}).done((response) => {
+        }}).then((response) => {
             setState(response.entity);       
         })
     }, []);

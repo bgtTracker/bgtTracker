@@ -118,7 +118,7 @@ export default function Summary() {
         from: fromDateForQuerry,
         to: toDateForQuerry,
         usrid: userID
-    }}).done((response) => {
+    }}).then((response) => {
         
         let sum = response.entity.expenses.data.reduce((a, b) => a + b, 0);
         let spent = (sum/response.entity.goal) * 100;

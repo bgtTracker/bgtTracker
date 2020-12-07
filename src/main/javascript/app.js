@@ -34,6 +34,8 @@ import {
 } from '@material-ui/icons';
 
 import Dashboard from "./Components/Dashboard";
+import Summary from "./Components/Summary/Summary";
+import History from "./Components/History/History";
 
 const drawerWidth = 240;
 
@@ -181,7 +183,8 @@ export default class App extends Component {
                                 <Redirect to="/dashboard"/>
                             </Route>
                             <Route exact path="/dashboard" component={Dashboard}/>
-                            <Route exact path="/summary" component={Dashboard}/>
+                            <Route exact path="/summary" component={Summary}/>
+                            <Route exact path="/history" component={History}/>
                         </Switch>
                     </Container>
                 </main>

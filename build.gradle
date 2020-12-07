@@ -39,8 +39,8 @@ dependencies {
 }
 
 node {
-    version = '12.16.2'
-    npmVersion = '6.14.4'
+    version = '14.15.1'
+    npmVersion = '6.14.9'
     distBaseUrl = 'https://nodejs.org/dist'
     download = true
 }
@@ -50,7 +50,7 @@ task buildReactApp(type: NodeTask, dependsOn: 'npmInstall') {
     args = [
             '--mode', 'development',
             '--entry', './src/main/javascript/app.js',
-            '-o', './src/main/resources/static/built/app.js'
+            '-o', './src/main/resources/static/built/'
     ]
 }
 
