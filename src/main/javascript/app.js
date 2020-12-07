@@ -181,6 +181,7 @@ export default class App extends Component {
                                 <Redirect to="/dashboard"/>
                             </Route>
                             <Route exact path="/dashboard" component={Dashboard}/>
+                            <Route exact path="/summary" component={Dashboard}/>
                         </Switch>
                     </Container>
                 </main>
