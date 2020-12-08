@@ -42,7 +42,7 @@ const useStyles = makeStyles((theme) => ({
 
 export default function SelectPeriodDialog(props) {
   const classes = useStyles();
-  const maxWidth = 400;
+  const maxWidth = 'xm';
   const [open, setOpen] = useState(true);
   const [toDate, setToDate] = useState(new Date());
   const [fromDate, setFromDate] = useState(new Date(toDate.getFullYear(), toDate.getMonth(), 1));

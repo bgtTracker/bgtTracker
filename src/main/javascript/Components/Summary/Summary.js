@@ -15,7 +15,7 @@ import Grid from '@material-ui/core/Grid';
 import SpentCirce from '../Charts/SpentCirce.js';
 import Paper from '@material-ui/core/Paper';
 import clientJson from '../../clientJson.js';
-import History from '../History/History.js';
+import History from '../History/HistoryTable.js';
 
 const theme = createMuiTheme();
 
@@ -192,7 +192,7 @@ export default function Summary() {
                 </Grid>
                 <Grid item xs={12}> 
                     <Paper className={classes.paper}>
-                       <History/>
+                       <History details={true}/>
                    </Paper>         
                 </Grid>  
             </Grid>

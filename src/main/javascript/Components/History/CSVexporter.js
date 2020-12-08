@@ -2,18 +2,16 @@ import React from 'react'
 import { CSVDownload } from "react-csv";
 import PropTypes from 'prop-types';
 
-export default function CSVexporter() {
-
-    const data = props.lables.concat(props.data);
+export default function CSVexporter(props) {
 
     return (
         <div>
-            <CSVDownload data={data} target="_blank"/>
+            <CSVDownload data={props.data} headers={props.labels} target="_blank"/>
         </div>
     )
 }
 
 CSVexporter.propsTypes = {
-    lables: PropTypes.array.isRequired,
+    labels: PropTypes.object.isRequired,
     data: PropTypes.array.isRequired,
 }

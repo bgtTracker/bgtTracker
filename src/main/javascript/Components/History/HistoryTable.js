@@ -18,8 +18,10 @@ import IconButton from '@material-ui/core/IconButton';
 import Tooltip from '@material-ui/core/Tooltip';
 import ImportExportIcon from '@material-ui/icons/ImportExport';
 import HelpIcon from '@material-ui/icons/Help';
-import Collapse from '@material-ui/core/Collapse';
-import Box from '@material-ui/core/Box';
+import CSVexporter from "./CSVexporter.js";
+import RowDetails from "./RowDetails.js"
+import RowNoDetails from "./Row.js"
+import DataConverter from './DataConveret.js';
 
 const theme = createMuiTheme();
 
@@ -42,8 +44,19 @@ function createData(id, date, expenses, income, balance, d) {
     };
   }
 
-  const rows = [
+  let rows = [
     createData(101,'2020-11', 3000, 7000, 4000),
+    createData(102,'2020-10', 2000, 1000, -100),
+    createData(103,'2020-09', 1000, 2000, 1000),
+    createData(104,'2020-08', 1500, 3000, 1500),
+    createData(105,'2020-11', 3000, 7000, 4000),
+    createData(106,'2020-10', 2000, 1000, -100),
+    createData(107,'2020-09', 1000, 2000, 1000),
+    createData(108,'2020-08', 1500, 3000, 1500),
+    createData(109,'2020-11', 3000, 7000, 4000),
+    createData(110,'2020-10', 2000, 1000, -100),
+    createData(112,'2020-09', 1000, 2000, 1000),
+    createData(112,'2020-08', 1500, 3000, 1500),
   ];
 
 function descendingComparator(a, b, orderBy) {
@@ -72,7 +85,7 @@ function stableSort(array, comparator) {
   return stabilizedThis.map((el) => el[0]);
 }
 
-const headCells = [
+let headCells = [
   { id: 'date', numeric: false, disablePadding: true, label: 'Date' },
   { id: 'expenses', numeric: true, disablePadding: false, label: 'Expenses' },
   { id: 'income', numeric: true, disablePadding: false, label: 'Income' },
@@ -155,6 +168,16 @@ const useToolbarStyles = makeStyles((theme) => ({
 const EnhancedTableToolbar = (props) => {
   const classes = useToolbarStyles();
   const { numSelected } = props;
+  const [downloadCVS, setDownloadCSV] = React.useState(false);
+  const [data, setData] = React.useState();
+
+
+  function HandleDownloadCSV(){
+    let d = DataConverter(headCells, rows, props.selected);
+    console.log(d);
+    setData(d);
+    setDownloadCSV(true);
+  }
 
   return (
     <Toolbar
@@ -174,8 +197,9 @@ const EnhancedTableToolbar = (props) => {
 
       {numSelected > 0 ? (
         <Tooltip title="Export to csv">
-          <IconButton aria-label="export">
+          <IconButton aria-label="export" onClick={HandleDownloadCSV}>
                 <ImportExportIcon/>
+                {downloadCVS === true ? <CSVexporter data={data.data} labels={data.labels}/>: <div/> }
           </IconButton>
         </Tooltip>
       ) : (
@@ -191,7 +215,13 @@ const EnhancedTableToolbar = (props) => {
 
 EnhancedTableToolbar.propTypes = {
   numSelected: PropTypes.number.isRequired,
+  selected: PropTypes.array.isRequired
+  // getDataForCVS: PropTypes.func.isRequired,
 };
+
+// EnhancedTableToolbar.defaultProps = {
+//   lables: [date, ]
+// }
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -217,14 +247,25 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function HistoryTable() {
+export default function HistoryTable(props) {
   const classes = useStyles();
   const [order, setOrder] = React.useState('asc');
   const [orderBy, setOrderBy] = React.useState('calories');
   const [selected, setSelected] = React.useState([]);
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
-  const [opend, setOpened] = React.useState([]);
+
+  if (props.headCells != undefined)
+    headCells = props.headCells;
+  
+  if (props.rows != undefined)
+    rows = props.rows
+
+  let Row;
+  if(props.details)
+    Row = RowDetails;
+  else
+    Row = RowNoDetails;
 
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === 'asc';
@@ -257,7 +298,7 @@ export default function HistoryTable() {
         selected.slice(selectedIndex + 1),
       );
     }
-
+    console.log(newSelected);
     setSelected(newSelected);
   };
 
@@ -277,7 +318,7 @@ export default function HistoryTable() {
   return (
     <div className={classes.root}>
       <Paper className={classes.paper}>
-        <EnhancedTableToolbar numSelected={selected.length} />
+        <EnhancedTableToolbar numSelected={selected.length} selected={selected} />
         <TableContainer>
           <Table
             className={classes.table}
@@ -323,81 +364,6 @@ export default function HistoryTable() {
 }
 
 
-
-function Row(props){
-
-    const row  = props.row;
-    let index = props.index;
-    const [open, setOpen] = React.useState(false);
-
-    const isItemSelected = props.isSelected(row.id);
-    const labelId = `enhanced-table-checkbox-${index}`;
-
-    return (
-    <React.Fragment>
-    <TableRow
-        hover
-        role="checkbox"
-        aria-checked={isItemSelected}
-        tabIndex={-1}
-        key={row.id}
-        selected={isItemSelected}
-    >
-        <TableCell padding="checkbox">
-        <Checkbox
-            checked={isItemSelected}
-            inputProps={{ 'aria-labelledby': labelId }}
-            onClick = {(event) => props.handleCheckBoxClick(event, row.id)}
-        />
-        </TableCell>
-        <TableCell component="th" id={labelId} scope="row" padding="none" onClick={(event) => setOpen(!open)}>
-        {row.date}
-        </TableCell>
-        <TableCell align="right" onClick={(event) => setOpen(!open)}>{row.expenses}</TableCell>
-        <TableCell align="right" onClick={(event) => setOpen(!open)}>{row.income}</TableCell>
-        <TableCell align="right" onClick={(event) => setOpen(!open)}>{row.balance}</TableCell>
-    </TableRow>
-
-    <TableRow>
-      <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6} onClick={(event) => setOpen(!open)}>
-      <Collapse in={open} timeout="auto" unmountOnExit>
-          <Box margin={1}>
-          <Typography variant="h6" gutterBottom component="div">
-              Details
-          </Typography>
-          <Table size="small" aria-label="purchases">
-              <TableHead>
-              <TableRow>
-                  <TableCell>Date</TableCell>
-                  <TableCell>Name</TableCell>
-                  <TableCell align="right">Type</TableCell>
-                  <TableCell align="right">Amount</TableCell>
-              </TableRow>
-              </TableHead>
-              <TableBody>
-              {row.details.map((details) => (
-                  <TableRow key={details.id}>
-                  <TableCell component="th" scope="row">
-                      {details.date}
-                  </TableCell>
-                  <TableCell>{details.name}</TableCell>
-                  <TableCell align="right">{details.type}</TableCell>
-                  <TableCell align="right">{details.amount}</TableCell>
-                  </TableRow>
-              ))}
-              </TableBody>
-          </Table>
-          </Box>
-      </Collapse>
-      </TableCell>
-    </TableRow>
-  </React.Fragment>    
-)}
-
-Row.propTypes = {
-  row: PropTypes.object.isRequired,
-  isSelected: PropTypes.func.isRequired,
-  handleCheckBoxClick: PropTypes.func.isRequired,
-  index: PropTypes.func.isRequired,
+HistoryTable.propsTypes = {
+  details: PropTypes.bool.isRequired,
 }
-    
