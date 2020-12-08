@@ -170,13 +170,16 @@ const EnhancedTableToolbar = (props) => {
   const { numSelected } = props;
   const [downloadCVS, setDownloadCSV] = React.useState(false);
   const [data, setData] = React.useState();
-
+  const [downloaded, sedDownloaded] = React.useState(false);
 
   function HandleDownloadCSV(){
     let d = DataConverter(headCells, rows, props.selected);
-    console.log(d);
     setData(d);
     setDownloadCSV(true);
+  }
+
+  const onDownloaded = () =>{
+    setDownloadCSV(false);
   }
 
   return (
@@ -199,7 +202,7 @@ const EnhancedTableToolbar = (props) => {
         <Tooltip title="Export to csv">
           <IconButton aria-label="export" onClick={HandleDownloadCSV}>
                 <ImportExportIcon/>
-                {downloadCVS === true ? <CSVexporter data={data.data} labels={data.labels}/>: <div/> }
+                {(downloadCVS === true && downloaded === false)? <CSVexporter data={data.data} labels={data.labels} onDownloaded={onDownloaded}/>: <div/> }
           </IconButton>
         </Tooltip>
       ) : (
