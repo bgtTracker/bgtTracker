@@ -185,14 +185,14 @@ export default function Summary() {
                     {period.lastYear  === true ? <SummaryGetter period={'lastYear'}/> : <div/>}
                     {period.customPeriod  === true ? <SummaryGetter period={'customPeriod'} to={toDate} from={fromDate}/> : <div/>}
                 </Grid>
-                <Grid item xs={12}> 
+                {/* <Grid item xs={12}> 
                     <Paper className={classes.paper}>
                         {period.thisMonth  === true ? <History period={'thisMonth'}/> : <div/>}
                         {period.thisYear  === true ? <History  period={'thisYear'}/> : <div/>}
                         {period.lastYear  === true ? <History  period={'lastYear'}/> : <div/>}
                         {period.customPeriod  === true ? <History  period={'customPeriod'} to={toDate} from={fromDate}/> : <div/>}
                    </Paper>         
-                </Grid>  
+                </Grid>   */}
             </Grid>
         </div>
     )

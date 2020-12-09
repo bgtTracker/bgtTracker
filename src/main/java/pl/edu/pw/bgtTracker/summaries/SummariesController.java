@@ -57,8 +57,10 @@ public class SummariesController {
         int[] balancePerDay = new int[31]; 
         // = {886, -279, -237, -886, -168, -159, 1245, 1991, 337, 1714, -223, 1717, 386, 252, -546, 1832, 592, -879, 1071, -908, -89, 1118, 1211, -823, 810, 1189, 1263, 377, 999, 1103};
         int[] incomes = new int[31];
+        String[] categoriesExpanse = {"Food", "Home", "Car", "Commute", "Luxuries"};
+        String[] categoriesIncome = {"Work", "Investments", "Allegor"};
         String[] categories = {"Food", "Home", "Car", "Commute", "Luxuries"};
-        int[] categoryData = {1000, 400, 500, 150, 400};
+        int[] categoryData = {0, 0, 0, 0, 0};
 
         int [] daylyExpenses = new int[31]; 
         // = {1814, 500, 1605, 822, 299, 991, 1307, 53, 138, 881, 869, 1325, 936, 93, 1795, 1766, 1219, 1379, 313, 752, 867, 859, 448, 610, 990, 1739, 750, 470, 593, 446};
@@ -78,12 +80,15 @@ public class SummariesController {
             cal.set(Calendar.DAY_OF_MONTH, i+1);
             long day = cal.getTime().getTime();
             int amount = ThreadLocalRandom.current().nextInt(10, 1501);
+            int catIndex = ThreadLocalRandom.current().nextInt(0, categoriesExpanse.length);
+            categoryData[catIndex] += amount;
             daylyExpenses[i] = amount;
             days[i] = day;
             JSONObject ob = new JSONObject();
             ob.put("Amount", amount);
             ob.put("Date", day);
             ob.put("Name", "Expanse Test" + i);
+            ob.put("Category", categoriesExpanse[catIndex]);
             expansesArr.add(ob);
         }
 
@@ -95,11 +100,13 @@ public class SummariesController {
             {
                 cal.set(Calendar.DAY_OF_MONTH, i+1);
                 amount = ThreadLocalRandom.current().nextInt(300, 4000);
+                int incomeCatIndex = ThreadLocalRandom.current().nextInt(0, categoriesIncome.length);
                 incomes[i] = amount;
                 JSONObject ob = new JSONObject();
                 ob.put("Amount", amount);
                 ob.put("Date", cal.getTime().getTime());
                 ob.put("Name", "Income Test" + i);
+                ob.put("Category", categoriesIncome[incomeCatIndex]);
                 incomeArray.add(ob);
             }
                 balancePerDay[i] = amount - daylyExpenses[i];
