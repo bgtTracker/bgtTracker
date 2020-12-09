@@ -1,7 +1,11 @@
-import React, { Component } from 'react';
+import React from 'react';
+import ChangeTitle from "./ChangeTitle";
 
 export default function Dashboard() {
     return (
-        <span>test</span>
+        <>
+            <ChangeTitle title="Dashboard - bgtTracker"/>
+            <span>test</span>
+        </>
     );
 }
