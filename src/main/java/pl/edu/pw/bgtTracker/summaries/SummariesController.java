@@ -32,11 +32,11 @@ public class SummariesController {
 
     @GetMapping(value = {"/"}, produces=MediaType.APPLICATION_JSON_VALUE)
     public String getUserExpanse(@RequestParam(value = "from", defaultValue="2017-10-01") String from, 
-    @RequestParam(value = "to", defaultValue="2017-11-01") String to,
+    @RequestParam(value = "to", defaultValue=("11111111111111")) String to,
     @RequestParam(value = "usrid", defaultValue="1") String usrID)
     {
-        System.out.println("from: " + from);
-        System.out.println("to: " + to);
+        System.out.println("from: " + from.toString());
+        System.out.println("to: " + to.toString());
         System.out.println("userId: " + usrID);
         int userid = Integer.parseInt(usrID);
         return getSummaryData(userid, from, to).toString();

@@ -15,7 +15,7 @@ import Grid from '@material-ui/core/Grid';
 import SpentCirce from '../Charts/SpentCirce.js';
 import Paper from '@material-ui/core/Paper';
 import clientJson from '../../clientJson.js';
-import History from '../History/HistoryTable.js';
+import History from '../History/HistoryTableDetails.js';
 
 const theme = createMuiTheme();
 
@@ -42,12 +42,6 @@ const useStyles = makeStyles({
         flexDirection: 'column',
       },     
   });
-
-const fromatData = (date) => {
-    let dataStr = date.getFullYear()+'-'+(date.getMonth()+1)+'-'+(date.getDate());
-    return dataStr
-}
-
 
 export default function Summary() {
     let userID = 1;
@@ -110,8 +104,8 @@ export default function Summary() {
       }
     
     let nowDate = new Date();
-    let toDateForQuerry = fromatData(nowDate);
-    let fromDateForQuerry  = fromatData(new Date(nowDate.getFullYear(), nowDate.getMonth(), 1));
+    let toDateForQuerry = nowDate.getTime().toString();
+    let fromDateForQuerry  = new Date(nowDate.getFullYear(), nowDate.getMonth(), 1).getTime().toString();
 
     useEffect(() =>{
     clientJson({method: 'GET', path: '/testapi/summary/', params: {
@@ -185,6 +179,7 @@ export default function Summary() {
                         </Paper>
                     </Grid> 
                 <Grid item xs={12}>    
+                 {/* // this is just horrible but i coudn't get to rerender componet at the moment and didn't have time to solve */}
                     {period.thisMonth  === true ? <SummaryGetter period={'thisMonth'}/> : <div/>}
                     {period.thisYear  === true ? <SummaryGetter period={'thisYear'}/> : <div/>}
                     {period.lastYear  === true ? <SummaryGetter period={'lastYear'}/> : <div/>}
@@ -192,7 +187,10 @@ export default function Summary() {
                 </Grid>
                 <Grid item xs={12}> 
                     <Paper className={classes.paper}>
-                       <History details={true}/>
+                        {period.thisMonth  === true ? <History period={'thisMonth'}/> : <div/>}
+                        {period.thisYear  === true ? <History  period={'thisYear'}/> : <div/>}
+                        {period.lastYear  === true ? <History  period={'lastYear'}/> : <div/>}
+                        {period.customPeriod  === true ? <History  period={'customPeriod'} to={toDate} from={fromDate}/> : <div/>}
                    </Paper>         
                 </Grid>  
             </Grid>

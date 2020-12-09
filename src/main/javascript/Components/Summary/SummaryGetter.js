@@ -2,12 +2,6 @@ import React, {useState, useEffect} from 'react';
 import Charts from '../Charts/Charts.js';
 import clientJson from '../../clientJson.js';
 
-const fromatData = (date) => {
-    let dataStr = date.getFullYear()+'-'+(date.getMonth()+1)+'-'+(date.getDate());
-    return dataStr
-}
-
-
 
 export default function SummaryGetter(props) {
 
@@ -19,20 +13,20 @@ export default function SummaryGetter(props) {
 
     switch(props.period){
         case 'thisMonth':
-            toDate = fromatData(new Date(now.getFullYear(), now.getMonth(), now.getDate()));
-            fromDate = fromatData(new Date(now.getFullYear(), now.getMonth(), 1));
+            toDate = new Date(now.getFullYear(), now.getMonth(), now.getDate()).getTime().toString();
+            fromDate = new Date(now.getFullYear(), now.getMonth(), 1).getTime().toString();
             break;
         case 'thisYear':
-            toDate = fromatData(new Date(now.getFullYear(), now.getMonth(), now.getDate()));
-            fromDate = fromatData(new Date(now.getFullYear(), 0, 1));
+            toDate = new Date(now.getFullYear(), now.getMonth(), now.getDate()).getTime().toString();
+            fromDate = new Date(now.getFullYear(), 0, 1).getTime().toString();
             break;
         case 'lastYear':
-            toDate = fromatData(new Date(now.getFullYear(), 11, 31));
-            fromDate = fromatData(new Date(now.getFullYear(), 0, 1));
+            toDate = new Date(now.getFullYear(), 11, 31).getTime().toString();
+            fromDate = new Date(now.getFullYear(), 0, 1).getTime().toString();
             break;
         case 'customPeriod':
-            toDate = fromatData(props.to);
-            fromDate = fromatData(props.from);
+            toDate = props.to.getTime().toString();
+            fromDate = props.from.getTime().toString();
             break;
         default:
             console.log("Wrong Period");
@@ -42,7 +36,6 @@ export default function SummaryGetter(props) {
             </div>
             )
     }
-
 
     useEffect(() =>{
         clientJson({method: 'GET', path: '/testapi/summary/', params: {
