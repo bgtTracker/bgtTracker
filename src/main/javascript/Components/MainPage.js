@@ -37,6 +37,9 @@ import Dashboard from "./Dashboard";
 import Summary from "./Summary/Summary";
 import History from "./History/History";
 import Settings from "./Settings/Settings.js";
+import Income from "./Tables/Income/Income";
+import Expense from "./Tables/Expense/Expense";
+import Bill from "./Tables/Expense/Expense";
 
 const drawerWidth = 240;
 
@@ -208,6 +211,9 @@ export default function MainPage() {
                         <Route exact path={`${path}/summary`} component={Summary}/>
                         <Route exact path={`${path}/history`} component={History}/>
                         <Route exact path={`${path}/settings`} component={Settings}/>
+                        <Route exact path={`${path}/incomes`} component={Income}/>
+                        <Route exact path={`${path}/expenses`} component={Expense}/>
+                        <Route exact path={`${path}/bills`} component={Bill}/>
                     </Switch>
                 </Container>
             </main>
