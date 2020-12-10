@@ -81,7 +81,7 @@ export const useStyles = makeStyles((theme) => ({
       height: 350,
     },
     fixedHeightChart: {
-        height: 450,
+        height: 500,
       },
     fixedHeightCategory: {
         height: 45,
