@@ -5,6 +5,8 @@ import ModalWithForm from "./ModalWithForm"
 import { Container, Row, Col } from 'reactstrap';
 import { Badge } from 'reactstrap';
 
+import "../../../../../node_modules/react-bootstrap-table/dist/react-bootstrap-table-all.min.css"
+import "../../../../../node_modules/bootstrap/dist/css/bootstrap.min.css"
 
 function colorFormat(cell, row) {
 return (<Badge style={{backgroundColor: cell, color: cell}}>{cell}</Badge>)
@@ -30,23 +32,8 @@ export default class CustomPaginationTable extends React.Component {
         <BSTable data={ row.expand } />
       );
     }
-    createCustomDeleteButton = (onClick) => {
-        return (
-          <button style={ { color: 'red' } } onClick={ onClick }>Delete rows</button>
-        )}
-    handleInsertButtonClick = (onClick) => {
-            // Custom your onClick event here,
-            // it's not necessary to implement this function if you have no any process before onClick
-            console.log('This is my custom function for InserButton click event');
-            
-          }
-    handleEditButtonClick = (onClick) => {
-      // Custom your onClick event here,
-      // it's not necessary to implement this function if you have no any process before onClick
-      console.log('Edit button clicked');
-      this.state.cellEditMode = "dbclick"
-    }
-    handleEditButtonClick2() { // zle :(
+    
+    handleEditButtonClick2() { 
         this.setState((prevState) => {
           console.log(prevState)
           let ret
@@ -63,16 +50,7 @@ export default class CustomPaginationTable extends React.Component {
           
         })
     }
-    createCustomInsertButton = (onClick) => {
-            return (
-              <InsertButton
-                btnText='CustomInsertText'
-                btnContextual='btn-success'
-                className='my-custom-class'
-                btnGlyphicon='glyphicon-edit'
-                onClick={ () => this.handleInsertButtonClick(onClick) }/>
-            );
-          }
+    
     handleModal(info) {
         console.log(info)
     }
