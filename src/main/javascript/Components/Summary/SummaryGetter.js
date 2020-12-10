@@ -84,11 +84,8 @@ function createRows(resposne) {
   let rows = [];
   let expansesIndex = 0;
   let incomesIndex = 0;
-  console.log(resposne);
-  console.log(resposne.entity.expenses.data.length);
     for(let i = 0; i<resposne.entity.expenses.data.length; i++)
     {
-      console.log(1);
       if(resposne.entity.expenses.data[i] != 0 || resposne.entity.incomes.data[i] != 0)
       {
       let details = [];
@@ -125,7 +122,6 @@ function createRows(resposne) {
         ));
     }
   }
-  console.log(rows);
   return rows;
 }
 
