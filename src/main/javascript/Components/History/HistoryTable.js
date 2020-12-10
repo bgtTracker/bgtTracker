@@ -301,7 +301,6 @@ export default function HistoryTable(props) {
         selected.slice(selectedIndex + 1),
       );
     }
-    console.log(newSelected);
     setSelected(newSelected);
   };
 
