@@ -36,6 +36,7 @@ import ChangeTitle from "./ChangeTitle";
 import Dashboard from "./Dashboard";
 import Summary from "./Summary/Summary";
 import History from "./History/History";
+import Settings from "./Settings/Settings.js";
 
 const drawerWidth = 240;
 
@@ -206,6 +207,7 @@ export default function MainPage() {
                         <Route exact path={`${path}/dashboard`} component={Dashboard}/>
                         <Route exact path={`${path}/summary`} component={Summary}/>
                         <Route exact path={`${path}/history`} component={History}/>
+                        <Route exact path={`${path}/settings`} component={Settings}/>
                     </Switch>
                 </Container>
             </main>
