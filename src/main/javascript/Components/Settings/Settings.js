@@ -10,6 +10,7 @@ import DialogContent from '@material-ui/core/DialogContent';;
 import DialogTitle from '@material-ui/core/DialogTitle';
 import { makeStyles, createMuiTheme } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
+import { set } from 'date-fns';
 
 const theme = createMuiTheme();
 
@@ -52,13 +53,19 @@ const useStyles = makeStyles((theme) => ({
 ));
 
 export default function Settings() {
+    const maxWidth = 'xl';
     const [password, setPassword] = useState();
     const [name, setName] = useState('Billy');
     const [lastName, setLastName] = useState('Herrington');
 
-    const maxWidth = 'xl';
+    const [tempName, setTempName] = useState('Billy');
+    const [tempLastName, setTempLastName] = useState('Herrington');
+    const [temppass, setTempPass] = useState("temp");
+
     const [open, setOpen] = useState(false);
     const [passDialogOpen, setPassDialogOpen] = useState(false);
+    const [goal, setGoal] = useState(5000);
+
     function HandleNamesChange(){
         setOpen(true);
     }
@@ -67,14 +74,29 @@ export default function Settings() {
         setOpen(false);
     }
 
+    function handleClickClose(){
+        setName(tempName);
+        setLastName(tempLastName);
+        setOpen(false);
+    }
+
+    function handlePassworChange(){
+        setPassword(temppass)
+        setPassDialogOpen(false)
+    }
+
+    function handleGoalChange(){
+        setPassword(temppass);
+    }
+
     return (
         <div>
             <Grid container spacing={4}>
-                <Grid item xs={12} alignItems='center' justify='center'>
+                <Grid item xs={12}>
                     <Paper>
                     <Grid container spacing={4}>
                         <Grid item xs={12}>
-                        <Grid container spacing={4} direction='Row' alignItems='center' justify='center'>   
+                        <Grid container spacing={4} direction='row' alignItems='center' justify='center'>   
                             <Grid item xs={4}>
                                 <p>First name: {name}     Last name: {lastName}</p>
                             </Grid>
@@ -86,15 +108,15 @@ export default function Settings() {
                                     onClose={handleClose}
                                     aria-labelledby="max-width-dialog-title"
                                 >
-                                    <DialogTitle id="max-width-dialog-title">Select Period</DialogTitle>
+                                    <DialogTitle id="max-width-dialog-title">Enter new name and last name</DialogTitle>
                                     <DialogContent>
                                     <Grid container justify="space-around">
-                                        <TextField id="First Name" label="First Name" variant="outlined" value={name} onChange={(e)=>setName(e.target.value)}/>
-                                        <TextField id="Last Name" label="Last Name" variant="outlined"  value={lastName} onChange={(e)=>setLastName(e.target.value)}/>
+                                        <TextField id="First Name" label="First Name" variant="outlined" value={tempName} onChange={(e)=>setTempName(e.target.value)}/>
+                                        <TextField id="Last Name" label="Last Name" variant="outlined"  value={tempLastName} onChange={(e)=>setTempLastName(e.target.value)}/>
                                     </Grid>
                                     </DialogContent>
                                     <DialogActions>
-                                    <Button onClick={handleClose} color="primary">
+                                    <Button onClick={handleClickClose} color="primary">
                                         Done
                                     </Button>
                                     </DialogActions>
@@ -106,7 +128,7 @@ export default function Settings() {
                         <Divider flexItem variant="middle"/>
 
                         <Grid item xs={12}>
-                        <Grid container spacing={4} direction='Row' alignItems='center' justify='center'>   
+                        <Grid container spacing={4} direction='row' alignItems='center' justify='center'>   
                             <Grid item>
                                 <Button onClick={()=>setPassDialogOpen(true)}>Change password</Button>
                                 <Dialog
@@ -115,14 +137,14 @@ export default function Settings() {
                                     onClose={()=>setPassDialogOpen(false)}
                                     aria-labelledby="max-width-dialog-title"
                                 >
-                                    <DialogTitle id="max-width-dialog-title">Select Period</DialogTitle>
+                                    <DialogTitle id="max-width-dialog-title">Enter new password</DialogTitle>
                                     <DialogContent>
                                     <Grid container justify="space-around">
-                                        <TextField id="Password" label="Password" variant="outlined"  onChange={(e)=>setPassword(e.target.value)}/>
+                                        <TextField id="Password" label="Password" type="password" variant="outlined"  onChange={(e)=>setTempPass(e.target.value)}/>
                                     </Grid>
                                     </DialogContent>
                                     <DialogActions>
-                                    <Button onClick={()=>setPassDialogOpen(false)} color="primary">
+                                    <Button onClick={handlePassworChange} color="primary">
                                         Done
                                     </Button>
                                     </DialogActions>
@@ -132,6 +154,16 @@ export default function Settings() {
                         </Grid>
 
                         <Divider flexItem variant="middle"/>
+                        <Grid item xs={12}>
+                        <Grid container spacing={4} direction='row' alignItems='center' justify='center'>   
+                            <Grid item xs={4}>
+                                <TextField id="goal" label="goal" variant="outlined"  value={goal} onChange={(e)=>setGoal(e.target.value)}/>
+                            </Grid>
+                            <Grid item>
+                                <Button onClick={handleGoalChange}>Change Goal</Button>
+                            </Grid>
+                            </Grid>
+                        </Grid>
                     </Grid>    
                     </Paper>
                 </Grid>
