@@ -10,13 +10,72 @@ import CategoryPie from './CategoryPie.js';
 import {useStyles} from '../Theme.js';
 import BalanceChart from "./BlanceChart.js";
 import LPCH from "./LinePlusColumnChart.js";
+import SwipeableViews from 'react-swipeable-views';
+import AppBar from '@material-ui/core/AppBar';
+import Tabs from '@material-ui/core/Tabs';
+import Tab from '@material-ui/core/Tab';
+import Typography from '@material-ui/core/Typography';
+import PropTypes from 'prop-types';
+import Box from '@material-ui/core/Box';
 
 const theme = createMuiTheme();
 
-function Charts (props){
+function TabPanel(props) {
+    const { children, value, index, ...other } = props;
+
+    return (
+        <div
+        role="tabpanel"
+        hidden={value !== index}
+        id={`full-width-tabpanel-${index}`}
+        aria-labelledby={`full-width-tab-${index}`}
+        {...other}
+        >
+        {value === index && (
+            <Box p={3}>
+            <Typography>{children}</Typography>
+            </Box>
+        )}
+        </div>
+    );
+    }
+
+TabPanel.propTypes = {
+children: PropTypes.node,
+index: PropTypes.any.isRequired,
+value: PropTypes.any.isRequired,
+};
+
+function a11yProps(index) {
+    return {
+      id: `full-width-tab-${index}`,
+      'aria-controls': `full-width-tabpanel-${index}`,
+    };
+  }
+
+  function Charts (props){
     let classes = useStyles();
     let fixedHeightPaperChart = clsx(classes.paper, classes.fixedHeightChart);
     let CategoryAmountFixedHeight = clsx(classes.paper, classes.fixedHeightCategory)
+
+    const [valueCategories, setValueCategories] = React.useState(0);
+    const [valueChart, setChart] = React.useState(0);
+
+    const handleChangeCategories = (event, newValue) => {
+        setValueCategories(newValue);
+      };
+    
+      const handleChangeIndexCategories = (index) => {
+        setValueCategories(index);
+      };
+    
+    const handleChangeChart = (event, newValue) => {
+        setChart(newValue);
+      };
+    
+    const handleChangeIndexChart = (index) => {
+        setChart(index);
+      };
 
     // render() {
         return (
@@ -36,7 +95,31 @@ function Charts (props){
                             <Grid container spacing={2} direction="row" justify="center" alignItems="center">
                             <Grid item  xs={6}>
                                 <Paper className={fixedHeightPaperChart}>
-                                    <CategoryPie labels={props.categoryData.labels} data={props.categoryData.data} title={"Spendings per category"}/>
+                                    <AppBar position="static" color="default">
+                                        <Tabs
+                                        value={valueCategories}
+                                        onChange={handleChangeCategories}
+                                        indicatorColor="primary"
+                                        textColor="primary"
+                                        variant="fullWidth"
+                                        aria-label="full width tabs example"
+                                        >
+                                        <Tab label="Expanses Categories" {...a11yProps(0)} />
+                                        <Tab label="Incomes Categories" {...a11yProps(1)} />
+                                        </Tabs>
+                                    </AppBar>
+                                    <SwipeableViews
+                                        axis={theme.direction === 'rtl' ? 'x-reverse' : 'x'}
+                                        index={valueCategories}
+                                        onChangeIndex={handleChangeIndexCategories}
+                                        >
+                                        <TabPanel value={valueCategories} index={0} dir={theme.direction}>
+                                            <CategoryPie labels={props.categoryData.labels} data={props.categoryData.data} title={"Spendings per category"}/>
+                                        </TabPanel>
+                                        <TabPanel value={valueCategories} index={1} dir={theme.direction}>
+                                            Second Chart
+                                        </TabPanel>
+                                    </SwipeableViews>
                                 </Paper>
                             </Grid>
                             <Grid item xs={6}>
@@ -46,7 +129,31 @@ function Charts (props){
                             </Grid>       
                             <Grid item  xs={12}>
                                 <Paper className={fixedHeightPaperChart}>
-                                    <BarChart labels={props.monthChartData.labels} data={props.monthChartData.data} name={"Expenses"} labelsType={'datetime'} title={"Expenses"}/>
+                                <AppBar position="static" color="default">
+                                        <Tabs
+                                        value={valueChart}
+                                        onChange={handleChangeChart}
+                                        indicatorColor="primary"
+                                        textColor="primary"
+                                        variant="fullWidth"
+                                        aria-label="full width tabs example"
+                                        >
+                                        <Tab label="Expanses Chart" {...a11yProps(0)} />
+                                        <Tab label="Incomes Chart" {...a11yProps(1)} />
+                                        </Tabs>
+                                    </AppBar>
+                                    <SwipeableViews
+                                        axis={theme.direction === 'rtl' ? 'x-reverse' : 'x'}
+                                        index={valueChart}
+                                        onChangeIndex={handleChangeIndexChart}
+                                        >
+                                        <TabPanel value={valueChart} index={0} dir={theme.direction}>
+                                            <BarChart labels={props.monthChartData.labels} data={props.monthChartData.data} name={"Expenses"} labelsType={'datetime'} title={"Expenses"}/>
+                                        </TabPanel>
+                                        <TabPanel value={valueChart} index={1} dir={theme.direction}>
+                                        Second Chart
+                                        </TabPanel>
+                                    </SwipeableViews>
                                 </Paper>
                             </Grid>
                         </Grid>
