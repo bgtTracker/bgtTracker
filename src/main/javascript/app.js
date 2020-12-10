@@ -36,6 +36,9 @@ import {
 import Dashboard from "./Components/Dashboard";
 import Summary from "./Components/Summary/Summary";
 import History from "./Components/History/History";
+import Income from "./Components/Tables/Income/Income"
+import Expense from "./Components/Tables/Expense/Expense"
+import Bill from "./Components/Tables/Bill/Bill"
 
 const drawerWidth = 240;
 
@@ -185,6 +188,9 @@ export default class App extends Component {
                             <Route exact path="/dashboard" component={Dashboard}/>
                             <Route exact path="/summary" component={Summary}/>
                             <Route exact path="/history" component={History}/>
+                            <Route exact path="/incomes" component={Income} />
+                            <Route exact path="/expenses" component={Expense} />
+                            <Route exact path="/bills" component={Bill} />
                         </Switch>
                     </Container>
                 </main>

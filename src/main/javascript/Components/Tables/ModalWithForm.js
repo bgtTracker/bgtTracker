@@ -1,167 +1,218 @@
-import React, { useState } from 'react';
-import { Button, Modal, ModalHeader, ModalBody, ModalFooter ,Input} from 'reactstrap';
+import React from 'react';
+import { BootstrapTable, TableHeaderColumn, InsertButton, DeleteButton, BSTable} from 'react-bootstrap-table';
+import { Button } from 'reactstrap'
+import ModalWithForm from "./ModalWithForm"
 import { Container, Row, Col } from 'reactstrap';
-import { Form, FormGroup, Label, FormText } from 'reactstrap';
 import { Badge } from 'reactstrap';
 
+import "../../../../../node_modules/react-bootstrap-table/dist/react-bootstrap-table-all.min.css"
+import "../../../../../node_modules/bootstrap/dist/css/bootstrap.min.css"
 
+function colorFormat(cell, row) {
+return (<Badge style={{backgroundColor: cell, color: cell}}>{cell}</Badge>)
+}  
 
-export default class ModalWithForm extends React.Component {
+export default class CustomPaginationTable extends React.Component {
 
-    constructor (props) {
-        super(props);
-
-        var today = new Date(),
-            nowDate = today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + (today.getDate()<10 ? '0' + today.getDate(): today.getDate());
-        
-        
-        this.state = {
-            type: "category",
-            name: "",
-            amount: 0,
-            category: "",
-            color: "#000000",
-            date: nowDate,
-            note: "",
-            className: "",
-
-            buttonLabel: "New row",
-            modalLabel: "New row",
-            modal: false,
-            setModal: false // zbedne
-        }
-        this.toggle = this.toggle.bind(this)
-        this.changeName = this.changeName.bind(this)
-        this.changeAmount = this.changeAmount.bind(this)
-        this.changeDate = this.changeDate.bind(this)
-        this.changeCategory = this.changeCategory.bind(this)
-        this.changeColor = this.changeColor.bind(this)
-        this.changeNote = this.changeNote.bind(this)
-        this.setState = this.setState.bind(this)
-
-        this.handleSubmit = this.handleSubmit.bind(this)
+    constructor(props) {
+      super();
+      this.state = {
+          data: "",
+          cellEditMode: "none",
+          
+      }
+      this.refs = React.createRef();
+      this.handleEditButtonClick2 = this.handleEditButtonClick2.bind(this)
+      this.insertData2 = this.insertData2.bind(this)
     }
 
-    toggle () {
+  
+    expandComponent(row) {
+      return (
+        <BSTable data={ row.expand } />
+      );
+    }
+    
+    handleEditButtonClick2() { 
         this.setState((prevState) => {
+          console.log(prevState)
+          let ret
+          if(prevState.cellEditMode === "dbclick"){
+            console.log("tak")
+            alert("Edit mode disactivated")
+            ret = {cellEditMode: "none"}
+          } else {
+            alert("Edit mode activated")
+            console.log("taktak")
+            ret = {cellEditMode: "dbclick"}
+          }
+          return ret
+          
+        })
+    }
+    
+    handleModal(info) {
+        console.log(info)
+    }
+
+    insertData2(newData) {
+        this.setState((prevState) => {
+            console.log(prevState)
             return {
-                modal: !this.state.modal
+              data: this.state.data.push({
+                id: 100,
+                name: newData.name,
+                category: newData.category,
+                date: (newData.date.substring(8,10)+'.'+newData.date.substring(5,7)+'.'+newData.date.substring(0,4)),
+                amount: newData.amount,
+                color: newData.color,
+                expand: true
+              })
             }
         })
     }
-    changeName(event) {
-        this.setState({ name: event.target.value })
+
+    newTry (newData) {
+      return(
+        {
+            id:100,
+            name: newData.name,
+            category: newData.category,
+            date: newData.date,
+            amount: newData.amount,
+            color: newData.color,
+            expand: true
+        }
+      )
     }
+    
+  render() {
 
-    changeAmount(event) {
-        this.setState({ amount: event.target.value })
+    const type = this.props.type
+    this.state.data =  this.props.data
+    var category = this.props.category
+    console.log("tabela")
+    console.log(this.state.data)
+
+    var rows
+    var modalType
+    var modalLabel
+    var modalButtonLabel
+    var modalRet = {}
+    
+    if (type === "income") {
+      rows = [
+        {dataField: "id", label: "ID", isKey: true, hidden: true},
+        {dataField: "name", label: "Income Name", isKey: false, hidden: false},
+        {dataField: "category", label: "Category", isKey: false, hidden: false},
+        {dataField: "date", label: "Date", isKey: false, hidden: false},
+        {dataField: "amount", label: "Amount", isKey: false, hidden: false},
+      ]
+      modalButtonLabel = "Add new Income"
+      modalLabel = "New income"
+      modalType = "income"
+    } else if (type === "expense") {
+      rows = [
+        {dataField: "id", label: "ID", isKey: true, hidden: true},
+        {dataField: "name", label: "Expense Name", isKey: false, hidden: false},
+        {dataField: "category", label: "Category", isKey: false, hidden: false},
+        {dataField: "date", label: "Date", isKey: false, hidden: false},
+        {dataField: "amount", label: "Amount", isKey: false, hidden: false},
+      ]
+      modalButtonLabel = "Add new Expense"
+      modalLabel = "New Expense"
+      modalType = "expense"
+    } else if (type === "bill") {
+      rows = [
+        {dataField: "id", label: "ID", isKey: true, hidden: true},
+        {dataField: "name", label: "Bill Name", isKey: false, hidden: false},
+        {dataField: "category", label: "Category", isKey: false, hidden: false},
+        {dataField: "date", label: "Date", isKey: false, hidden: false},
+        {dataField: "amount", label: "Amount", isKey: false, hidden: false},
+      ]
+      modalButtonLabel = "Add new bill"
+      modalLabel = "New bill"
+      modalType = "bill"
+    } else {
+      rows = [
+        {dataField: "id", label: "ID", isKey: true, hidden: true},
+        {dataField: "name", label: "Category", isKey: false, hidden: false},
+        {dataField: "color", label: "Color", isKey: false, hidden: false},
+      ]
+      modalButtonLabel = "Add new Category"
+      modalLabel = "New category"
+      modalType = "category"
     }
+    
+  
 
-    changeDate(event) {
-        this.setState({ date: event.target.value })
-    }
+    const tableBody = rows.map((foo) => (
+        foo.dataField==="color" ? <TableHeaderColumn dataField={foo.dataField} hidden={foo.hidden} dataFormat={colorFormat}>{foo.label}</TableHeaderColumn>:
+      <TableHeaderColumn dataField={foo.dataField} hidden={foo.hidden}>{foo.label}</TableHeaderColumn>))
+    
+    const options = {
+      page: 1,  // which page you want to show as default
+      sizePerPageList: [ {
+        text: '5', value: 5
+      }, {
+        text: '10', value: 10
+      }, {
+        text: '100', value: 100
+      } ], // you can change the dropdown list for size per page
+      sizePerPage: 5,  // which size per page you want to locate as default
+      pageStartIndex: 1, // where to start counting the pages
+      paginationSize: 3,  // the pagination bar size.
+      prePage: '<', // Previous page button text
+      nextPage: '>', // Next page button text
+      firstPage: '<<', // First page button text
+      lastPage: '>>', // Last page button text
+      paginationPosition: 'bottom',  // default is bottom, top and both is all available
+      deleteText: 'Custom Delete Text',
+      clearnBtn: true,
+      noDataText: 'Coś tu za cicho',
+      searchDelayTime: 200 // delay in ms
+      
+    };
 
-    changeCategory(event) {
-        this.setState({ category: event.target.value })
-    }
+    let selectRow = {
+        mode: 'none',  // multi select
+        clickToSelectAndEditCell: true,
+        columnWidth: '40px'
+      };
 
-    changeNote(event) {
-        this.setState({ note: event.target.value })
-    }
-
-    changeColor(event) {
-        this.setState({ color: event.target.value })
-    }
-
-    handleSubmit() {
-        //console.log("Submit")
-        //console.log(this.state)
-        this.props.handleNew(this.state)
-        this.toggle()
-        //this.props.dispatch()
-    }
+    const cellEdit = {
+        mode: this.state.cellEditMode // double click cell to edit dbclick
+      };
 
 
-    colorFormat(cell) {
-        return (<Badge style={{backgroundColor: cell, color: cell}}>{cell}</Badge>)
-    }  
-
-    render() {
-        this.state.type = this.props.type
-        const selectOpt = this.props.category
-        this.state.buttonLabel = this.props.buttonLabel
-        const categorySelect = selectOpt.map((cat) => (<option> {cat.name} </option>))
-        var formBody = (
-            <div>
-                <FormGroup>
-                    <Label >{this.state.type === "income"? "Income name" : this.state.type === "expense" ? "Expense name" : this.state.type === "bill" ? "Bill name" : "Category name"}</Label>
-                    <Input type="text" name="name" id="name" placeholder="Enter text" onChange={this.changeName} value={this.state.name} />
-                </FormGroup>
-                <FormGroup>
-                    <Label >Amount</Label>
-                    <Input type="number" name="amount" id="amount" placeholder="Enter amount" onChange={this.changeAmount} value={this.state.value} />
-                </FormGroup>
-                <Row>
-                <Col>
-                <FormGroup>
-                    <Label>Date</Label>
-                    <Input type="date" name="date" id="date" placeholder="Enter date" onChange={this.changeDate} value={this.state.date}/>   
-                </FormGroup>
-                </Col>
-                <Col>
-                <FormGroup>
-                    <Label >Choose category</Label>
-                    <Input type="select" name="category" id="category" onChange={this.changeCategory} value={this.state.category}>
-                        {categorySelect}
-                    </Input>
-                </FormGroup>
-                </Col>
-                </Row>
-                <FormGroup>
-                    <Label >Note</Label>
-                    <Input type="textarea" name="note" id="note"  onChange={this.changeNote} />
-                </FormGroup>
-          </div>
-        )
-        var catBody = (
-            <div>
-                <Row>
-                <Col>
-                <FormGroup>
-                    <Label >Category name</Label>
-                    <Input type="text" name="name" id="name" placeholder="Enter text" onChange={this.changeName} value={this.state.name} />
-                </FormGroup>
-                </Col>
-                <Col>
-                <FormGroup>
-                    <Label >Category color</Label>
-                    <Input type="color" name="color" id="color" placeholder="Choose color" onChange={this.changeColor} value={this.state.color} />
-                </FormGroup>
-                </Col>
-                </Row>
-                <FormGroup>
-                    <Label >Note</Label>
-                    <Input type="textarea" name="note" id="note"  onChange={this.changeNote} />
-                </FormGroup>
-                
-          </div>
-        )
-        return (
-            <div>
-                <Button color="success" onClick={this.toggle}>{this.state.buttonLabel}</Button>
-                <Modal onSubmit={this.handleSubmit} isOpen={this.state.modal} toggle={this.toggle} className={this.state.className} size="lg" style={{position: "absolute", top: "50px", right: "100px", bottom: 0, left: 0, zIndex: 10040, overflow: "auto", overflowY: "auto"}}>
-                    <ModalHeader toggle={this.toggle}>{this.state.type === "income"? "New Income" : this.state.type === "expense" ? "New Expense" : this.state.type === "bill" ? "New Bill " : "New category"}</ModalHeader>
-                    <ModalBody>
-                        <Form onSubmit={this.handleSubmit}>
-                        {this.state.type === "category"? catBody: formBody}
-                        </Form>
-                    </ModalBody>
-                    <ModalFooter>
-                        <Button type="submit" color="primary" onClick={this.handleSubmit}>Submit</Button>
-                        <Button color="secondary" onClick={this.toggle}>Cancel</Button>
-                    </ModalFooter>
-                </Modal>
-            </div>
-        )
-    }
+    return (
+    <div>
+      <BootstrapTable 
+            data={ this.state.data }
+            keyField="id"
+            pagination={ true } 
+            options={ options }   
+            search
+            searchPlaceholder='What are u looking for..'
+            selectRow={ selectRow }
+            cellEdit={ cellEdit }
+            height='272'
+            expandComponent={ this.expandComponent }
+            exportCSV
+            csvFileName="Income_table.csv"
+            > 
+           {tableBody}
+      </BootstrapTable>
+      
+      <Row>
+        &nbsp;&nbsp;&nbsp;
+        <ModalWithForm buttonLabel={modalButtonLabel} type={modalType} category={category} handleNew={this.insertData2}/>&nbsp;
+        <Button color="warning" onClick={ () => (this.handleEditButtonClick2())}>Edit</Button>
+      </Row>
+      
+      
+      
+    </div>
+    );
+  }
 }
