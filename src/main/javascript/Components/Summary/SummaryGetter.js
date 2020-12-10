@@ -93,7 +93,7 @@ function createRows(resposne) {
       {
         let detail = createDetails(
           i,
-          new Date(resposne.entity.expenses.history[expansesIndex].Date).toLocaleString(),
+          new Date(resposne.entity.expenses.history[expansesIndex].Date),
           resposne.entity.expenses.history[expansesIndex].Category,
           resposne.entity.expenses.history[expansesIndex].Name,
           resposne.entity.expenses.history[expansesIndex].Amount
@@ -105,7 +105,7 @@ function createRows(resposne) {
       {
         let detail = createDetails(
           i+resposne.entity.expenses.data.length,
-          new Date(resposne.entity.incomes.history[incomesIndex].Date).toLocaleString(),
+          new Date(resposne.entity.incomes.history[incomesIndex].Date),
           resposne.entity.incomes.history[incomesIndex].Category,
           resposne.entity.incomes.history[incomesIndex].Name,
           resposne.entity.incomes.history[incomesIndex].Amount
@@ -114,7 +114,7 @@ function createRows(resposne) {
         incomesIndex++;
       }
       rows.push(createData(i,
-        new Date(resposne.entity.expenses.labels[i]).toDateString(),
+        new Date(resposne.entity.expenses.labels[i]),
         resposne.entity.expenses.data[i],
         resposne.entity.incomes.data[i],
         resposne.entity.BalanceData.data[i],
@@ -129,7 +129,8 @@ function createRows(resposne) {
         <div>
             <Grid container spacing={4}>
                 <Grid item xs={12}>
-                    {state === undefined ? <h1>Loading...</h1> : <Charts categoryData={state.CategoryData} balanceData = {state.BalanceData} monthChartData={state.expenses}/> }
+                    {state === undefined ? <h1>Loading...</h1> : <Charts IncomesCategoryData={state.IncomesCategoryData} categoryData={state.CategoryData} 
+                    balanceData = {state.BalanceData} monthlyExpenses={state.expenses} monthlyIncomes={state.incomes}/> } 
                 </Grid>
                 <Grid item xs={12}>
                         {rows === undefined ? <h1>Loading...</h1> : <HistoryTable details={true} rows={rows}/> }

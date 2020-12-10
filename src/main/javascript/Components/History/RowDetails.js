@@ -37,7 +37,7 @@ export default function Row(props){
         />
         </TableCell>
         <TableCell component="th" id={labelId} scope="row" padding="none" onClick={(event) => setOpen(!open)}>
-        {row.date}
+        {row.date.toDateString()}
         </TableCell>
         <TableCell align="right" onClick={(event) => setOpen(!open)}>{row.expenses}</TableCell>
         <TableCell align="right" onClick={(event) => setOpen(!open)}>{row.income}</TableCell>
@@ -64,7 +64,7 @@ export default function Row(props){
               {row.details.map((details) => (
                   <TableRow key={details.id}>
                   <TableCell component="th" scope="row">
-                      {details.date}
+                      {details.date.toLocaleString()}
                   </TableCell>
                   <TableCell>{details.name}</TableCell>
                   <TableCell align="right">{details.type}</TableCell>

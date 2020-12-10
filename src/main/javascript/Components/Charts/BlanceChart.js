@@ -31,7 +31,7 @@ class BalanceChart extends Component {
             },
             chart: {
               type: 'bar',
-              height: 350
+              height: 450
             },
             plotOptions: {
               bar: {
@@ -83,7 +83,7 @@ class BalanceChart extends Component {
         return (
             <div className="ApexChart">
             <ApexChart
-                  height="350"
+                  height="450"
                   series={this.state.series}
                   options={this.state.options}
                   type="bar"

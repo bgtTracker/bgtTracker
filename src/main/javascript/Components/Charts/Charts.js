@@ -117,7 +117,7 @@ function a11yProps(index) {
                                             <CategoryPie labels={props.categoryData.labels} data={props.categoryData.data} title={"Spendings per category"}/>
                                         </TabPanel>
                                         <TabPanel value={valueCategories} index={1} dir={theme.direction}>
-                                            Second Chart
+                                            <CategoryPie labels={props.IncomesCategoryData.labels} data={props.IncomesCategoryData.data} title={"Incomes per category"}/>
                                         </TabPanel>
                                     </SwipeableViews>
                                 </Paper>
@@ -148,10 +148,10 @@ function a11yProps(index) {
                                         onChangeIndex={handleChangeIndexChart}
                                         >
                                         <TabPanel value={valueChart} index={0} dir={theme.direction}>
-                                            <BarChart labels={props.monthChartData.labels} data={props.monthChartData.data} name={"Expenses"} labelsType={'datetime'} title={"Expenses"}/>
+                                            <BarChart labels={props.monthlyExpenses.labels} data={props.monthlyExpenses.data} name={"Expenses"} labelsType={'datetime'} title={"Expenses"}/>
                                         </TabPanel>
                                         <TabPanel value={valueChart} index={1} dir={theme.direction}>
-                                        Second Chart
+                                            <BarChart labels={props.monthlyIncomes.labels} data={props.monthlyIncomes.data} name={"Incomes"} labelsType={'datetime'} title={"Incomes"}/>
                                         </TabPanel>
                                     </SwipeableViews>
                                 </Paper>

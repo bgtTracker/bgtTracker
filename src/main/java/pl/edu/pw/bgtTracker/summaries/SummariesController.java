@@ -61,6 +61,7 @@ public class SummariesController {
         String[] categoriesIncome = {"Work", "Investments", "Allegor"};
         String[] categories = {"Food", "Home", "Car", "Commute", "Luxuries"};
         int[] categoryData = {0, 0, 0, 0, 0};
+        int[] incomeCategoriesData = {0, 0, 0};
 
         int [] daylyExpenses = new int[31]; 
         // = {1814, 500, 1605, 822, 299, 991, 1307, 53, 138, 881, 869, 1325, 936, 93, 1795, 1766, 1219, 1379, 313, 752, 867, 859, 448, 610, 990, 1739, 750, 470, 593, 446};
@@ -101,6 +102,7 @@ public class SummariesController {
                 cal.set(Calendar.DAY_OF_MONTH, i+1);
                 amount = ThreadLocalRandom.current().nextInt(300, 4000);
                 int incomeCatIndex = ThreadLocalRandom.current().nextInt(0, categoriesIncome.length);
+                incomeCategoriesData[incomeCatIndex] += amount;
                 incomes[i] = amount;
                 JSONObject ob = new JSONObject();
                 ob.put("Amount", amount);
@@ -124,6 +126,11 @@ public class SummariesController {
         category.put("data", categoryData);
         data.put("CategoryData", category);
 
+        JSONObject incomeCategory = new JSONObject();
+        incomeCategory.put("labels", categoriesIncome);
+        incomeCategory.put("data", incomeCategoriesData);
+        data.put("IncomesCategoryData", incomeCategory);
+
         JSONObject expenses = new JSONObject();
         expenses.put("labels", days);
         expenses.put("data", daylyExpenses);
@@ -131,7 +138,7 @@ public class SummariesController {
         data.put("expenses", expenses);
 
         JSONObject incomesJ = new JSONObject();
-        incomesJ.put("lables", days);
+        incomesJ.put("labels", days);
         incomesJ.put("data", incomes);
         incomesJ.put("history", incomeArray);
         data.put("incomes", incomesJ);

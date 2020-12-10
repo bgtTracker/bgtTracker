@@ -208,7 +208,7 @@ export default function MainPage() {
                             <Redirect to={`${path}/dashboard`}/>
                         </Route>
                         <Route exact path={`${path}/dashboard`} component={Dashboard}/>
-                        <Route exact path={`${path}/summary`} component={Summary}/>
+                        <Route exact path={`${path}/stats`} component={Summary}/>
                         <Route exact path={`${path}/history`} component={History}/>
                         <Route exact path={`${path}/settings`} component={Settings}/>
                         <Route exact path={`${path}/incomes`} component={Income}/>
