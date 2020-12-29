@@ -12,20 +12,18 @@ firebase.initializeApp({
 
 const messaging = firebase.messaging();
 
-self.addEventListener('push', async event => {
-	console.log("push event");
-	console.log(event);
-	// const allClients = await clients.matchAll({ includeUncontrolled: true });
-	// for (const client of allClients) {
-	// 	client.postMessage({
-	// 		msg: "almost no money to sepend",
-	// 		level: 'warning',
-	// 		title: 'Be carefull',
-	// 		action: 'showNotification'
-	// 	});
-	// }
+// self.addEventListener('push', async event => {
+//   const allClients = await clients.matchAll({ includeUncontrolled: true });
+//   for (const client of allClients) {
+//     client.postMessage({
+//       msg: "almost no money to sepend",
+//       level: 'warning',
+//       title: 'Be carefull',
+//       action: 'showNotification'
+//     });
+//   }
 	
-});
+// });
 
 messaging.setBackgroundMessageHandler(function(payload) {
   const notificationTitle = 'Background Title (client)';

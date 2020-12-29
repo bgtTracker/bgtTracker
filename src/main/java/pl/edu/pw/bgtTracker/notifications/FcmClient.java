@@ -44,7 +44,7 @@ public class FcmClient {
 
     Message message = Message.builder().putAllData(data).setTopic(topic)
         .setWebpushConfig(WebpushConfig.builder().putHeader("ttl", "300")
-            .setNotification(new WebpushNotification("Bgt tracker",
+            .setNotification(new WebpushNotification(data.get("title"),
                 data.get("msg"), "logo192.png"))
             .build())
         .build();

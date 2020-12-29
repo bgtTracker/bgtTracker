@@ -162,11 +162,8 @@ function drawerItems(classes, url) {
     );
 }
 
-async function SubscribeToUserTopic(user)
+async function InitFireBase()
 {
-    // !!!!!!!!
-    // to do replace with actuac user id
-    // !!!!!!!!
     const initializedFirebaseApp = firebase.initializeApp({
         apiKey: "AIzaSyCoy2KVfE3CotDEwJk5X5xbkA0HMa0O5L0",
         authDomain: "bgttracket.firebaseapp.com",
@@ -176,19 +173,27 @@ async function SubscribeToUserTopic(user)
         appId: "1:487395361382:web:9b492dcbfa3b77339923a7"
     });
 
+}
+
+
+async function SubscribeToUserTopic(user)
+{
+    // !!!!!!!!
+    // to do replace with actuac user id
+    // !!!!!!!!
+
     const messaging = firebase.messaging();
 
     try{
         const currentToken = await messaging.getToken({
             vapidKey: 'BAxFZLrrh8nZ_BmuUYpkYjL3s6plsYNWZjou86Fys3w1zfZThBjmR3Kv12D5nP8B2Wv8VKS_SGY0NF9rOkSXt4M',
         });
-        console.log("Token: " + currentToken);
-        //fetch('../api/pushsubscribe', { method: 'post', body: currentToken });
+        // console.log("Token: " + currentToken);
         clientJson({method: 'POST', path: '/api/pushsubscribe', params: {
             token: currentToken,
             topic: user
             }}).then((response) => {
-                console.log("push subsciption")
+                console.log("push subsciption");
                 console.log(response);
             })
     }catch (e) {
@@ -204,17 +209,26 @@ export default function MainPage() {
     const classes = useStyles();
     const [drawerOpen, setDrawerOpen] = React.useState(true);
     const {path, url} = useRouteMatch();
+    const [fireBaseInit, setFireBaseInit] = React.useState(false);
+    const [userSubscribed, setUserSubscribed] = React.useState(false);
 
-    SubscribeToUserTopic(1);
+    if (!fireBaseInit)
+    {
+        InitFireBase();
+        setFireBaseInit(true);
+    }
+    if(!userSubscribed)
+    {
+        SubscribeToUserTopic(1);
+        setUserSubscribed(true);
+    }
     // !!!!!!!!
-    // to do replace with actuac user id
+    // to do replace with user id
     // !!!!!!!!
     let notificationSystem = React.createRef();
 
     const addNotification = data => {
       const notification = notificationSystem.current;
-      console.log("WTF");
-      console.log(data);
       notification.addNotification({
         message: data.msg,
         level: data.level,
@@ -223,11 +237,18 @@ export default function MainPage() {
     };
     
     navigator.serviceWorker.addEventListener('message', event => {
-        console.log("added ")
-        console.log(event);
-        addNotification(event.data.firebaseMessaging.payload.data)
-        // if (event.data.action === 'showNotification')
-        //     addNotification(event.data.firebaseMessaging)
+        if (event.data.firebaseMessaging.payload.data.action === 'showNotification')
+        {
+            try
+            {
+                addNotification(event.data.firebaseMessaging.payload.data);
+            }
+            catch(e)
+            {
+               //no idea why it works so i don't bother rn
+               //of course i'm sorry for this horrible thing but liblary has forced my hand 
+            }
+        }
         // else
         //     console.log(event);
     });
