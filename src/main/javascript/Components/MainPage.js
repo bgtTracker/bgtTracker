@@ -10,6 +10,7 @@ import {
     Divider,
     Drawer,
     IconButton,
+    Button,
     List,
     ListItem,
     ListItemIcon,
@@ -44,6 +45,9 @@ import firebase from 'firebase/app';
 import 'firebase/messaging';
 import clientJson from '../clientJson.js';
 import NotificationSystem from 'react-notification-system';
+import Menu from '@material-ui/core/Menu';
+import MenuItem from '@material-ui/core/MenuItem';
+import Fade from '@material-ui/core/Fade';
 
 const drawerWidth = 240;
 
@@ -172,7 +176,6 @@ async function InitFireBase()
         messagingSenderId: "487395361382",
         appId: "1:487395361382:web:9b492dcbfa3b77339923a7"
     });
-
 }
 
 
@@ -211,6 +214,8 @@ export default function MainPage() {
     const {path, url} = useRouteMatch();
     const [fireBaseInit, setFireBaseInit] = React.useState(false);
     const [userSubscribed, setUserSubscribed] = React.useState(false);
+    const [notifications, setNotifications] = React.useState([]);
+    const [toDeleteNot, setToDeleteNot] = React.useState([]);
 
     if (!fireBaseInit)
     {
@@ -225,15 +230,38 @@ export default function MainPage() {
     // !!!!!!!!
     // to do replace with user id
     // !!!!!!!!
+
+
+    function removeNotication(notificationId)
+    {
+        console.log("not pog");
+        console.log(notificationId);
+        console.log(notifications);
+        setToDeleteNot(toDeleteNot => [...toDeleteNot, notificationId]);
+    }
+
     let notificationSystem = React.createRef();
 
     const addNotification = data => {
       const notification = notificationSystem.current;
-      notification.addNotification({
+      let not = {
+        id: data.id,
         message: data.msg,
         level: data.level,
-        title: data.title
-      });
+        title: data.title,
+        action: {
+        label: 'Got it!',
+        callback: function() {
+            removeNotication(data.id);
+        }
+        }
+      };
+      notification.addNotification(not);
+      console.log(notifications);
+      console.log(toDeleteNot);
+    console.log('adding');
+    setNotifications(notifications => [...notifications, not]);
+      
     };
     
     navigator.serviceWorker.addEventListener('message', event => {
@@ -249,8 +277,6 @@ export default function MainPage() {
                //of course i'm sorry for this horrible thing but liblary has forced my hand 
             }
         }
-        // else
-        //     console.log(event);
     });
 
     return (
@@ -272,7 +298,9 @@ export default function MainPage() {
                     </Typography>
                     <IconButton color="inherit">
                         <Badge badgeContent={0} invisible={true}>
-                            <NotificationsOutlinedIcon/>
+                            {/* <IconButton color="primary" aria-label="upload picture" component="span"> */}
+                                <NotificationsOutlinedIcon/>
+                            {/* </IconButton> */}
                         </Badge>
                     </IconButton>
                 </Toolbar>

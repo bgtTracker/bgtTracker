@@ -20,14 +20,15 @@ public class NotificationsService {
         this.fcmClient = fcmClient;
     }
 
-    @Scheduled(fixedDelay = 2000, initialDelay = 2000)
+    @Scheduled(fixedDelay = 10000, initialDelay = 2000)
     public void sendTestMsg() throws InterruptedException, ExecutionException 
     {
         BgtTrackerApplication.logger.info("Sending test msg");
         sendNotifiaction("1", "KOCHAM PW ja dupia2", "warning", "warning");
-        sendNotifiaction("1", "KOCHAM PW ja dupia2", "info", "info");
-        sendNotifiaction("1", "KOCHAM PW ja dupia2", "success", "success");
-        sendNotifiaction("1", "KOCHAM PW ja dupia2", "error", "error");
+        // sendNotifiaction("1", "KOCHAM PW ja dupia2", "info", "info");
+        // sendNotifiaction("1", "KOCHAM PW ja dupia2", "success", "success");
+        // sendNotifiaction("1", "KOCHAM PW ja dupia2", "error", "error");
+        
     }
 
     public void sendNotifiaction(String topic, String msg, String level, String title) throws InterruptedException, ExecutionException 
