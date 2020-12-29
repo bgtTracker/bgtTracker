@@ -45,12 +45,12 @@ public class FcmClient {
     Message message = Message.builder().putAllData(data).setTopic(topic)
         .setWebpushConfig(WebpushConfig.builder().putHeader("ttl", "300")
             .setNotification(new WebpushNotification("Bgt tracker",
-                data.get("msg"), "mail2.png"))
+                data.get("msg"), "logo192.png"))
             .build())
         .build();
 
     String response = FirebaseMessaging.getInstance().sendAsync(message).get();
-    System.out.println("Sent message: " + response);
+    BgtTrackerApplication.logger.info("Sent message: " + response);
   }
 
   public void subscribe(String topic, String clientToken) {

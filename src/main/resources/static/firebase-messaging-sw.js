@@ -13,43 +13,19 @@ firebase.initializeApp({
 const messaging = firebase.messaging();
 
 self.addEventListener('push', async event => {
-	// const db = await getDb();
-	// const tx = this.db.transaction('history', 'readwrite');
-	// const store = tx.objectStore('history');
-
-	// const data = event.data.json().data;
-	// data.id = parseInt(data.id);
-	// store.put(data);
-
-	// tx.oncomplete = async e => {
-	// 	const allClients = await clients.matchAll({ includeUncontrolled: true });
-	// 	for (const client of allClients) {
-	// 		client.postMessage('newData');
-	// 	}
-	// };
 	console.log("push event");
+	console.log(event);
+	// const allClients = await clients.matchAll({ includeUncontrolled: true });
+	// for (const client of allClients) {
+	// 	client.postMessage({
+	// 		msg: "almost no money to sepend",
+	// 		level: 'warning',
+	// 		title: 'Be carefull',
+	// 		action: 'showNotification'
+	// 	});
+	// }
+	
 });
-
-async function getDb() {
-	if (this.db) {
-		return Promise.resolve(this.db);
-	}
-
-	return new Promise(resolve => {
-		const openRequest = indexedDB.open("Start", 1);
-
-		openRequest.onupgradeneeded = event => {
-			const db = event.target.result;
-			db.createObjectStore('history', { keyPath: 'id' });
-		};
-
-		openRequest.onsuccess = event => {
-			this.db = event.target.result;
-			resolve(this.db);
-		}
-	});
-}
-
 
 messaging.setBackgroundMessageHandler(function(payload) {
   const notificationTitle = 'Background Title (client)';

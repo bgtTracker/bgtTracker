@@ -3,6 +3,7 @@ package pl.edu.pw.bgtTracker.notifications;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import pl.edu.pw.bgtTracker.BgtTrackerApplication;
@@ -19,10 +20,12 @@ public class RegistryController {
     this.fcmClient = fcmClient;
   }
 
-  @PostMapping("/register")
-  public void register(@RequestBody String token) {
+  @PostMapping("/api/pushsubscribe")
+  public void register(@RequestParam(value = "token") String token,
+    @RequestParam(value = "topic") String topic) 
+  {
     System.out.println("TOKEN: " + token);
-    this.fcmClient.subscribe("test", token);
+    this.fcmClient.subscribe("test2", token);
     return;
   }
 

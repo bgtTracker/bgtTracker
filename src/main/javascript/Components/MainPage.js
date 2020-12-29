@@ -40,6 +40,10 @@ import Settings from "./Settings/Settings.js";
 import Income from "./Tables/Income/Income";
 import Expense from "./Tables/Expense/Expense";
 import Bill from "./Tables/Expense/Expense";
+import firebase from 'firebase/app';
+import 'firebase/messaging';
+import clientJson from '../clientJson.js';
+import NotificationSystem from 'react-notification-system';
 
 const drawerWidth = 240;
 
@@ -158,10 +162,75 @@ function drawerItems(classes, url) {
     );
 }
 
+async function SubscribeToUserTopic(user)
+{
+    // !!!!!!!!
+    // to do replace with actuac user id
+    // !!!!!!!!
+    const initializedFirebaseApp = firebase.initializeApp({
+        apiKey: "AIzaSyCoy2KVfE3CotDEwJk5X5xbkA0HMa0O5L0",
+        authDomain: "bgttracket.firebaseapp.com",
+        projectId: "bgttracket",
+        storageBucket: "bgttracket.appspot.com",
+        messagingSenderId: "487395361382",
+        appId: "1:487395361382:web:9b492dcbfa3b77339923a7"
+    });
+
+    const messaging = firebase.messaging();
+
+    try{
+        const currentToken = await messaging.getToken({
+            vapidKey: 'BAxFZLrrh8nZ_BmuUYpkYjL3s6plsYNWZjou86Fys3w1zfZThBjmR3Kv12D5nP8B2Wv8VKS_SGY0NF9rOkSXt4M',
+        });
+        console.log("Token: " + currentToken);
+        //fetch('../api/pushsubscribe', { method: 'post', body: currentToken });
+        clientJson({method: 'POST', path: '/api/pushsubscribe', params: {
+            token: currentToken,
+            topic: user
+            }}).then((response) => {
+                console.log("push subsciption")
+                console.log(response);
+            })
+    }catch (e) {
+        console.log('somthing went wrong', e);
+        return;
+
+    }
+
+}
+
+
 export default function MainPage() {
     const classes = useStyles();
     const [drawerOpen, setDrawerOpen] = React.useState(true);
     const {path, url} = useRouteMatch();
+
+    SubscribeToUserTopic(1);
+    // !!!!!!!!
+    // to do replace with actuac user id
+    // !!!!!!!!
+    let notificationSystem = React.createRef();
+
+    const addNotification = data => {
+      const notification = notificationSystem.current;
+      console.log("WTF");
+      console.log(data);
+      notification.addNotification({
+        message: data.msg,
+        level: data.level,
+        title: data.title
+      });
+    };
+    
+    navigator.serviceWorker.addEventListener('message', event => {
+        console.log("added ")
+        console.log(event);
+        addNotification(event.data.firebaseMessaging.payload.data)
+        // if (event.data.action === 'showNotification')
+        //     addNotification(event.data.firebaseMessaging)
+        // else
+        //     console.log(event);
+    });
 
     return (
         <div className={classes.root}>
@@ -217,6 +286,7 @@ export default function MainPage() {
                     </Switch>
                 </Container>
             </main>
+            <NotificationSystem ref={notificationSystem} />
         </div>
     );
 }
