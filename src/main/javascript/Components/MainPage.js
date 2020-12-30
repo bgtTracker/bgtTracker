@@ -207,15 +207,12 @@ async function SubscribeToUserTopic(user)
 
 }
 
-
 export default function MainPage() {
     const classes = useStyles();
     const [drawerOpen, setDrawerOpen] = React.useState(true);
     const {path, url} = useRouteMatch();
     const [fireBaseInit, setFireBaseInit] = React.useState(false);
     const [userSubscribed, setUserSubscribed] = React.useState(false);
-    const [notifications, setNotifications] = React.useState([]);
-    const [toDeleteNot, setToDeleteNot] = React.useState([]);
 
     if (!fireBaseInit)
     {
@@ -231,13 +228,9 @@ export default function MainPage() {
     // to do replace with user id
     // !!!!!!!!
 
-
     function removeNotication(notificationId)
     {
-        console.log("not pog");
-        console.log(notificationId);
-        console.log(notifications);
-        setToDeleteNot(toDeleteNot => [...toDeleteNot, notificationId]);
+    
     }
 
     let notificationSystem = React.createRef();
@@ -257,11 +250,6 @@ export default function MainPage() {
         }
       };
       notification.addNotification(not);
-      console.log(notifications);
-      console.log(toDeleteNot);
-    console.log('adding');
-    setNotifications(notifications => [...notifications, not]);
-      
     };
     
     navigator.serviceWorker.addEventListener('message', event => {
@@ -278,6 +266,9 @@ export default function MainPage() {
             }
         }
     });
+
+
+
 
     return (
         <div className={classes.root}>

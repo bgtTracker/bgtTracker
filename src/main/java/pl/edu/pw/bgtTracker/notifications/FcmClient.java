@@ -48,6 +48,10 @@ public class FcmClient {
                 data.get("msg"), "logo192.png"))
             .build())
         .build();
+    
+    // Message message = Message.builder().putAllData(data).setTopic(topic)
+    // .setWebpushConfig(WebpushConfig.builder().putHeader("ttl", "300").build())
+    // .build();
 
     String response = FirebaseMessaging.getInstance().sendAsync(message).get();
     BgtTrackerApplication.logger.info("Sent message: " + response);

@@ -26,9 +26,9 @@ const messaging = firebase.messaging();
 // });
 
 messaging.setBackgroundMessageHandler(function(payload) {
-  const notificationTitle = 'Background Title (client)';
+  const notificationTitle = payload.data.title;
   const notificationOptions = {
-    body: 'Background Body (client)',
+    body: payload.data.msg,
   };
 
   return self.registration.showNotification(notificationTitle,

@@ -20,7 +20,7 @@ public class NotificationsService {
         this.fcmClient = fcmClient;
     }
 
-    @Scheduled(fixedDelay = 10000, initialDelay = 2000)
+    @Scheduled(fixedDelay = 1000, initialDelay = 2000)
     public void sendTestMsg() throws InterruptedException, ExecutionException 
     {
         BgtTrackerApplication.logger.info("Sending test msg");
