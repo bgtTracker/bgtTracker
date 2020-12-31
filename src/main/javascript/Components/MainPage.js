@@ -45,6 +45,7 @@ import firebase from 'firebase/app';
 import 'firebase/messaging';
 import clientJson from '../clientJson.js';
 import NotificationSystem from 'react-notification-system';
+import NotificationMenu from "./Notifications/NotificationMenu.js";
 import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
 import Fade from '@material-ui/core/Fade';
@@ -207,12 +208,41 @@ async function SubscribeToUserTopic(user)
 
 }
 
+const notifications2 = [
+    {
+      id: 1,
+      title: 'Error',
+      level: 'error',
+      msg: 'aleres',
+      action: 'nwm',
+      open: true,
+    },
+    {
+      id: 2,
+      title: 'warning',
+      level: 'warning',
+      msg: 'aleres',
+      action: 'nwm',
+      open: true,
+    },
+    {
+      id: 3,
+      title: 'success',
+      level: 'success',
+      msg: 'aleres',
+      open: true,
+    },
+  ]
+
+
 export default function MainPage() {
     const classes = useStyles();
     const [drawerOpen, setDrawerOpen] = React.useState(true);
     const {path, url} = useRouteMatch();
     const [fireBaseInit, setFireBaseInit] = React.useState(false);
     const [userSubscribed, setUserSubscribed] = React.useState(false);
+    const [menuAnchor, setMenuAnchor] = React.useState(null);
+    const [notifications, setNotfications] = React.useState();
 
     if (!fireBaseInit)
     {
@@ -268,7 +298,29 @@ export default function MainPage() {
     });
 
 
+    const handleOpenNotificationMenu = (event) =>
+    {
+        setMenuAnchor(event.currentTarget);
+    }
 
+    const handleCloseMotifications = () =>
+    {
+        console.log("menu close");
+        setMenuAnchor(null);
+    }
+
+    React.useEffect(() => {
+        clientJson({method: 'GET', path: '/api/getNotifications/', params: {
+          user: "1"
+      }}).then((response) => {
+          let nots = response.entity.notifications;
+          for(var n of nots)
+          {
+            n.open = true;
+          }
+          setNotfications(nots);
+      })
+      }, []);
 
     return (
         <div className={classes.root}>
@@ -288,10 +340,8 @@ export default function MainPage() {
                         bgtTracker
                     </Typography>
                     <IconButton color="inherit">
-                        <Badge badgeContent={0} invisible={true}>
-                            {/* <IconButton color="primary" aria-label="upload picture" component="span"> */}
-                                <NotificationsOutlinedIcon/>
-                            {/* </IconButton> */}
+                        <Badge badgeContent={1} invisible={true}>
+                            {notifications === undefined ? <NotificationsOutlinedIcon/> : <NotificationMenu notifications={notifications}/> }
                         </Badge>
                     </IconButton>
                 </Toolbar>

@@ -4,6 +4,10 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
+import com.google.gson.JsonArray;
+
+import net.minidev.json.JSONArray;
+import net.minidev.json.JSONObject;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
@@ -20,14 +24,14 @@ public class NotificationsService {
         this.fcmClient = fcmClient;
     }
 
-    @Scheduled(fixedDelay = 1000, initialDelay = 2000)
+    @Scheduled(fixedDelay = 10000, initialDelay = 2000)
     public void sendTestMsg() throws InterruptedException, ExecutionException 
     {
         BgtTrackerApplication.logger.info("Sending test msg");
         sendNotifiaction("1", "KOCHAM PW ja dupia2", "warning", "warning");
-        // sendNotifiaction("1", "KOCHAM PW ja dupia2", "info", "info");
-        // sendNotifiaction("1", "KOCHAM PW ja dupia2", "success", "success");
-        // sendNotifiaction("1", "KOCHAM PW ja dupia2", "error", "error");
+        sendNotifiaction("1", "KOCHAM PW ja dupia2", "info", "info");
+        sendNotifiaction("1", "KOCHAM PW ja dupia2", "success", "success");
+        sendNotifiaction("1", "KOCHAM PW ja dupia2", "error", "error");
         
     }
 
@@ -62,6 +66,36 @@ public class NotificationsService {
     public void sendError(int userID, String msg, String title) throws InterruptedException, ExecutionException 
     {
         this.sendNotifiaction(Integer.toString(userID) , msg, "error", title);
+    }
+
+    public JSONObject getNotification(int user)
+    {
+        JSONObject data = new JSONObject();
+        JSONObject not1 =  new JSONObject();
+        not1.put("id", 1);
+        not1.put("title", "Error");
+        not1.put("level", "error");        
+        not1.put("msg", "alert");
+        JSONObject not2 =  new JSONObject();
+        not2.put("id", 3);
+        not2.put("title", "warning");
+        not2.put("level", "warning");        
+        not2.put("msg", "alert");
+        JSONObject not3 =  new JSONObject();
+        not3.put("id", 3);
+        not3.put("title", "success");
+        not3.put("level", "success");        
+        not3.put("msg", "alert");
+
+        JSONArray arr = new JSONArray();
+
+        arr.add(not1);
+        arr.add(not2);
+        arr.add(not3);
+
+        data.put("notifications", arr);
+        
+        return data;
     }
 
 }
