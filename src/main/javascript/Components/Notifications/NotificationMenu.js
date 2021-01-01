@@ -46,6 +46,7 @@ export default function NotificationMenu(props) {
     }
 
     const handleDissmisal = (element) => {
+      props.removeNotication(element.id);
       element.open = false;
       setDissmed(dissmed =>[ ...dissmed, element.id]);
     }
@@ -57,40 +58,46 @@ export default function NotificationMenu(props) {
             <NotificationsOutlined/>
           </Badge>
         </IconButton>
-        <Menu
-          id="fade-menu"
-          anchorEl={anchorEl}
-          keepMounted
-          open={open}
-          onClose={handleClose}
-          TransitionComponent={Fade}
-        >
-          {props.notifications.map((element) => (
-          <Collapse in={checkOpen(element)}>
-              <MenuItem>
-              <Alert severity={element.level} action={
-                    <Button color="inherit" size="small" onClick = {() => handleDissmisal(element)}>
-                      Got it!
-                    </Button>}>
-                      <AlertTitle>{element.title}</AlertTitle>
-                       {element.msg}
-              </Alert>
+        {props.notifications.length === 0 ?
+        <div>
+          <Menu
+            id="fade-menu"
+            anchorEl={anchorEl}
+            keepMounted
+            open={open}
+            onClose={handleClose}
+            TransitionComponent={Fade}
+          >
+            <MenuItem>
+                <h3>Nothings new</h3>
             </MenuItem>
-            </Collapse>
-          ))}
-          {/* <MenuItem>
-            <Alert severity="error" action={
-                  <Button color="inherit" size="small">
-                    Got It !
-                  </Button>}>
-                    <AlertTitle>Error</AlertTitle>
-                    This is an error alert — check it out!
-            </Alert>
-          </MenuItem>
-          <MenuItem>
-            <Alert severity="warning">This is a warning alert — check it out!</Alert>
-          </MenuItem> */}
-        </Menu>
+          </Menu>
+        </div>
+        :
+        <div>
+          <Menu
+            id="fade-menu"
+            anchorEl={anchorEl}
+            keepMounted
+            open={open}
+            onClose={handleClose}
+            TransitionComponent={Fade}
+          >
+            {props.notifications.map((element) => (
+            <Collapse in={checkOpen(element)}>
+                <MenuItem>
+                <Alert severity={element.level} action={
+                      <Button color="inherit" size="small" onClick = {() => handleDissmisal(element)}>
+                        Got it!
+                      </Button>}>
+                        <AlertTitle>{element.title}</AlertTitle>
+                        {element.msg}
+                </Alert>
+              </MenuItem>
+              </Collapse>
+            ))}
+          </Menu>
+        </div>}
       </div>
     );
   }

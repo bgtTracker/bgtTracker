@@ -28,20 +28,20 @@ public class NotificationsService {
 
         this.data = new JSONObject();
         JSONObject not1 =  new JSONObject();
-        not1.put("id", 1);
+        not1.put("id", 0);
         not1.put("title", "Error");
         not1.put("level", "error");        
         not1.put("msg", "alert");
         not1.put("read", false);
         JSONObject not2 =  new JSONObject();
-        not2.put("id", 2);
+        not2.put("id", 1);
         not2.put("title", "warning");
         not2.put("level", "warning");        
         not2.put("msg", "alert");
         not2.put("read", false);
 
         JSONObject not3 =  new JSONObject();
-        not3.put("id", 3);
+        not3.put("id", 2);
         not3.put("title", "success");
         not3.put("level", "success");        
         not3.put("msg", "alert");
@@ -56,28 +56,28 @@ public class NotificationsService {
         this.data.put("notifications", arr);
     }
 
-    @Scheduled(fixedDelay = 10000, initialDelay = 2000)
+    @Scheduled(fixedDelay = 40000, initialDelay = 4000)
     public void sendTestMsg() throws InterruptedException, ExecutionException 
     {
         BgtTrackerApplication.logger.info("Sending test msg");
         sendNotifiaction("1", "KOCHAM PW ja dupia2", "warning", "warning");
-        sendNotifiaction("1", "KOCHAM PW ja dupia2", "info", "info");
-        sendNotifiaction("1", "KOCHAM PW ja dupia2", "success", "success");
-        sendNotifiaction("1", "KOCHAM PW ja dupia2", "error", "error");
+        // sendNotifiaction("1", "KOCHAM PW ja dupia2", "info", "info");
+        // sendNotifiaction("1", "KOCHAM PW ja dupia2", "success", "success");
+        // sendNotifiaction("1", "KOCHAM PW ja dupia2", "error", "error");
         
     }
 
     public void sendNotifiaction(String topic, String msg, String level, String title) throws InterruptedException, ExecutionException 
     {
-        Map<String, String> data = new HashMap<>();
-        data.put("id", seq.toString());
-        data.put("msg", msg);
-        data.put("title", title);
-        data.put("level", level);
-        data.put("action", "showNotification");
+        Map<String, String> notification = new HashMap<>();
+        notification.put("id", seq.toString());
+        notification.put("msg", msg);
+        notification.put("title", title);
+        notification.put("level", level);
+        notification.put("action", "showNotification");
         seq++;
         BgtTrackerApplication.logger.info("Sending push notification...");
-        this.fcmClient.send(data, topic);
+        this.fcmClient.send(notification, topic);
     }
 
     public void sendWaring(int userID, String msg, String title) throws InterruptedException, ExecutionException 

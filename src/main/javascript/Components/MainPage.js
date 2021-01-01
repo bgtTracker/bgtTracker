@@ -239,9 +239,8 @@ export default function MainPage() {
     const {path, url} = useRouteMatch();
     const [fireBaseInit, setFireBaseInit] = React.useState(false);
     const [userSubscribed, setUserSubscribed] = React.useState(false);
-    const [menuAnchor, setMenuAnchor] = React.useState(null);
     const [notifications, setNotfications] = React.useState();
-    const [loading, setLoading] = React.useState(true); //used to cheange state of things and as depedency for useeffect
+    const [lodaing, setLodaing] = React.useState(false);
 
     if (!fireBaseInit)
     {
@@ -250,7 +249,7 @@ export default function MainPage() {
     }
     if(!userSubscribed)
     {
-        SubscribeToUserTopic(1);
+        SubscribeToUserTopic(1); //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
         setUserSubscribed(true);
     }
     // !!!!!!!!
@@ -282,7 +281,7 @@ export default function MainPage() {
             removeNotication(data.id);
         }
         },
-        onRemove: {
+        onRemove: () => {
             reloadNotifications();
         }
       };
@@ -305,8 +304,8 @@ export default function MainPage() {
     });
 
     const reloadNotifications = () => {
-        setLoading(!loading);
         setNotfications(undefined);
+        setLodaing(!lodaing);
         //yes it is not good
         //yes i have no enefry and time to think of better 
         //it works so it stays for no 
@@ -323,7 +322,7 @@ export default function MainPage() {
           } 
           setNotfications(nots);
       })
-      }, [loading]);
+      }, [lodaing]);
 
     return (
         <div className={classes.root}>
@@ -342,7 +341,7 @@ export default function MainPage() {
                     <Typography variant="h6" color="inherit" noWrap className={classes.title}>
                         bgtTracker
                     </Typography>
-                        {notifications === undefined ? <Skeleton animation="wave" variant="circle" width={40} height={40} /> : <NotificationMenu reloadnotifications={reloadNotifications} notifications={notifications}/> }
+                        {notifications === undefined ? <Skeleton animation="wave" variant="circle" width={40} height={40} /> : <NotificationMenu removeNotication={removeNotication} reloadnotifications={reloadNotifications} notifications={notifications}/> }
                 </Toolbar>
             </AppBar>
             <Drawer

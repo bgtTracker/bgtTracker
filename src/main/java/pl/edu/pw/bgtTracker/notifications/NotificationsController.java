@@ -44,6 +44,8 @@ public class NotificationsController {
   public void alertRead(@RequestParam(value="id") String id)
   {
     BgtTrackerApplication.logger.info("Notifications has been red " + id);
+    notificationsService.readNotifications(Integer.parseInt(id));
+    //to do handle response correntyl
     return;
   }
 }
