@@ -46,9 +46,7 @@ import 'firebase/messaging';
 import clientJson from '../clientJson.js';
 import NotificationSystem from 'react-notification-system';
 import NotificationMenu from "./Notifications/NotificationMenu.js";
-import Menu from '@material-ui/core/Menu';
-import MenuItem from '@material-ui/core/MenuItem';
-import Fade from '@material-ui/core/Fade';
+import {Skeleton} from '@material-ui/lab';
 
 const drawerWidth = 240;
 
@@ -243,6 +241,7 @@ export default function MainPage() {
     const [userSubscribed, setUserSubscribed] = React.useState(false);
     const [menuAnchor, setMenuAnchor] = React.useState(null);
     const [notifications, setNotfications] = React.useState();
+    const [loading, setLoading] = React.useState(true); //used to cheange state of things and as depedency for useeffect
 
     if (!fireBaseInit)
     {
@@ -260,7 +259,12 @@ export default function MainPage() {
 
     function removeNotication(notificationId)
     {
-    
+        clientJson({method: 'POST', path: "/api/notificationsread", params: {
+            id: notificationId
+            }}).then((response) => {
+                console.log("notification Read");
+                console.log(response);
+            })
     }
 
     let notificationSystem = React.createRef();
@@ -277,6 +281,9 @@ export default function MainPage() {
         callback: function() {
             removeNotication(data.id);
         }
+        },
+        onRemove: {
+            reloadNotifications();
         }
       };
       notification.addNotification(not);
@@ -297,16 +304,12 @@ export default function MainPage() {
         }
     });
 
-
-    const handleOpenNotificationMenu = (event) =>
-    {
-        setMenuAnchor(event.currentTarget);
-    }
-
-    const handleCloseMotifications = () =>
-    {
-        console.log("menu close");
-        setMenuAnchor(null);
+    const reloadNotifications = () => {
+        setLoading(!loading);
+        setNotfications(undefined);
+        //yes it is not good
+        //yes i have no enefry and time to think of better 
+        //it works so it stays for no 
     }
 
     React.useEffect(() => {
@@ -317,10 +320,10 @@ export default function MainPage() {
           for(var n of nots)
           {
             n.open = true;
-          }
+          } 
           setNotfications(nots);
       })
-      }, []);
+      }, [loading]);
 
     return (
         <div className={classes.root}>
@@ -339,11 +342,7 @@ export default function MainPage() {
                     <Typography variant="h6" color="inherit" noWrap className={classes.title}>
                         bgtTracker
                     </Typography>
-                    <IconButton color="inherit">
-                        <Badge badgeContent={1} invisible={true}>
-                            {notifications === undefined ? <NotificationsOutlinedIcon/> : <NotificationMenu notifications={notifications}/> }
-                        </Badge>
-                    </IconButton>
+                        {notifications === undefined ? <Skeleton animation="wave" variant="circle" width={40} height={40} /> : <NotificationMenu reloadnotifications={reloadNotifications} notifications={notifications}/> }
                 </Toolbar>
             </AppBar>
             <Drawer

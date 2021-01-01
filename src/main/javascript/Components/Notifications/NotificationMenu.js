@@ -8,6 +8,7 @@ import  NotificationsOutlined from '@material-ui/icons/NotificationsOutlined';
 import { makeStyles, createMuiTheme } from '@material-ui/core/styles';
 import { Alert, AlertTitle } from '@material-ui/lab';
 import Collapse from '@material-ui/core/Collapse';
+import Badge from '@material-ui/core/Badge';
 import { element } from 'prop-types';
 
 const theme = createMuiTheme();
@@ -32,6 +33,7 @@ export default function NotificationMenu(props) {
     };
   
     const handleClose = () => {
+      props.reloadnotifications();
       setAnchorEl(null);
     };
     
@@ -51,7 +53,9 @@ export default function NotificationMenu(props) {
     return (
       <div>
         <IconButton aria-controls="fade-menu" aria-haspopup="true" onClick={handleClick}>
-          <NotificationsOutlined/>
+          <Badge badgeContent={props.notifications.length} color="secondary" >
+            <NotificationsOutlined/>
+          </Badge>
         </IconButton>
         <Menu
           id="fade-menu"

@@ -39,4 +39,11 @@ public class NotificationsController {
     BgtTrackerApplication.logger.info("Notifications requested for " + user);
     return notificationsService.getNotification(Integer.parseInt(user));
   }
+
+  @PostMapping("/api/notificationsread")
+  public void alertRead(@RequestParam(value="id") String id)
+  {
+    BgtTrackerApplication.logger.info("Notifications has been red " + id);
+    return;
+  }
 }

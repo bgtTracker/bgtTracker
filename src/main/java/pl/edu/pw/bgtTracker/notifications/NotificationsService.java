@@ -4,7 +4,9 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
+import com.google.api.client.json.Json;
 import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
 
 import net.minidev.json.JSONArray;
 import net.minidev.json.JSONObject;
@@ -16,12 +18,42 @@ import pl.edu.pw.bgtTracker.BgtTrackerApplication;
 @Service
 public class NotificationsService {
     private final FcmClient fcmClient;
+    private JSONObject data;
 
     private Integer seq = 0;
 
     public NotificationsService(FcmClient fcmClient)
     {
         this.fcmClient = fcmClient;
+
+        this.data = new JSONObject();
+        JSONObject not1 =  new JSONObject();
+        not1.put("id", 1);
+        not1.put("title", "Error");
+        not1.put("level", "error");        
+        not1.put("msg", "alert");
+        not1.put("read", false);
+        JSONObject not2 =  new JSONObject();
+        not2.put("id", 2);
+        not2.put("title", "warning");
+        not2.put("level", "warning");        
+        not2.put("msg", "alert");
+        not2.put("read", false);
+
+        JSONObject not3 =  new JSONObject();
+        not3.put("id", 3);
+        not3.put("title", "success");
+        not3.put("level", "success");        
+        not3.put("msg", "alert");
+        not3.put("read", false);
+
+        JSONArray arr = new JSONArray();
+
+        arr.add(not1);
+        arr.add(not2);
+        arr.add(not3);
+
+        this.data.put("notifications", arr);
     }
 
     @Scheduled(fixedDelay = 10000, initialDelay = 2000)
@@ -70,32 +102,30 @@ public class NotificationsService {
 
     public JSONObject getNotification(int user)
     {
-        JSONObject data = new JSONObject();
-        JSONObject not1 =  new JSONObject();
-        not1.put("id", 1);
-        not1.put("title", "Error");
-        not1.put("level", "error");        
-        not1.put("msg", "alert");
-        JSONObject not2 =  new JSONObject();
-        not2.put("id", 3);
-        not2.put("title", "warning");
-        not2.put("level", "warning");        
-        not2.put("msg", "alert");
-        JSONObject not3 =  new JSONObject();
-        not3.put("id", 3);
-        not3.put("title", "success");
-        not3.put("level", "success");        
-        not3.put("msg", "alert");
+        JSONObject newD = new JSONObject();
 
         JSONArray arr = new JSONArray();
 
-        arr.add(not1);
-        arr.add(not2);
-        arr.add(not3);
-
-        data.put("notifications", arr);
+        ((JSONArray) this.data.get("notifications")).forEach(
+            item -> {
+                JSONObject obj = (JSONObject) item;
+                System.out.println(obj.toJSONString());
+                if((Boolean) obj.get("read") == false)
+                {
+                    arr.add(obj);
+                }
+            }
+        );
         
-        return data;
+        newD.put("notifications", arr);
+        return newD;
+    }
+
+    public Boolean readNotifications(int id)
+    {
+        //to do place actual code
+        ((JSONObject)(((JSONArray)(this.data.get("notifications"))).get(id))).replace("read", true);
+        return true;
     }
 
 }
