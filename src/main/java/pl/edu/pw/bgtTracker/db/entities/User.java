@@ -55,4 +55,9 @@ public class User {
 			inverseJoinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id")
 	)
 	private List<IncomeCategory> incomeCategories = new ArrayList<>();
+
+	public String toString()
+	{
+		return id + " " + firstName + " " + lastName;
+	}
 }

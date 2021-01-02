@@ -232,6 +232,7 @@ const notifications2 = [
     },
   ]
 
+const userId = 2;
 
 export default function MainPage() {
     const classes = useStyles();
@@ -249,7 +250,7 @@ export default function MainPage() {
     }
     if(!userSubscribed)
     {
-        SubscribeToUserTopic(1); //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+        SubscribeToUserTopic(userId); //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
         setUserSubscribed(true);
     }
     // !!!!!!!!
@@ -313,7 +314,7 @@ export default function MainPage() {
 
     React.useEffect(() => {
         clientJson({method: 'GET', path: '/api/getNotifications/', params: {
-          user: "1"
+          user: userId
       }}).then((response) => {
           let nots = response.entity.notifications;
           for(var n of nots)

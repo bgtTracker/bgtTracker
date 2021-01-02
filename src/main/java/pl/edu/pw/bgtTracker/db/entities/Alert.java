@@ -1,6 +1,8 @@
 package pl.edu.pw.bgtTracker.db.entities;
 
 import lombok.Data;
+import net.minidev.json.JSONObject;
+
 import javax.persistence.*;
 
 @Entity
@@ -15,4 +17,17 @@ public class Alert {
     @ManyToOne(optional = false)
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     private User user;
+
+    public JSONObject toJSON()
+    {
+        JSONObject json = new JSONObject();
+        json.put("id", Long.toString(id));
+        json.put("title", title);
+        json.put("msg", content);
+        json.put("read", read);
+        json.put("level", level);
+        json.put("user", user.getId());
+
+        return json;
+    }
 }
