@@ -204,9 +204,10 @@ async function SubscribeToUserTopic(user)
             vapidKey: 'BAxFZLrrh8nZ_BmuUYpkYjL3s6plsYNWZjou86Fys3w1zfZThBjmR3Kv12D5nP8B2Wv8VKS_SGY0NF9rOkSXt4M',
         });
         // console.log("Token: " + currentToken);
-        clientJson({method: 'POST', path: '/api/pushsubscribe', params: {
+        clientJson({method: 'POST', path: '/api/pushsubscribe', 
+        headers: AuthService.getAuthHeader(),
+        params: {
             token: currentToken,
-            topic: user
             }}).then((response) => {
                 console.log("push subsciption");
                 console.log(response);
@@ -218,32 +219,6 @@ async function SubscribeToUserTopic(user)
     }
 
 }
-
-const notifications2 = [
-    {
-      id: 1,
-      title: 'Error',
-      level: 'error',
-      msg: 'aleres',
-      action: 'nwm',
-      open: true,
-    },
-    {
-      id: 2,
-      title: 'warning',
-      level: 'warning',
-      msg: 'aleres',
-      action: 'nwm',
-      open: true,
-    },
-    {
-      id: 3,
-      title: 'success',
-      level: 'success',
-      msg: 'aleres',
-      open: true,
-    },
-  ]
 
 const userId = 2;
 
@@ -257,11 +232,11 @@ export default function MainPage() {
   const [notifications, setNotfications] = React.useState();
   const [lodaing, setLodaing] = React.useState(false);
 
-  if (!fireBaseInit)
+  if (firebase.apps.length === 0)
   {
-      InitFireBase();
-      setFireBaseInit(true);
+    InitFireBase();
   }
+  
   if(!userSubscribed)
   {
       SubscribeToUserTopic(userId); //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
@@ -337,9 +312,7 @@ export default function MainPage() {
   }
 
   React.useEffect(() => {
-      clientJson({method: 'GET', path: '/api/getNotifications/', params: {
-        user: userId
-    }}).then((response) => {
+      clientJson({method: 'GET', path: '/api/getNotifications/', headers: AuthService.getAuthHeader()}).then((response) => {
         let nots = response.entity.notifications;
         for(var n of nots)
         {

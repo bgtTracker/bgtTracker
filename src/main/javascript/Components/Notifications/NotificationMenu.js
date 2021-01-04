@@ -84,7 +84,7 @@ export default function NotificationMenu(props) {
             TransitionComponent={Fade}
           >
             {props.notifications.map((element) => (
-            <Collapse in={checkOpen(element)}>
+            <Collapse key={element.id} in={checkOpen(element)}>
                 <MenuItem>
                 <Alert severity={element.level} action={
                       <Button color="inherit" size="small" onClick = {() => handleDissmisal(element)}>

@@ -35,11 +35,11 @@ public class NotificationsService {
 
     }
 
-    // @Scheduled(fixedDelay = 40000, initialDelay = 4000)
+    // @Scheduled(fixedDelay = 7000, initialDelay = 4000)
     // public void sendTestMsg() throws InterruptedException, ExecutionException 
     // {
     //     BgtTrackerApplication.logger.info("Sending test msg");
-    //     sendWaring(2, "KOCHAM PW ja dupia" + seq, "warning");
+    //     sendWaring(1, "KOCHAM PW ja dupia" + seq, "warning");
     //     // sendNotifiaction("1", "KOCHAM PW ja dupia2", "info", "info");
     //     // sendNotifiaction("1", "KOCHAM PW ja dupia2", "success", "success");
     //     // sendNotifiaction("1", "KOCHAM PW ja dupia2", "error", "error");
