@@ -1,11 +1,14 @@
 package pl.edu.pw.bgtTracker.db.entities;
 
 import lombok.Data;
+import lombok.NoArgsConstructor;
+
 import javax.persistence.*;
 import java.util.Date;
 
 @Entity
 @Data
+@NoArgsConstructor
 public class Objective {
     private @Id @GeneratedValue long id;
     private String name;
@@ -15,5 +18,5 @@ public class Objective {
 
     @ManyToOne
     @JoinColumn(name = "user_id", referencedColumnName = "id")
-    private User user;
+    private AppUser user;
 }

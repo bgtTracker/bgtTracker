@@ -1,12 +1,14 @@
 package pl.edu.pw.bgtTracker.db.entities;
 
 import lombok.Data;
+import lombok.NoArgsConstructor;
+
 import javax.persistence.*;
-import java.net.UnknownServiceException;
 import java.util.Date;
 
 @Entity
 @Data
+@NoArgsConstructor
 public class Bill {
     private @Id @GeneratedValue long id;
     private long amount;
@@ -21,5 +23,5 @@ public class Bill {
 
     @ManyToOne(optional = false)
     @JoinColumn(name = "user_id", referencedColumnName = "id")
-    private User user;
+    private AppUser user;
 }

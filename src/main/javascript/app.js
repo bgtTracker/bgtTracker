@@ -1,12 +1,19 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
-import { BrowserRouter as Router, Redirect, Route, Switch } from "react-router-dom";
+import React from "react";
+import ReactDOM from "react-dom";
+import {
+  BrowserRouter as Router,
+  Redirect,
+  Route,
+  Switch
+} from "react-router-dom";
 import Login from "./Components/Login/Login";
 import Register from "./Components/Login/Register";
 import MainPage from "./Components/MainPage";
 import firebase from 'firebase/app';
 import 'firebase/messaging';
 import clientJson from './clientJson.js';
+import AuthenticatedRoute from "./Components/AuthenticatedRoute";
+import AuthService from "./api/AuthService";
 
 async function initPush()
 {
@@ -25,19 +32,28 @@ async function initPush()
 }
 
 export default function App() {
-    return (
-        <Router>
-            <Switch>
-                <Route exact path="/">
-                    <Redirect to="/login"/>
-                </Route>
-                <Route exact path="/login" component={Login}/>
-                <Route exact path="/register" component={Register}/>
-                {/* TODO: replace with protected route once backend auth is done */}
-                <Route path="/app" component={MainPage}/>
-            </Switch>
-        </Router>
-    );
+  const [isAuth, setAuth] = React.useState(null);
+
+  React.useEffect(() => {
+    (async () => setAuth(await AuthService.verifyUser()))();
+  }, []);
+
+  return (
+    <Router>
+      <Switch>
+        <Route exact path="/">
+          {(isAuth !== null &&
+            ((isAuth === true && <Redirect to="/app" />) || (
+              <Redirect to="/login" />
+            ))) ||
+            null}
+        </Route>
+        <Route exact path="/login" component={Login} />
+        <Route exact path="/register" component={Register} />
+        <AuthenticatedRoute path="/app" component={MainPage} />
+      </Switch>
+    </Router>
+  );
 }
 
 ReactDOM.render(

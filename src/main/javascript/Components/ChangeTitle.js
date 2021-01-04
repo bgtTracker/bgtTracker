@@ -1,4 +1,4 @@
 export default function ChangeTitle({ title }) {
-    document.title = title;
-    return null;
+  document.title = title;
+  return null;
 }

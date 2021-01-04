@@ -1,10 +1,13 @@
 package pl.edu.pw.bgtTracker.db.entities;
 
 import lombok.Data;
+import lombok.NoArgsConstructor;
+
 import javax.persistence.*;
 
 @Entity
 @Data
+@NoArgsConstructor
 public class Income {
     private @Id @GeneratedValue long id;
     private long amount;
@@ -12,7 +15,7 @@ public class Income {
 
     @ManyToOne(optional = false)
     @JoinColumn(name = "user_id", referencedColumnName = "id")
-    private User user;
+    private AppUser user;
 
     @ManyToOne(optional = false)
     @JoinColumn(name = "category_id", referencedColumnName = "id")
