@@ -55,6 +55,7 @@ import NotificationSystem from 'react-notification-system';
 import NotificationMenu from "./Notifications/NotificationMenu.js";
 import {Skeleton} from '@material-ui/lab';
 import AuthService from "../api/AuthService";
+import Objectives from "./Objectives/Objectives.js";
 
 const drawerWidth = 240;
 
@@ -393,6 +394,7 @@ export default function MainPage() {
             <Route exact path={`${path}/incomes`} component={Income} />
             <Route exact path={`${path}/expenses`} component={Expense} />
             <Route exact path={`${path}/bills`} component={Bill} />
+            <Route exact path={`${path}/objectives`} component={Objectives} />
           </Switch>
         </Container>
       </main>
