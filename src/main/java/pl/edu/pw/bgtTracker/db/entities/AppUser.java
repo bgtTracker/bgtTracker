@@ -1,23 +1,24 @@
 package pl.edu.pw.bgtTracker.db.entities;
 
 import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
+
 import javax.persistence.*;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 @Entity
-@Table(name = "Users")
 @Data
-public class User {
+@ToString(exclude = "password")
+@NoArgsConstructor
+public class AppUser {
 	private @Id @GeneratedValue long id;
-	private String login;
-	private String passwordHash;
-	private String passwordSalt;
+	@Column(unique = true)
+	private String email;
+	private String password;
 	private String firstName;
 	private String lastName;
-	private String email;
-	private Date birthDate;
 
 	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
 	private List<Alert> alerts = new ArrayList<>();
@@ -55,4 +56,11 @@ public class User {
 			inverseJoinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id")
 	)
 	private List<IncomeCategory> incomeCategories = new ArrayList<>();
+
+	public AppUser(String email, String password, String firstName, String lastName) {
+		this.email = email;
+		this.password = password;
+		this.firstName = firstName;
+		this.lastName = lastName;
+	}
 }

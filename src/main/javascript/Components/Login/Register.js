@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link as RouterLink } from 'react-router-dom';
+import { Link as RouterLink, useHistory } from 'react-router-dom';
 import { makeStyles } from "@material-ui/core/styles";
 import {
     Avatar,
@@ -12,6 +12,8 @@ import {
     Typography,
 } from "@material-ui/core";
 import { PersonAddOutlined } from "@material-ui/icons";
+import RegexTextField from "../RegexTextField";
+import AuthService, { User } from "../../api/AuthService";
 
 import ChangeTitle from "../ChangeTitle";
 
@@ -37,6 +39,27 @@ const useStyles = makeStyles((theme) => ({
 
 export default function Register() {
     const classes = useStyles();
+    const history = useHistory();
+    const [userExists, setUserExists] = React.useState(false);
+
+    const onSubmit = async event => {
+        event.preventDefault();
+
+        let user = new User(
+            document.getElementById('email').value,
+            document.getElementById('password').value,
+            document.getElementById('firstName').value,
+            document.getElementById('lastName').value
+        );
+
+        if (!await AuthService.register(user)) {
+            setUserExists(true);
+            return;
+        }
+
+        await AuthService.login(user.getCreds());
+        history.push('/app');
+    };
 
     return (
         <Container component="main" maxWidth="xs">
@@ -49,7 +72,7 @@ export default function Register() {
                 <Typography component="h1" variant="h5">
                     Sign up
                 </Typography>
-                <form className={classes.form} noValidate>
+                <form className={classes.form} onSubmit={onSubmit}>
                     <Grid container spacing={2}>
                         <Grid item xs={12} sm={6}>
                             <TextField
@@ -75,7 +98,7 @@ export default function Register() {
                             />
                         </Grid>
                         <Grid item xs={12}>
-                            <TextField
+                            <RegexTextField
                                 variant="outlined"
                                 required
                                 fullWidth
@@ -83,6 +106,10 @@ export default function Register() {
                                 label="Email Address"
                                 name="email"
                                 autoComplete="email"
+                                regex={/^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/}
+                                invalidText="Invalid email address"
+                                error={userExists}
+                                helperText={userExists ? "This user already exists" : undefined}
                             />
                         </Grid>
                         <Grid item xs={12}>

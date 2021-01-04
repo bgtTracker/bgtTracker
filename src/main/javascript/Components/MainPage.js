@@ -1,5 +1,5 @@
 import React from 'react';
-import { NavLink, Redirect, Route, Switch, useRouteMatch } from "react-router-dom";
+import { NavLink, Redirect, Route, Switch, useHistory, useRouteMatch } from "react-router-dom";
 import { makeStyles } from '@material-ui/core/styles';
 import clsx from 'clsx';
 import {
@@ -19,14 +19,15 @@ import {
 } from '@material-ui/core';
 import {
     AccountBalanceWalletOutlined as AccountBalanceWalletOutlinedIcon,
-    NotificationsOutlined as NotificationsOutlinedIcon,
     AttachMoney as AttachMoneyIcon,
     BarChart as BarChartIcon,
     CommentOutlined as CommentOutlinedIcon,
     ChevronLeft as ChevronLeftIcon,
     DashboardOutlined as DashboardOutlinedIcon,
+    ExitToApp as ExitToAppIcon,
     GpsFixed as GpsFixedIcon,
     Menu as MenuIcon,
+    NotificationsOutlined as NotificationsOutlinedIcon,
     ReceiptOutlined as ReceiptOutlinedIcon,
     SettingsOutlined as SettingsOutlinedIcon,
     WorkOutline as WorkOutlineIcon
@@ -40,6 +41,7 @@ import Settings from "./Settings/Settings.js";
 import Income from "./Tables/Income/Income";
 import Expense from "./Tables/Expense/Expense";
 import Bill from "./Tables/Expense/Expense";
+import AuthService from "../api/AuthService";
 
 const drawerWidth = 240;
 
@@ -160,8 +162,14 @@ function drawerItems(classes, url) {
 
 export default function MainPage() {
     const classes = useStyles();
+    const history = useHistory();
     const [drawerOpen, setDrawerOpen] = React.useState(true);
     const {path, url} = useRouteMatch();
+
+    const handleLogout = event => {
+        AuthService.logout();
+        history.push('/login');
+    };
 
     return (
         <div className={classes.root}>
@@ -184,6 +192,9 @@ export default function MainPage() {
                         <Badge badgeContent={0} invisible={true}>
                             <NotificationsOutlinedIcon/>
                         </Badge>
+                    </IconButton>
+                    <IconButton color="inherit" onClick={handleLogout}>
+                        <ExitToAppIcon/>
                     </IconButton>
                 </Toolbar>
             </AppBar>

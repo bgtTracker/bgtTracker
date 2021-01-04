@@ -1,12 +1,7 @@
-package pl.edu.pw.bgtTracker.summaries;
+package pl.edu.pw.bgtTracker.api.summaries;
 
-import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
-import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
-
-import com.fasterxml.jackson.core.JsonFactoryBuilder;
 
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,8 +11,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import net.minidev.json.JSONArray;
 import net.minidev.json.JSONObject;
-
-import pl.edu.pw.bgtTracker.db.entities.*;
 
 @RestController
 @RequestMapping(value = {"/testapi/summary"})

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link as RouterLink } from 'react-router-dom';
+import { Link as RouterLink, Redirect, useHistory } from 'react-router-dom';
 import { makeStyles } from "@material-ui/core/styles";
 import {
     Avatar,
@@ -14,6 +14,7 @@ import {
     Typography
 } from '@material-ui/core';
 import { LockOutlined } from "@material-ui/icons";
+import AuthService, { UserCredentials } from "../../api/AuthService";
 
 import ChangeTitle from "../ChangeTitle";
 
@@ -39,6 +40,27 @@ const useStyles = makeStyles(theme => ({
 
 export default function Login() {
     const classes = useStyles();
+    const history = useHistory();
+    const [isError, setError] = React.useState(false);
+
+    const onSubmit = async event => {
+        event.preventDefault();
+
+        AuthService.permanentStorage(document.getElementById('remember').checked)
+
+        let creds = new UserCredentials(
+            document.getElementById('email').value,
+            document.getElementById('password').value
+        );
+
+        try {
+            setError(false);
+            await AuthService.login(creds);
+            history.push('/app');
+        } catch (e) {
+            setError(true);
+        }
+    }
 
     return (
         <Container component="main" maxWidth="xs">
@@ -51,7 +73,7 @@ export default function Login() {
                 <Typography component="h1" variant="h5">
                     Sign in
                 </Typography>
-                <form className={classes.form} noValidate>
+                <form className={classes.form} onSubmit={onSubmit}>
                     <TextField
                         variant="outlined"
                         margin="normal"
@@ -62,6 +84,8 @@ export default function Login() {
                         name="email"
                         autoComplete="email"
                         autoFocus
+                        error={isError}
+                        helperText={isError ? "Invalid email or password" : undefined}
                     />
                     <TextField
                         variant="outlined"
@@ -73,19 +97,19 @@ export default function Login() {
                         label="Password"
                         type="password"
                         autoComplete="current-password"
+                        error={isError}
+                        helperText={isError ? "Invalid email or password" : undefined}
                     />
                     <FormControlLabel
-                        control={<Checkbox value="remember" color="primary"/>}
+                        control={<Checkbox name="remember" id="remember" color="primary"/>}
                         label="Remember me"
                     />
                     <Button
+                        type="submit"
                         fullWidth
                         variant="contained"
                         color="primary"
                         className={classes.submit}
-
-                        component={RouterLink}
-                        to="/app"
                     >
                         Sign In
                     </Button>
