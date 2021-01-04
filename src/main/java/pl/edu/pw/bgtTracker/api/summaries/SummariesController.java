@@ -28,8 +28,8 @@ public class SummariesController {
     @RequestParam(value = "to", defaultValue=("11111111111111")) String to,
     @RequestParam(value = "usrid", defaultValue="1") String usrID)
     {
-        System.out.println("from: " + from.toString());
-        System.out.println("to: " + to.toString());
+        System.out.println("from: " + from);
+        System.out.println("to: " + to);
         System.out.println("userId: " + usrID);
         int userid = Integer.parseInt(usrID);
         return getSummaryData(userid, from, to).toString();

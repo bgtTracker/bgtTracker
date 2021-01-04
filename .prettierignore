@@ -1,0 +1,9 @@
+/build
+/.gradle
+/.idea
+/node_modules
+/src/main/java
+/src/main/resources
+*.json
+*.md
+*.config.js

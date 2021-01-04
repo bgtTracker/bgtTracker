@@ -12,8 +12,8 @@ import pl.edu.pw.bgtTracker.db.repos.UserRepository;
 @RestController
 @RequestMapping("/api/auth")
 public class AuthController {
-    private UserRepository repository;
-    private BCryptPasswordEncoder encoder;
+    private final UserRepository repository;
+    private final BCryptPasswordEncoder encoder;
 
     public AuthController(UserRepository repository, BCryptPasswordEncoder encoder) {
         this.repository = repository;

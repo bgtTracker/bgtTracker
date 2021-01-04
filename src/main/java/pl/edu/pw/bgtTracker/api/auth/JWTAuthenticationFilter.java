@@ -20,7 +20,7 @@ import static com.auth0.jwt.algorithms.Algorithm.HMAC512;
 import static pl.edu.pw.bgtTracker.api.auth.SecurityConstants.*;
 
 public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
-    private AuthenticationManager manager;
+    private final AuthenticationManager manager;
 
     public JWTAuthenticationFilter(AuthenticationManager manager) {
         setFilterProcessesUrl(LOGIN_URL);
