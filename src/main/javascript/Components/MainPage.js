@@ -273,12 +273,22 @@ export default function MainPage() {
 
   function removeNotication(notificationId)
   {
-      clientJson({method: 'POST', path: "/api/notificationsread", params: {
+      clientJson({method: 'POST', path: "/api/notificationsread",  
+      headers : AuthService.getAuthHeader(),
+      params: {
           id: notificationId
-          }}).then((response) => {
+      }}).then((response) => {
               console.log("notification Read");
               console.log(response);
-          })
+      }).catch(e => {
+        switch (error.response.status) {
+          case 403:
+              console.error("403");
+              break
+          default:
+              console.error(e);
+        }
+      })
   }
 
   let notificationSystem = React.createRef();

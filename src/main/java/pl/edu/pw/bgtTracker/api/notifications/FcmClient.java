@@ -1,4 +1,4 @@
-package pl.edu.pw.bgtTracker.notifications;
+package pl.edu.pw.bgtTracker.api.notifications;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -20,7 +20,7 @@ import com.google.firebase.messaging.TopicManagementResponse;
 import com.google.firebase.messaging.WebpushConfig;
 import com.google.firebase.messaging.WebpushNotification;
 
-import pl.edu.pw.bgtTracker.notifications.FcmSettings;
+import pl.edu.pw.bgtTracker.api.notifications.FcmSettings;
 import pl.edu.pw.bgtTracker.BgtTrackerApplication;
 
 @Service

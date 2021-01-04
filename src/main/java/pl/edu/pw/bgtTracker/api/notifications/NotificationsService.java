@@ -1,13 +1,9 @@
-package pl.edu.pw.bgtTracker.notifications;
+package pl.edu.pw.bgtTracker.api.notifications;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
-
-import com.google.api.client.json.Json;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
 
 import net.minidev.json.JSONArray;
 import net.minidev.json.JSONObject;
@@ -17,10 +13,10 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import pl.edu.pw.bgtTracker.BgtTrackerApplication;
-import pl.edu.pw.bgtTracker.db.AlertRepository;
-import pl.edu.pw.bgtTracker.db.UserRepository;
+import pl.edu.pw.bgtTracker.db.repos.AlertRepository;
+import pl.edu.pw.bgtTracker.db.repos.UserRepository;
 import pl.edu.pw.bgtTracker.db.entities.Alert;
-import pl.edu.pw.bgtTracker.db.entities.User;
+import pl.edu.pw.bgtTracker.db.entities.AppUser;
 
 @Service
 public class NotificationsService {
@@ -39,16 +35,16 @@ public class NotificationsService {
 
     }
 
-    @Scheduled(fixedDelay = 40000, initialDelay = 4000)
-    public void sendTestMsg() throws InterruptedException, ExecutionException 
-    {
-        BgtTrackerApplication.logger.info("Sending test msg");
-        sendWaring(2, "KOCHAM PW ja dupia" + seq, "warning");
-        // sendNotifiaction("1", "KOCHAM PW ja dupia2", "info", "info");
-        // sendNotifiaction("1", "KOCHAM PW ja dupia2", "success", "success");
-        // sendNotifiaction("1", "KOCHAM PW ja dupia2", "error", "error");
-        seq++;
-    }
+    // @Scheduled(fixedDelay = 40000, initialDelay = 4000)
+    // public void sendTestMsg() throws InterruptedException, ExecutionException 
+    // {
+    //     BgtTrackerApplication.logger.info("Sending test msg");
+    //     sendWaring(2, "KOCHAM PW ja dupia" + seq, "warning");
+    //     // sendNotifiaction("1", "KOCHAM PW ja dupia2", "info", "info");
+    //     // sendNotifiaction("1", "KOCHAM PW ja dupia2", "success", "success");
+    //     // sendNotifiaction("1", "KOCHAM PW ja dupia2", "error", "error");
+    //     seq++;
+    // }
 
     private void sendNotifiaction(long id, String topic, String msg, String level, String title) throws InterruptedException, ExecutionException 
     {
@@ -65,7 +61,7 @@ public class NotificationsService {
     private Alert putAlert(long userid, String msg, String level, String title)
     {
         Alert newAlert = new Alert();
-        User u = userRepository.findById(userid).get();
+        AppUser u = userRepository.findById(userid).get();
         newAlert.setTitle(title);
         newAlert.setContent(msg);
         newAlert.setLevel(level);
@@ -106,7 +102,7 @@ public class NotificationsService {
 
     public JSONObject getNotification(long userID)
     {
-        User user = userRepository.findById(userID).get();
+        AppUser user = userRepository.findById(userID).get();
         List<Alert> alerts = alertRepository.findByUser(user);
 
         JSONObject newD = new JSONObject();

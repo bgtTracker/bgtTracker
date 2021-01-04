@@ -1,4 +1,4 @@
-package pl.edu.pw.bgtTracker.notifications;
+package pl.edu.pw.bgtTracker.api.notifications;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
