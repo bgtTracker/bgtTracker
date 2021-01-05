@@ -16,4 +16,8 @@ public class IncomeCategory {
 
     @OneToMany(mappedBy = "category")
     private List<Income> incomes = new ArrayList<>();
+
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "user_id", referencedColumnName = "id")
+    private AppUser user;
 }

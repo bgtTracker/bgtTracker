@@ -3,6 +3,7 @@ package pl.edu.pw.bgtTracker.api.objectives;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -36,11 +37,13 @@ public class ObjectivesController {
       return body;
    }
 
-   @GetMapping("/api/getobjectives")
+   @GetMapping(value={"/api/getobjectives"}, produces=MediaType.APPLICATION_JSON_VALUE)
    public JSONObject getObjectives(Authentication auth)
    {
       AppUser appuser = userRepository.findByEmail(auth.getName());
-      return objectivesService.getObjectives(appuser);
+      JSONObject data = objectivesService.getObjectives(appuser);
+      System.out.println(data);
+      return data; 
    }
 
    @PutMapping("/api/editobjectives")

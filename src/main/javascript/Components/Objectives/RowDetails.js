@@ -96,12 +96,7 @@ export default function Row(props) {
   }
 
   const handleSave = (toSave) => {
-    row.name = toSave.name;
-    row.amount = toSave.amount;
-    row.category = toSave.category;
-    row.date = toSave.date;
-    row.description = toSave.description;
-    fetch("/api/editobjectives")
+      props.handleSave(toSave);
   }
 
   const handleOpenEdit = () => {
@@ -142,6 +137,9 @@ export default function Row(props) {
           {row.date.toDateString()}
         </TableCell>
         <TableCell align="right" onClick={handleClose}>
+          {row.priority}
+        </TableCell>
+        <TableCell align="right" onClick={handleClose}>
           {row.category}
         </TableCell>
         <TableCell align="right" onClick={handleClose}>
@@ -155,7 +153,7 @@ export default function Row(props) {
       <TableRow>
         <TableCell
           style={{ paddingBottom: 0, paddingTop: 0 }}
-          colSpan={6}
+          colSpan={7}
           onClick={handleClose}
         >
           <Collapse in={open} timeout="auto" unmountOnExit>
@@ -198,5 +196,6 @@ Row.propTypes = {
   row: PropTypes.object.isRequired,
   isSelected: PropTypes.func.isRequired,
   handleCheckBoxClick: PropTypes.func.isRequired,
-  index: PropTypes.number.isRequired
+  index: PropTypes.number.isRequired,
+  handleSave: PropTypes.func.isRequired
 };

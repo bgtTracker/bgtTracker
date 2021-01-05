@@ -17,6 +17,8 @@ import {
 import InputLabel from '@material-ui/core/InputLabel';
 import Input from '@material-ui/core/Input';
 import MenuItem from '@material-ui/core/MenuItem';
+import AuthService from "../../api/AuthService.js";
+import {Skeleton} from '@material-ui/lab';
 
 const theme = createMuiTheme();
 
@@ -26,6 +28,10 @@ const useStyles = makeStyles({
   },
   bigTextField: {
     height: 150,
+    width: 470,
+  },
+  nameTextFile: {
+    height: 50,
     width: 470,
   },
   dialog: {
@@ -57,6 +63,23 @@ export default function ObjectiveDialog(props) {
   const [name, setName] = React.useState(props.row.name);
   const [amount, setAmount] = React.useState(props.row.amount);
   const [description, setDescription] = React.useState(props.row.description);
+  const [priority, setPriority] = React.useState(props.row.priority);
+  const [categories, setCategories] = React.useState();
+  
+  React.useEffect(() => {
+    fetch("/api/getexpensecategory",{
+      method: "GET",
+      headers: AuthService.getAuthHeader(),
+    }).then(res => res.json())
+    .then(res => {
+      console.log("POGGG");
+      console.log(res);
+      setCategories(res.expenseCategories);
+    }).catch(e => {
+      console.error(e);
+    })
+
+  }, [])
 
   const handleDataChange = date => {
     setDate(date);
@@ -72,7 +95,8 @@ export default function ObjectiveDialog(props) {
       amount: amount,
       description: description,
       date: date.getTime(),
-      category: category
+      category: category,
+      priority: priority
     });
     props.handleClose();
   }
@@ -95,11 +119,11 @@ export default function ObjectiveDialog(props) {
               <Grid item xs={6}>
                 <TextField
                   className={classes.smalleTextField}
-                  id="Name"
-                  label="Name"
+                  id="Piority"
+                  label="Piority"
                   variant="outlined"
-                  value={name}
-                  onChange={e => setName(e.target.value)}
+                  value={priority}
+                  onChange={e => setPriority(e.target.value)}
                 />
               </Grid>
               <Grid item xs={6}>
@@ -148,15 +172,27 @@ export default function ObjectiveDialog(props) {
                     onChange={(e) => setCategory(e.target.value)}
                     label="Category"
                   >
-                    <MenuItem value="">
-                      <em>None</em>
-                    </MenuItem>
-                    <MenuItem value={10}>Ten</MenuItem>
-                    <MenuItem value={20}>Twenty</MenuItem>
-                    <MenuItem value={30}>Thirty</MenuItem>
+                    {categories === undefined? <Skeleton animation="wave" variant="react"/> :
+                      categories.map(element => (
+                        <MenuItem key={element.id} value={element.id}>{element.name}</MenuItem>
+                      ))
+                    }
                   </Select>
                 </FormControl>
               </Grid>
+            </Grid>
+            <Grid item xs={12}>
+              <div className={classes.BlankSpace}> </div>
+            </Grid>
+            <Grid item xs={12}>
+              <TextField
+                  className={classes.nameTextFile}
+                  id="Name"
+                  label="Name"
+                  variant="outlined"
+                  value={name}
+                  onChange={e => setName(e.target.value)}
+              />
             </Grid>
             <Grid item xs={12}>
               <div className={classes.BlankSpace}> </div>

@@ -199,17 +199,7 @@ const EnhancedTableToolbar = props => {
   }
 
   const addObjective = (toSave) => {
-    fetch("/api/addobjective", {
-      method: "POST",
-      body: JSON.stringify(toSave),
-      headers: AuthService.getAuthHeader()
-    }
-    ).then(respone => {
-      console.log(respone);
-    }
-    ).catch(error => {
-      console.log(error);
-    })
+    props.addObjective(toSave);
   }
 
   return (
@@ -332,6 +322,7 @@ export default function ObjectivesTable(props) {
     setSelected([]);
   };
 
+
   const handleCheckBoxClick = (event, name) => {
     const selectedIndex = selected.indexOf(name);
     let newSelected = [];
@@ -364,6 +355,10 @@ export default function ObjectivesTable(props) {
 
   const emptyRows =
     rowsPerPage - Math.min(rowsPerPage, rows.length - page * rowsPerPage);
+
+  const editObjective = (toSave) =>{
+      props.editObjective(toSave);
+  }
 
   return (
     <div className={classes.root}>
@@ -398,6 +393,7 @@ export default function ObjectivesTable(props) {
                     index={index}
                     isSelected={isSelected}
                     handleCheckBoxClick={handleCheckBoxClick}
+                    handleSave={editObjective}
                     money={money}
                   />
                 ))}

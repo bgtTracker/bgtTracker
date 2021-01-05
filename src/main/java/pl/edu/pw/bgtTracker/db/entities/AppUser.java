@@ -41,20 +41,10 @@ public class AppUser {
 	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
 	private List<Objective> objectives = new ArrayList<>();
 
-	@ManyToMany
-	@JoinTable(
-			name = "user_expense_categories",
-			joinColumns = @JoinColumn(name = "expense_category_id", referencedColumnName = "id"),
-			inverseJoinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id")
-	)
+	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
 	private List<ExpenseCategory> expenseCategories = new ArrayList<>();
 
-	@ManyToMany
-	@JoinTable(
-			name = "user_income_categories",
-			joinColumns = @JoinColumn(name = "income_category_id", referencedColumnName = "id"),
-			inverseJoinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id")
-	)
+	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
 	private List<IncomeCategory> incomeCategories = new ArrayList<>();
 
 	public String toString()
