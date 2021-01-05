@@ -6,7 +6,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import pl.edu.pw.bgtTracker.db.entities.Alert;
 import pl.edu.pw.bgtTracker.db.entities.AppUser;
 
-public interface AlertRepository extends JpaRepository<Alert, Long> {
-    List<Alert> findByUser(AppUser user);
-    
+public interface AlertRepository extends JpaRepository<Alert, Long> 
+{
+    List<Alert> findByUser(AppUser user);    
 }
