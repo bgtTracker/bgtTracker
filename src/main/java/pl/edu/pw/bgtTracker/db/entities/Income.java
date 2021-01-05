@@ -2,6 +2,7 @@ package pl.edu.pw.bgtTracker.db.entities;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.json.JSONObject;
 
 import javax.persistence.*;
 
@@ -20,4 +21,14 @@ public class Income {
     @ManyToOne(optional = false)
     @JoinColumn(name = "category_id", referencedColumnName = "id")
     private IncomeCategory category;
+
+    public JSONObject toJSON(){
+        JSONObject json = new JSONObject();
+        json.put("id", Long.toString(id));
+        json.put("amount", amount);
+        json.put("name", name);
+        json.put("category", category.getId());
+        json.put("user", user.getId());
+        return json;
+    }
 }

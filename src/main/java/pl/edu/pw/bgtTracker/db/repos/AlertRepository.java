@@ -7,6 +7,5 @@ import pl.edu.pw.bgtTracker.db.entities.Alert;
 import pl.edu.pw.bgtTracker.db.entities.AppUser;
 
 public interface AlertRepository extends JpaRepository<Alert, Long> {
-    List<Alert> findByUser(AppUser user);
-    
+    List<Alert> findByUser(AppUser user);  
 }
