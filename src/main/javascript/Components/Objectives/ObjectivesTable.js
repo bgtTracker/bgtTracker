@@ -17,11 +17,13 @@ import Checkbox from "@material-ui/core/Checkbox";
 import IconButton from "@material-ui/core/IconButton";
 import Tooltip from "@material-ui/core/Tooltip";
 import ImportExportIcon from "@material-ui/icons/ImportExport";
-import HelpIcon from "@material-ui/icons/Help";
+import AddCircleOutlineOutlinedIcon from '@material-ui/icons/AddCircleOutlineOutlined';
 import CSVexporter from "../History/CSVexporter.js";
 import RowDetails from "./RowDetails.js";
 import RowNoDetails from "../History/Row.js";
 import DataConverter from "../History/DataConveret.js";
+import ObjectiveDialog from "./ObjectiveDialog.js"
+import AuthService from "../../api/AuthService.js";
 
 const money = 10000;
 
@@ -171,6 +173,16 @@ const EnhancedTableToolbar = props => {
   const [downloadCVS, setDownloadCSV] = React.useState(false);
   const [data, setData] = React.useState();
   const [downloaded, sedDownloaded] = React.useState(false);
+  const [openDialog, setOpenDialog] = React.useState(false);
+  let row = {
+    id: -1,
+    name: "Default",
+    amount: 1000,
+    date: new Date(),
+    category: 1,
+    description: "New description"
+  }
+
 
   function HandleDownloadCSV() {
     let d = DataConverter(headCells, rows, props.selected);
@@ -181,6 +193,24 @@ const EnhancedTableToolbar = props => {
   const onDownloaded = () => {
     setDownloadCSV(false);
   };
+
+  const closeDialog = () => {
+    setOpenDialog(false);
+  }
+
+  const addObjective = (toSave) => {
+    fetch("/api/addobjective", {
+      method: "POST",
+      body: JSON.stringify(toSave),
+      headers: AuthService.getAuthHeader()
+    }
+    ).then(respone => {
+      console.log(respone);
+    }
+    ).catch(error => {
+      console.log(error);
+    })
+  }
 
   return (
     <Toolbar
@@ -224,11 +254,14 @@ const EnhancedTableToolbar = props => {
           </IconButton>
         </Tooltip>
       ) : (
-        <Tooltip title="Help">
-          <IconButton aria-label="help">
-            <HelpIcon />
+        <div>
+        <Tooltip title="Add new objective">
+          <IconButton aria-label="objectives" onClick={e =>{ setOpenDialog(true)}}>
+            <AddCircleOutlineOutlinedIcon />
           </IconButton>
         </Tooltip>
+        <ObjectiveDialog open={openDialog} row={row} handleClose={closeDialog} handleSave={addObjective}/>
+        </div>
       )}
     </Toolbar>
   );

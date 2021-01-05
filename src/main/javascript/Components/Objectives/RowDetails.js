@@ -13,6 +13,9 @@ import Button from "@material-ui/core/Button";
 import Grid from "@material-ui/core/Grid";
 import LinearProgress from "@material-ui/core/LinearProgress";
 import CircularProgress from '@material-ui/core/CircularProgress';
+import ObjectiveDialog from "./ObjectiveDialog.js";
+import clientJson from '../../clientJson.js';
+import AuthService from '../../api/AuthService.js';
 
 function LinearProgressWithLabel(props) {
   return (
@@ -78,6 +81,33 @@ export default function Row(props) {
   const row = props.row;
   let index = props.index;
   const [open, setOpen] = React.useState(false);
+  const [editDialogOpen, setEditDialogOpen] = React.useState(false);
+  let editDialogOpenTemp = editDialogOpen;
+
+  const handleClose = () => {
+    if(editDialogOpenTemp === false)
+    {
+      setOpen(!open);
+    }
+  }
+
+  const handleCloseEdit = () => {
+    setEditDialogOpen(false);
+  }
+
+  const handleSave = (toSave) => {
+    row.name = toSave.name;
+    row.amount = toSave.amount;
+    row.category = toSave.category;
+    row.date = toSave.date;
+    row.description = toSave.description;
+    fetch("/api/editobjectives")
+  }
+
+  const handleOpenEdit = () => {
+    editDialogOpenTemp = true;
+    setEditDialogOpen(true);
+  }
 
   const isItemSelected = props.isSelected(row.id);
   const labelId = `enhanced-table-checkbox-${index}`;
@@ -104,20 +134,20 @@ export default function Row(props) {
           id={labelId}
           scope="row"
           padding="none"
-          onClick={event => setOpen(!open)}
+          onClick={handleClose}
         >
           {row.name}
         </TableCell>
-        <TableCell align="right" onClick={event => setOpen(!open)}>
+        <TableCell align="right" onClick={handleClose}>
           {row.date.toDateString()}
         </TableCell>
-        <TableCell align="right" onClick={event => setOpen(!open)}>
+        <TableCell align="right" onClick={handleClose}>
           {row.category}
         </TableCell>
-        <TableCell align="right" onClick={event => setOpen(!open)}>
+        <TableCell align="right" onClick={handleClose}>
             <CircularProgressWithLabel value={(row.amount/props.money)*100}/>
         </TableCell>
-        <TableCell align="right" onClick={event => setOpen(!open)}>
+        <TableCell align="right" onClick={handleClose}>
           {row.amount}
         </TableCell>
       </TableRow>
@@ -126,7 +156,7 @@ export default function Row(props) {
         <TableCell
           style={{ paddingBottom: 0, paddingTop: 0 }}
           colSpan={6}
-          onClick={event => setOpen(!open)}
+          onClick={handleClose}
         >
           <Collapse in={open} timeout="auto" unmountOnExit>
             <Box margin={1}>
@@ -140,9 +170,10 @@ export default function Row(props) {
                 alignItems="center"
               >
                 <Grid item>
-                  <Button>
+                <Button onClick={handleOpenEdit}>
                       Edit              
                   </Button>
+                  <ObjectiveDialog open={editDialogOpen} row={row} handleClose={handleCloseEdit} handleSave={handleSave}/>
                 </Grid>
                 <Grid item>
                   <Button>
