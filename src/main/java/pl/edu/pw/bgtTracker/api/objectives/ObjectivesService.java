@@ -33,7 +33,7 @@ public class ObjectivesService {
 
   public JSONObject getObjectives(AppUser user)
   {
-      List<Objective> objectives = objectiveRepository.findByUser(user);
+      List<Objective> objectives = user.getObjectives();
       JSONObject data = new JSONObject();
 
       JSONArray arr = new JSONArray();
@@ -44,6 +44,12 @@ public class ObjectivesService {
       System.out.println(arr);
       data.put("objectives", arr);
       return data;
+  }
+
+  public void deleteObjectives(Long id)
+  {
+    Objective objective = objectiveRepository.findById(id).get();
+    objectiveRepository.delete(objective);
   }
 
   public void editObjective(JSONObject newObjective)

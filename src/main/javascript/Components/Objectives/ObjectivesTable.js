@@ -259,7 +259,8 @@ const EnhancedTableToolbar = props => {
 
 EnhancedTableToolbar.propTypes = {
   numSelected: PropTypes.number.isRequired,
-  selected: PropTypes.array.isRequired
+  selected: PropTypes.array.isRequired,
+  addObjective: PropTypes.func.isRequired,
   // getDataForCVS: PropTypes.func.isRequired,
 };
 
@@ -366,6 +367,7 @@ export default function ObjectivesTable(props) {
         <EnhancedTableToolbar
           numSelected={selected.length}
           selected={selected}
+          addObjective={props.addObjective}
         />
         <TableContainer>
           <Table
@@ -394,6 +396,7 @@ export default function ObjectivesTable(props) {
                     isSelected={isSelected}
                     handleCheckBoxClick={handleCheckBoxClick}
                     handleSave={editObjective}
+                    handleDelete={props.deleteObjective}
                     money={money}
                   />
                 ))}

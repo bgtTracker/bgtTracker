@@ -104,6 +104,10 @@ export default function Row(props) {
     setEditDialogOpen(true);
   }
 
+  const handleDelete = () => {
+    props.handleDelete(row.id);
+  }
+
   const isItemSelected = props.isSelected(row.id);
   const labelId = `enhanced-table-checkbox-${index}`;
 
@@ -179,7 +183,7 @@ export default function Row(props) {
                   </Button>
                 </Grid>
                 <Grid item>
-                  <Button>
+                  <Button onClick={handleDelete}>
                       Delete           
                   </Button>
                 </Grid>

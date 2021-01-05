@@ -1,6 +1,7 @@
 import React from "react";
 import ObjectivesTable from "./ObjectivesTable.js";
 import AuthService from '../../api/AuthService.js';
+import clientJson from '../../clientJson.js';
 
 export default function Objectives() {
   const [rows, setRows] = React.useState();
@@ -37,7 +38,7 @@ export default function Objectives() {
     ).catch(error => {
       console.log(error);
     })
-  }, [reload])
+  }, [reload]);
 
   const addObjective = (toSave) => {
     fetch("/api/addobjective", {
@@ -47,16 +48,47 @@ export default function Objectives() {
     }
     ).then(respone => {
       console.log(respone);
+      reloadNotifications();
     }
     ).catch(error => {
       console.log(error);
     })
-  }
+  };
 
   const editObjective = (toSave) => {
     console.log("save");
-    console.log(toSave);
-  }
+    fetch("/api/editobjective", {
+      method: "PUT",
+      body: JSON.stringify(toSave),
+      headers: AuthService.getAuthHeader()
+    }
+    ).then(respone => {
+      console.log(respone);
+      reloadNotifications();
+    }
+    ).catch(error => {
+      console.log(error);
+    })
+  };
+
+  const deleteObjective = (id) => {
+    clientJson({method: 'DELETE', path: "/api/deleteobjective",  
+    headers : AuthService.getAuthHeader(),
+    params: {
+        id: id
+    }}).then((response) => {
+            console.log(response);
+            reloadNotifications();
+    }).catch(e => {
+      switch (error.response.status) {
+        case 403:
+            console.error("403");
+            break
+        default:
+            console.error(e);
+      }
+    })
+  };
 
   const reloadNotifications = () => {
     setRealod(!reload);
@@ -70,6 +102,7 @@ export default function Objectives() {
       headCells={headCells} 
       addObjective={addObjective}
       editObjective={editObjective}
+      deleteObjective={deleteObjective}
       reloadFunc={reloadNotifications} />}
     </div>
   );
