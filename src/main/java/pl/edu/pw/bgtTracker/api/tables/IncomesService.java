@@ -1,8 +1,7 @@
 package pl.edu.pw.bgtTracker.api.tables;
 
 import net.minidev.json.JSONArray;
-//import org.json.JSONArray;
-import org.json.JSONObject;
+import net.minidev.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -38,10 +37,10 @@ public class IncomesService {
 
 
     }*/
-    public Income saveIncome(long userid, String name, long amount, long category_id){
+    /*public Income saveIncome(long userid, String name, long amount, long category_id){
         Income newIncome = new Income();
-        AppUser u = userRepository.findById(userid).get();
-        IncomeCategory iCat = incomeCategoryRepository.findById(category_id);
+        //AppUser u = userRepository.findById(userid).get();
+        //IncomeCategory iCat = incomeCategoryRepository.findById(category_id);
 
         newIncome.setName(name);
         newIncome.setAmount(amount);
@@ -49,9 +48,9 @@ public class IncomesService {
         newIncome.setCategory(iCat);
         incomeRepository.save(newIncome);
         return newIncome;
-    }
+    }*/
 
-    public void updateIncome(Income income){
+    /*public void updateIncome(Income income){
         try{
             Income oldIncome = incomeRepository.findById(income.getId()).get();
             oldIncome.setName(income.getName());
@@ -73,10 +72,10 @@ public class IncomesService {
         //List<Income> income = incomeRepository.findByUser(u);
         List<Income> income = incomeRepository.findByUser(u);
         return income;
-    }
+    }*/
 
-    public JSONObject getIncomes2(String userEmail) {
-        AppUser usr = userRepository.findByEmail(userEmail); // getting user 
+    /*public JSONObject getIncomes2(String userEmail) {
+        AppUser usr = userRepository.findByEmail(userEmail); // getting user
         //AppUser u = userRepository.findById(userID).get(); //geting user object
         List<Income> incomes = incomeRepository.findByUser(usr);
 
@@ -90,5 +89,48 @@ public class IncomesService {
         }
         dataFeed.put("incomes", arr);
         return dataFeed;
+    }*/
+    public JSONObject getIncomes(long userId)
+    {
+        AppUser user = userRepository.findById(userId).get();
+        List<Income> incomes = incomeRepository.findByUser(user);
+
+        JSONObject js = new JSONObject();
+        JSONArray jsArr = new JSONArray();
+        for(var i :  incomes)
+        {
+            JSONObject jsObj = i.toJSON();
+            jsArr.add(jsObj);
+        }
+        js.put("income", jsArr);
+        return js;
+/*
+        JSONArray jsArr = new JSONArray();
+        JSONObject jsObj = new JSONObject();
+        jsObj.put("t0","test0");
+        jsObj.put("t0","test0");
+        jsObj.put("t1","test0");
+        jsObj.put("t2","test0");
+        jsObj.put("userID",userId);
+        jsArr.add(jsObj);
+        js.put("tak", jsArr);
+        return js;*/
+    }
+
+    public void putIncome(long usrId, String newName, long newAmount, long categoryId) {
+        Income newIncome = new Income();
+        AppUser u = userRepository.findById(usrId).get();
+        IncomeCategory cat = incomeCategoryRepository.findById(categoryId); // nie dalo sie get()
+        newIncome.setName(newName);
+        newIncome.setAmount(newAmount);
+        newIncome.setCategory(cat);
+        newIncome.setUser(u);
+        incomeRepository.save(newIncome);
+        //return newIncome;
+    }
+
+    public void deleteIncome(String id) {
+        long categoryId = Long.parseLong(id);
+        incomeRepository.deleteById(categoryId);
     }
 }

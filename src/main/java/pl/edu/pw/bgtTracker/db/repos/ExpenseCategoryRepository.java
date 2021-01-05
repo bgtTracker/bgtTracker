@@ -8,7 +8,7 @@ import java.util.Collection;
 import java.util.List;
 
 public interface ExpenseCategoryRepository extends JpaRepository<ExpenseCategory, Long> {
-    List<ExpenseCategory> findByUser(AppUser user);
+    List<ExpenseCategory> findById(long id);
     //ExpenseCategory findById(long id);
     /* */
     

@@ -10,6 +10,7 @@ import { Button } from "reactstrap";
 import ModalWithForm from "./ModalWithForm";
 import { Container, Row, Col } from "reactstrap";
 import { Badge } from "reactstrap";
+import {Input, FormGroup, Label } from 'reactstrap';
 
 import "../../../../../node_modules/react-bootstrap-table/dist/react-bootstrap-table-all.min.css";
 import "../../../../../node_modules/bootstrap/dist/css/bootstrap.min.css";
@@ -40,6 +41,7 @@ export default class CustomPaginationTable extends React.Component {
       }
       this.refs = React.createRef();
 
+
       this.handleEditButtonClick = this.handleEditButtonClick.bind(this)
       this.insertData = this.insertData.bind(this)
       this.handleDeleteButtonClick = this.handleDeleteButtonClick.bind(this)
@@ -68,7 +70,7 @@ export default class CustomPaginationTable extends React.Component {
     
     insertData(newData) {
         this.setState((prevState) => {
-            console.log(prevState)
+            //console.log(prevState)
             return {
               data: this.state.data.push({
                 id: 100,
@@ -133,7 +135,8 @@ export default class CustomPaginationTable extends React.Component {
         })
     }
   render() {
-
+    console.log("Wyswietlam tabele")
+    console.log(this.state.data[0])
     const type = this.props.type
     
     this.state.data =  this.props.data
