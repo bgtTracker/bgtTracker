@@ -22,7 +22,7 @@ import pl.edu.pw.bgtTracker.db.entities.AppUser;
 public class NotificationsService {
     private final FcmClient fcmClient;
 
-    private Integer seq = 0;
+    private final Integer seq = 0;
 
     @Autowired
     private AlertRepository alertRepository;

@@ -27,7 +27,7 @@ public class ExpenseCategory {
     @ManyToOne(optional = false)
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     private AppUser user;
-    
+
     public JSONObject toJSON()
     {
         JSONObject data = new JSONObject();

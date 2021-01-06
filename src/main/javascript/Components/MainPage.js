@@ -217,7 +217,7 @@ async function SubscribeToUserTopic(user)
             })
     }catch (e) {
         console.log('somthing went wrong', e);
-        return;
+
 
     }
 
