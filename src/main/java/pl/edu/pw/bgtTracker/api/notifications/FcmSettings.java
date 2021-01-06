@@ -6,14 +6,14 @@ import org.springframework.stereotype.Component;
 @ConfigurationProperties(prefix = "fcm")
 @Component
 public class FcmSettings {
-  private String serviceAccountFile;
+    private String serviceAccountFile;
 
-  public String getServiceAccountFile() {
-    return this.serviceAccountFile;
-  }
+    public String getServiceAccountFile() {
+        return this.serviceAccountFile;
+    }
 
-  public void setServiceAccountFile(String serviceAccountFile) {
-    this.serviceAccountFile = serviceAccountFile;
-  }
+    public void setServiceAccountFile(String serviceAccountFile) {
+        this.serviceAccountFile = serviceAccountFile;
+    }
 
 }

@@ -20,45 +20,41 @@ import pl.edu.pw.bgtTracker.api.notifications.FcmClient;
 @CrossOrigin
 public class NotificationsController {
 
-  private final FcmClient fcmClient;
-  private final NotificationsService notificationsService;
-  private final UserRepository userRepository;
+    private final FcmClient fcmClient;
+    private final NotificationsService notificationsService;
+    private final UserRepository userRepository;
 
-  public NotificationsController(FcmClient fcmClient, NotificationsService notificationsService, UserRepository userRepository ) {
-    this.fcmClient = fcmClient;
-    this.notificationsService = notificationsService;
-    this.userRepository = userRepository;
-  }
+    public NotificationsController(FcmClient fcmClient, NotificationsService notificationsService, UserRepository userRepository) {
+        this.fcmClient = fcmClient;
+        this.notificationsService = notificationsService;
+        this.userRepository = userRepository;
+    }
 
-  @PostMapping("/api/pushsubscribe")
-  public void register(Authentication auth, @RequestParam(value = "token") String token) 
-  {
-    String topic = Long.toString(this.getUserId(auth));
-    BgtTrackerApplication.logger.info("Register topic: " + topic);
-    this.fcmClient.subscribe(topic, token);
-    return;
-  }
+    @PostMapping("/api/pushsubscribe")
+    public void register(Authentication auth, @RequestParam(value = "token") String token) {
+        String topic = Long.toString(this.getUserId(auth));
+        BgtTrackerApplication.logger.info("Register topic: " + topic);
+        this.fcmClient.subscribe(topic, token);
+        return;
+    }
 
-  @GetMapping( value={"/api/getNotifications"}, produces=MediaType.APPLICATION_JSON_VALUE)
-  public JSONObject getNotifications(Authentication auth)
-  {
-    long id = this.getUserId(auth);
-    BgtTrackerApplication.logger.info("Notifications requested for " + id);
-    return notificationsService.getNotification(id);
-  }
+    @GetMapping(value = {"/api/getNotifications"}, produces = MediaType.APPLICATION_JSON_VALUE)
+    public JSONObject getNotifications(Authentication auth) {
+        long id = this.getUserId(auth);
+        BgtTrackerApplication.logger.info("Notifications requested for " + id);
+        return notificationsService.getNotification(id);
+    }
 
-  @PostMapping("/api/notificationsread")
-  public void alertRead(Authentication auth, @RequestParam(value="id") String id)
-  {
-    notificationsService.readNotifications(Integer.parseInt(id));
-    BgtTrackerApplication.logger.info("Notifications has been reed " + id);
-    //to do handle response correntyl
-    return;
-  }
+    @PostMapping("/api/notificationsread")
+    public void alertRead(Authentication auth, @RequestParam(value = "id") String id) {
+        notificationsService.readNotifications(Integer.parseInt(id));
+        BgtTrackerApplication.logger.info("Notifications has been reed " + id);
+        //to do handle response correntyl
+        return;
+    }
 
-  private long getUserId(Authentication auth)
-  {
-    AppUser u = userRepository.findByEmail(auth.getName());
-    return u.getId();
-  }
+    private long getUserId(Authentication auth) {
+        AppUser u = userRepository.findByEmail(auth.getName());
+        return u.getId();
+    }
 }

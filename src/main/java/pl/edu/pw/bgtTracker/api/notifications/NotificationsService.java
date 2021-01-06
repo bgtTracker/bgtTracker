@@ -29,8 +29,7 @@ public class NotificationsService {
     @Autowired
     private UserRepository userRepository;
 
-    public NotificationsService(FcmClient fcmClient)
-    {
+    public NotificationsService(FcmClient fcmClient) {
         this.fcmClient = fcmClient;
 
     }
@@ -46,8 +45,7 @@ public class NotificationsService {
     //     seq++;
     // }
 
-    private void sendNotifiaction(long id, String topic, String msg, String level, String title) throws InterruptedException, ExecutionException 
-    {
+    private void sendNotifiaction(long id, String topic, String msg, String level, String title) throws InterruptedException, ExecutionException {
         Map<String, String> notification = new HashMap<>();
         notification.put("id", Long.toString(id));
         notification.put("msg", msg);
@@ -58,8 +56,7 @@ public class NotificationsService {
         this.fcmClient.send(notification, topic);
     }
 
-    private Alert putAlert(long userid, String msg, String level, String title)
-    {
+    private Alert putAlert(long userid, String msg, String level, String title) {
         Alert newAlert = new Alert();
         AppUser u = userRepository.findById(userid).get();
         newAlert.setTitle(title);
@@ -70,28 +67,24 @@ public class NotificationsService {
         return newAlert;
     }
 
-    public void sendWaring(long userID, String msg, String title) throws InterruptedException, ExecutionException 
-    {
+    public void sendWaring(long userID, String msg, String title) throws InterruptedException, ExecutionException {
         long id = this.putAlert(userID, msg, "warning", title).getId();
-        this.sendNotifiaction(id, Long.toString(userID) , msg, "warning", title);
+        this.sendNotifiaction(id, Long.toString(userID), msg, "warning", title);
     }
 
-    public void sendInfo(long userID, String msg, String title) throws InterruptedException, ExecutionException 
-    {
+    public void sendInfo(long userID, String msg, String title) throws InterruptedException, ExecutionException {
         long id = this.putAlert(userID, msg, "warning", title).getId();
-        this.sendNotifiaction(id, Long.toString(userID) , msg, "info", title);
+        this.sendNotifiaction(id, Long.toString(userID), msg, "info", title);
     }
 
-    public void sendSuccess(long userID, String msg, String title) throws InterruptedException, ExecutionException 
-    {
+    public void sendSuccess(long userID, String msg, String title) throws InterruptedException, ExecutionException {
         long id = this.putAlert(userID, msg, "warning", title).getId();
-        this.sendNotifiaction(id, Long.toString(userID) , msg, "success", title);
+        this.sendNotifiaction(id, Long.toString(userID), msg, "success", title);
     }
 
-    public void sendError(long userID, String msg, String title) throws InterruptedException, ExecutionException 
-    {
+    public void sendError(long userID, String msg, String title) throws InterruptedException, ExecutionException {
         long id = this.putAlert(userID, msg, "warning", title).getId();
-        this.sendNotifiaction(id, Long.toString(userID) , msg, "error", title);
+        this.sendNotifiaction(id, Long.toString(userID), msg, "error", title);
     }
 
     // public void sendNotifiactionTopic(String topic, String msg, String level, String title) throws InterruptedException, ExecutionException 
@@ -100,8 +93,7 @@ public class NotificationsService {
     //     this.sendNotifiaction(topic, msg, level, title);
     // }
 
-    public JSONObject getNotification(long userID)
-    {
+    public JSONObject getNotification(long userID) {
         AppUser user = userRepository.findById(userID).get();
         List<Alert> alerts = alertRepository.findByUser(user);
 
@@ -109,29 +101,26 @@ public class NotificationsService {
 
         JSONArray arr = new JSONArray();
 
-        for(var a: alerts)
-        {
-            if(!a.isRead())
-            {
+        for (var a : alerts) {
+            if (!a.isRead()) {
                 JSONObject n = a.toJSON();
                 n.put("action", "showNotification");
                 arr.add(n);
             }
         }
-        
+
         newD.put("notifications", arr);
         return newD;
     }
 
-    public Boolean readNotifications(long id)
-    {
-        try{
+    public Boolean readNotifications(long id) {
+        try {
             //to do place actual code
             Alert alert = alertRepository.findById(id).get();
             alert.setRead(true);
             alertRepository.save(alert);
             return true;
-        }catch(Exception e) //to do change that mayby
+        } catch (Exception e) //to do change that mayby
         {
             BgtTrackerApplication.logger.error(e.toString());
             return false;

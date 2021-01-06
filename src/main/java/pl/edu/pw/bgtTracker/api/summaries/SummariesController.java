@@ -15,19 +15,18 @@ import net.minidev.json.JSONObject;
 @RestController
 @RequestMapping(value = {"/testapi/summary"})
 public class SummariesController {
-    
+
     public enum PossiblePeriods {
-        data, 
+        data,
     }
 
     String[] months = {"January", "February", "March", "April", "May", "June", "July",
-    "August", "September", "October", "November", "December"};
+            "August", "September", "October", "November", "December"};
 
-    @GetMapping(value = {"/"}, produces=MediaType.APPLICATION_JSON_VALUE)
-    public String getUserExpanse(@RequestParam(value = "from", defaultValue="2017-10-01") String from, 
-    @RequestParam(value = "to", defaultValue=("11111111111111")) String to,
-    @RequestParam(value = "usrid", defaultValue="1") String usrID)
-    {
+    @GetMapping(value = {"/"}, produces = MediaType.APPLICATION_JSON_VALUE)
+    public String getUserExpanse(@RequestParam(value = "from", defaultValue = "2017-10-01") String from,
+                                 @RequestParam(value = "to", defaultValue = ("11111111111111")) String to,
+                                 @RequestParam(value = "usrid", defaultValue = "1") String usrID) {
         System.out.println("from: " + from);
         System.out.println("to: " + to);
         System.out.println("userId: " + usrID);
@@ -35,10 +34,9 @@ public class SummariesController {
         return getSummaryData(userid, from, to).toString();
     }
 
-    public JSONObject getSummaryData(int userID, String from, String to)
-    {
+    public JSONObject getSummaryData(int userID, String from, String to) {
         int goal = 30000;
-        long [] days = new long[31];
+        long[] days = new long[31];
         Calendar cal = Calendar.getInstance();
         cal.set(Calendar.YEAR, 2020);
         cal.set(Calendar.MONTH, 11);
@@ -47,7 +45,7 @@ public class SummariesController {
         //     cal.set(Calendar.DAY_OF_MONTH, i+1);
         //     days[i] = cal.getTime().getTime();
         // }
-        int[] balancePerDay = new int[31]; 
+        int[] balancePerDay = new int[31];
         // = {886, -279, -237, -886, -168, -159, 1245, 1991, 337, 1714, -223, 1717, 386, 252, -546, 1832, 592, -879, 1071, -908, -89, 1118, 1211, -823, 810, 1189, 1263, 377, 999, 1103};
         int[] incomes = new int[31];
         String[] categoriesExpanse = {"Food", "Home", "Car", "Commute", "Luxuries"};
@@ -56,22 +54,21 @@ public class SummariesController {
         int[] categoryData = {0, 0, 0, 0, 0};
         int[] incomeCategoriesData = {0, 0, 0};
 
-        int [] daylyExpenses = new int[31]; 
+        int[] daylyExpenses = new int[31];
         // = {1814, 500, 1605, 822, 299, 991, 1307, 53, 138, 881, 869, 1325, 936, 93, 1795, 1766, 1219, 1379, 313, 752, 867, 859, 448, 610, 990, 1739, 750, 470, 593, 446};
 
 
         // int [] yearlyExpenses = {3000, 3000, 4000, 5000, 1200, 3000, 5000, 3000, 4032, 5255, 3232, 3131};
-        
+
 
         JSONObject data = new JSONObject();
 
         cal.set(Calendar.YEAR, 2020);
         cal.set(Calendar.MONTH, 11);
 
-        JSONArray expansesArr= new JSONArray();
-        for(int i = 0; i < 31; i++)
-        {
-            cal.set(Calendar.DAY_OF_MONTH, i+1);
+        JSONArray expansesArr = new JSONArray();
+        for (int i = 0; i < 31; i++) {
+            cal.set(Calendar.DAY_OF_MONTH, i + 1);
             long day = cal.getTime().getTime();
             int amount = ThreadLocalRandom.current().nextInt(10, 1501);
             int catIndex = ThreadLocalRandom.current().nextInt(0, categoriesExpanse.length);
@@ -86,13 +83,11 @@ public class SummariesController {
             expansesArr.add(ob);
         }
 
-        JSONArray incomeArray= new JSONArray();
-        for(int i = 0; i < 31; i++)
-        {
+        JSONArray incomeArray = new JSONArray();
+        for (int i = 0; i < 31; i++) {
             int amount = 0;
-            if(ThreadLocalRandom.current().nextInt(0, 100) > 90)
-            {
-                cal.set(Calendar.DAY_OF_MONTH, i+1);
+            if (ThreadLocalRandom.current().nextInt(0, 100) > 90) {
+                cal.set(Calendar.DAY_OF_MONTH, i + 1);
                 amount = ThreadLocalRandom.current().nextInt(300, 4000);
                 int incomeCatIndex = ThreadLocalRandom.current().nextInt(0, categoriesIncome.length);
                 incomeCategoriesData[incomeCatIndex] += amount;
@@ -104,7 +99,7 @@ public class SummariesController {
                 ob.put("Category", categoriesIncome[incomeCatIndex]);
                 incomeArray.add(ob);
             }
-                balancePerDay[i] = amount - daylyExpenses[i];
+            balancePerDay[i] = amount - daylyExpenses[i];
         }
 
         data.put("goal", goal);
@@ -139,11 +134,10 @@ public class SummariesController {
         return data;
     }
 
-    @GetMapping(value = {"/history"}, produces=MediaType.APPLICATION_JSON_VALUE)
-    public String getUserHistory(@RequestParam(value = "from", defaultValue="2017-10-01") String from, 
-    @RequestParam(value = "to", defaultValue="2017-11-01") String to,
-    @RequestParam(value = "usrid", defaultValue="1") String usrID)
-    {
+    @GetMapping(value = {"/history"}, produces = MediaType.APPLICATION_JSON_VALUE)
+    public String getUserHistory(@RequestParam(value = "from", defaultValue = "2017-10-01") String from,
+                                 @RequestParam(value = "to", defaultValue = "2017-11-01") String to,
+                                 @RequestParam(value = "usrid", defaultValue = "1") String usrID) {
         System.out.println("get user history");
         System.out.println("from: " + from);
         System.out.println("to: " + to);
@@ -152,8 +146,7 @@ public class SummariesController {
         return getSummaryData(userid, from, to).toString();
     }
 
-    public JSONObject getHistory(int userID, String from, String to)
-    {
+    public JSONObject getHistory(int userID, String from, String to) {
         JSONObject returVal = new JSONObject();
 
         return returVal;

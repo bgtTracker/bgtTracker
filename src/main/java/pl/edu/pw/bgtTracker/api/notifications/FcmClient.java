@@ -26,46 +26,44 @@ import pl.edu.pw.bgtTracker.BgtTrackerApplication;
 @Service
 public class FcmClient {
 
-  public FcmClient(FcmSettings settings) {
-    Path p = Paths.get(settings.getServiceAccountFile());
-    try (InputStream serviceAccount = Files.newInputStream(p)) {
-      FirebaseOptions options = new FirebaseOptions.Builder()
-          .setCredentials(GoogleCredentials.fromStream(serviceAccount)).build();
+    public FcmClient(FcmSettings settings) {
+        Path p = Paths.get(settings.getServiceAccountFile());
+        try (InputStream serviceAccount = Files.newInputStream(p)) {
+            FirebaseOptions options = new FirebaseOptions.Builder()
+                    .setCredentials(GoogleCredentials.fromStream(serviceAccount)).build();
 
-      FirebaseApp.initializeApp(options);
+            FirebaseApp.initializeApp(options);
+        } catch (IOException e) {
+            BgtTrackerApplication.logger.error("init fcm", e);
+        }
     }
-    catch (IOException e) {
-        BgtTrackerApplication.logger.error("init fcm", e);
+
+    public void send(Map<String, String> data, String topic)
+            throws InterruptedException, ExecutionException {
+
+        Message message = Message.builder().putAllData(data).setTopic(topic)
+                .setWebpushConfig(WebpushConfig.builder().putHeader("ttl", "300")
+                        .setNotification(new WebpushNotification(data.get("title"),
+                                data.get("msg"), "logo192.png"))
+                        .build())
+                .build();
+
+        // Message message = Message.builder().putAllData(data).setTopic(topic)
+        // .setWebpushConfig(WebpushConfig.builder().putHeader("ttl", "300").build())
+        // .build();
+
+        String response = FirebaseMessaging.getInstance().sendAsync(message).get();
+        BgtTrackerApplication.logger.info("Sent message: " + response);
     }
-  }
 
-  public void send(Map<String, String> data, String topic)
-      throws InterruptedException, ExecutionException {
-
-    Message message = Message.builder().putAllData(data).setTopic(topic)
-        .setWebpushConfig(WebpushConfig.builder().putHeader("ttl", "300")
-            .setNotification(new WebpushNotification(data.get("title"),
-                data.get("msg"), "logo192.png"))
-            .build())
-        .build();
-    
-    // Message message = Message.builder().putAllData(data).setTopic(topic)
-    // .setWebpushConfig(WebpushConfig.builder().putHeader("ttl", "300").build())
-    // .build();
-
-    String response = FirebaseMessaging.getInstance().sendAsync(message).get();
-    BgtTrackerApplication.logger.info("Sent message: " + response);
-  }
-
-  public void subscribe(String topic, String clientToken) {
-    try {
-      TopicManagementResponse response = FirebaseMessaging.getInstance()
-          .subscribeToTopicAsync(Collections.singletonList(clientToken), topic).get();
-      System.out
-          .println(response.getSuccessCount() + " tokens were subscribed successfully");
+    public void subscribe(String topic, String clientToken) {
+        try {
+            TopicManagementResponse response = FirebaseMessaging.getInstance()
+                    .subscribeToTopicAsync(Collections.singletonList(clientToken), topic).get();
+            System.out
+                    .println(response.getSuccessCount() + " tokens were subscribed successfully");
+        } catch (InterruptedException | ExecutionException e) {
+            BgtTrackerApplication.logger.error("subscribe", e);
+        }
     }
-    catch (InterruptedException | ExecutionException e) {
-        BgtTrackerApplication.logger.error("subscribe", e);
-    }
-  }
 }

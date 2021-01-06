@@ -26,8 +26,7 @@ public class Objective {
     @JoinColumn(name = "category_id", referencedColumnName = "id")
     private ExpenseCategory category;
 
-    public JSONObject toJSON()
-    {
+    public JSONObject toJSON() {
         JSONObject data = new JSONObject();
 
         data.put("id", id);
@@ -38,7 +37,7 @@ public class Objective {
         data.put("category-id", category.getId());
         data.put("category", category.getName());
         data.put("amount", amount);
-        
+
         return data;
     }
 

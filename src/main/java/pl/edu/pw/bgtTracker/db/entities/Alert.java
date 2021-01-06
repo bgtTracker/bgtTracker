@@ -20,8 +20,7 @@ public class Alert {
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     private AppUser user;
 
-    public JSONObject toJSON()
-    {
+    public JSONObject toJSON() {
         JSONObject json = new JSONObject();
         json.put("id", Long.toString(id));
         json.put("title", title);

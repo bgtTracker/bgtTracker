@@ -16,26 +16,23 @@ import pl.edu.pw.bgtTracker.db.repos.TestExpenseCategoryRepository;
 import pl.edu.pw.bgtTracker.db.repos.UserRepository;
 
 @RestController
-public class TestExpenseCategoryRepositoryController
-{
-  @Autowired private TestExpenseCategoryRepository expenseCategoryRepository;
-  @Autowired private UserRepository userRepository;
+public class TestExpenseCategoryRepositoryController {
+    @Autowired private TestExpenseCategoryRepository expenseCategoryRepository;
+    @Autowired private UserRepository userRepository;
 
-  @GetMapping(value={"/testapi/getexpensecategory"}, produces=MediaType.APPLICATION_JSON_VALUE)
-  public JSONObject getExpenseCategory(Authentication auth)
-  {
-    AppUser user = userRepository.findByEmail(auth.getName());
-    JSONObject data = new JSONObject();
-    
-    List<ExpenseCategory> categories = user.getExpenseCategories();
+    @GetMapping(value = {"/testapi/getexpensecategory"}, produces = MediaType.APPLICATION_JSON_VALUE)
+    public JSONObject getExpenseCategory(Authentication auth) {
+        AppUser user = userRepository.findByEmail(auth.getName());
+        JSONObject data = new JSONObject();
 
-    JSONArray arr = new JSONArray();
-    for(var c: categories)
-    {
-      arr.add(c.toJSON());
+        List<ExpenseCategory> categories = user.getExpenseCategories();
+
+        JSONArray arr = new JSONArray();
+        for (var c : categories) {
+            arr.add(c.toJSON());
+        }
+
+        data.put("expenseCategories", arr);
+        return data;
     }
-
-    data.put("expenseCategories", arr);
-    return data;
-  }
 }

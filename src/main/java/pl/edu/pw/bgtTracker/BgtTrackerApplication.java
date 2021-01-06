@@ -11,18 +11,17 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.RestController;
 
 @SpringBootApplication
-@RestController
 @EnableScheduling
 public class BgtTrackerApplication {
 
-	public static final Logger logger = LoggerFactory.getLogger("pl.edu.pw.bgtTracker");
-	
-	@Bean
-	public BCryptPasswordEncoder passwordEncoder() {
-		return new BCryptPasswordEncoder();
-	}
+    public static final Logger logger = LoggerFactory.getLogger("pl.edu.pw.bgtTracker");
 
-	public static void main(String[] args) {
-		SpringApplication.run(BgtTrackerApplication.class, args);
-	}
+    @Bean
+    public BCryptPasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
+
+    public static void main(String[] args) {
+        SpringApplication.run(BgtTrackerApplication.class, args);
+    }
 }

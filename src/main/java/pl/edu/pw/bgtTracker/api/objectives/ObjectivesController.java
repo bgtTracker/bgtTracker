@@ -23,71 +23,63 @@ import pl.edu.pw.bgtTracker.db.repos.UserRepository;
 
 @RestController
 public class ObjectivesController {
-  
-   @Autowired private ObjectivesService objectivesService;
-   @Autowired private UserRepository userRepository;
 
-   @PostMapping("/api/addobjective")
-   public JSONObject addObjective(Authentication auth, @RequestBody String bodyString, HttpServletResponse httpServletResponse)
-   {
-      AppUser appuser = userRepository.findByEmail(auth.getName());
-      System.out.println(bodyString);
-      JSONObject body = this.paresStringToJson(bodyString, httpServletResponse);
+    @Autowired private ObjectivesService objectivesService;
+    @Autowired private UserRepository userRepository;
 
-      objectivesService.addObjective(body, appuser);
-      
-      return body;
-   }
+    @PostMapping("/api/addobjective")
+    public JSONObject addObjective(Authentication auth, @RequestBody String bodyString, HttpServletResponse httpServletResponse) {
+        AppUser appuser = userRepository.findByEmail(auth.getName());
+        System.out.println(bodyString);
+        JSONObject body = this.paresStringToJson(bodyString, httpServletResponse);
 
-   @GetMapping(value={"/api/getobjectives"}, produces=MediaType.APPLICATION_JSON_VALUE)
-   public JSONObject getObjectives(Authentication auth)
-   {
-      AppUser appuser = userRepository.findByEmail(auth.getName());
-      JSONObject data = objectivesService.getObjectives(appuser);
-      System.out.println(data);
-      return data; 
-   }
+        objectivesService.addObjective(body, appuser);
 
-   @PutMapping("/api/editobjectives")
-   public void editObjective(Authentication auth, @RequestBody String bodyString, HttpServletResponse httpServletResponse)
-   {
-      JSONObject newObjective = paresStringToJson(bodyString, httpServletResponse);
-      objectivesService.editObjective(newObjective);
-   }
+        return body;
+    }
 
-   @DeleteMapping("/api/deleteobjective")
-   public void deleteObjectives(Authentication auth, @RequestParam(value = "id") Long id, HttpServletResponse httpServletResponse)
-   {
-      if(id == null)
-      {
-         httpServletResponse.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-         return;
-      }
-      objectivesService.deleteObjectives(id);
-   }
+    @GetMapping(value = {"/api/getobjectives"}, produces = MediaType.APPLICATION_JSON_VALUE)
+    public JSONObject getObjectives(Authentication auth) {
+        AppUser appuser = userRepository.findByEmail(auth.getName());
+        JSONObject data = objectivesService.getObjectives(appuser);
+        System.out.println(data);
+        return data;
+    }
 
-   private JSONObject paresStringToJson(String bodyString, HttpServletResponse httpServletResponse)
-   {
-      JSONParser parser = new JSONParser(JSONParser.MODE_JSON_SIMPLE);
-      JSONObject body;
-      try {
+    @PutMapping("/api/editobjectives")
+    public void editObjective(Authentication auth, @RequestBody String bodyString, HttpServletResponse httpServletResponse) {
+        JSONObject newObjective = paresStringToJson(bodyString, httpServletResponse);
+        objectivesService.editObjective(newObjective);
+    }
 
-       body = (JSONObject) parser.parse(bodyString);
-      
-      }catch(ParseException pe)
-      {
-         body = new JSONObject();
-         body.put("error", "bad parsing-bad data to parse");
-         httpServletResponse.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-      }catch(Exception e)
-      {
-         body = new JSONObject();
-         body.put("error", "unknwonn error");
-         httpServletResponse.setStatus(HttpServletResponse.SC_BAD_REQUEST); //?? good code?
-      }
-      
-      return body;
-   }
+    @DeleteMapping("/api/deleteobjective")
+    public void deleteObjectives(Authentication auth, @RequestParam(value = "id") Long id, HttpServletResponse httpServletResponse) {
+        if (id == null) {
+            httpServletResponse.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            return;
+        }
+        objectivesService.deleteObjectives(id);
+    }
+
+    private JSONObject paresStringToJson(String bodyString, HttpServletResponse httpServletResponse) {
+        JSONParser parser = new JSONParser(JSONParser.MODE_JSON_SIMPLE);
+        JSONObject body;
+        try {
+
+            body = (JSONObject) parser.parse(bodyString);
+
+        } catch (ParseException pe) {
+            body = new JSONObject();
+            body.put("error", "bad parsing-bad data to parse");
+            httpServletResponse.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+        } catch (Exception e) {
+            body = new JSONObject();
+            body.put("error", "unknwonn error");
+            httpServletResponse.setStatus(HttpServletResponse.SC_BAD_REQUEST); //?? good code?
+        }
+
+        return body;
+    }
 
 
 }

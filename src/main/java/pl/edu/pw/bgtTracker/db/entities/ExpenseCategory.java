@@ -28,8 +28,7 @@ public class ExpenseCategory {
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     private AppUser user;
 
-    public JSONObject toJSON()
-    {
+    public JSONObject toJSON() {
         JSONObject data = new JSONObject();
         data.put("id", id);
         data.put("name", name);

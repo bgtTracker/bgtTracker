@@ -18,57 +18,51 @@ import pl.edu.pw.bgtTracker.db.repos.UserRepository;
 @Service
 public class ObjectivesService {
 
-  @Autowired private ObjectiveRepository objectiveRepository;
-  @Autowired private TestExpenseCategoryRepository expenseCategoryRepository;
-  @Autowired private UserRepository userRepository;
+    @Autowired private ObjectiveRepository objectiveRepository;
+    @Autowired private TestExpenseCategoryRepository expenseCategoryRepository;
+    @Autowired private UserRepository userRepository;
 
-  public void addObjective(JSONObject objectiveJson, AppUser user)
-  {
-    //Objective objective
-    System.out.println(objectiveJson.toString());
-    Objective objective = new Objective();
-    objective = setObjectivToJson(objectiveJson, objective);
-    objective.setUser(user);
-    objectiveRepository.save(objective);
-  }
+    public void addObjective(JSONObject objectiveJson, AppUser user) {
+        //Objective objective
+        System.out.println(objectiveJson.toString());
+        Objective objective = new Objective();
+        objective = setObjectivToJson(objectiveJson, objective);
+        objective.setUser(user);
+        objectiveRepository.save(objective);
+    }
 
-  public JSONObject getObjectives(AppUser user)
-  {
-      List<Objective> objectives = user.getObjectives();
-      JSONObject data = new JSONObject();
+    public JSONObject getObjectives(AppUser user) {
+        List<Objective> objectives = user.getObjectives();
+        JSONObject data = new JSONObject();
 
-      JSONArray arr = new JSONArray();
-      for(var o: objectives)
-      {
-        arr.add(o.toJSON());
-      }
-      System.out.println(arr);
-      data.put("objectives", arr);
-      return data;
-  }
+        JSONArray arr = new JSONArray();
+        for (var o : objectives) {
+            arr.add(o.toJSON());
+        }
+        System.out.println(arr);
+        data.put("objectives", arr);
+        return data;
+    }
 
-  public void deleteObjectives(Long id)
-  {
-    Objective objective = objectiveRepository.findById(id).get();
-    objectiveRepository.delete(objective);
-  }
+    public void deleteObjectives(Long id) {
+        Objective objective = objectiveRepository.findById(id).get();
+        objectiveRepository.delete(objective);
+    }
 
-  public void editObjective(JSONObject newObjective)
-  {
-    Objective objective = objectiveRepository.findById((Long)newObjective.get("id")).get();
-    setObjectivToJson(newObjective, objective);
-    objectiveRepository.save(objective);
-  }
+    public void editObjective(JSONObject newObjective) {
+        Objective objective = objectiveRepository.findById((Long) newObjective.get("id")).get();
+        setObjectivToJson(newObjective, objective);
+        objectiveRepository.save(objective);
+    }
 
-  private Objective setObjectivToJson(JSONObject newObjective, Objective objective)
-  {
-    objective.setAmount((Long)newObjective.get("amount"));
-    objective.setName((String)newObjective.get("name"));
-    objective.setDescription((String)newObjective.get("description"));
-    objective.setDate(new Date((Long) newObjective.get("date")));
-    objective.setPriority((Long)newObjective.get("priority"));
-    objective.setCategory(expenseCategoryRepository.findById((Long) newObjective.get("category")).get());
-    return objective;
-  }
-  
+    private Objective setObjectivToJson(JSONObject newObjective, Objective objective) {
+        objective.setAmount((Long) newObjective.get("amount"));
+        objective.setName((String) newObjective.get("name"));
+        objective.setDescription((String) newObjective.get("description"));
+        objective.setDate(new Date((Long) newObjective.get("date")));
+        objective.setPriority((Long) newObjective.get("priority"));
+        objective.setCategory(expenseCategoryRepository.findById((Long) newObjective.get("category")).get());
+        return objective;
+    }
+
 }
