@@ -1,13 +1,11 @@
 export default function ErrorCodeHandling(code) {
-
-  const redirect = (code) =>{
-    if (typeof window !== 'undefined') 
-    {
+  const redirect = code => {
+    if (typeof window !== "undefined") {
       window.location.replace("/" + code);
     }
-  }
+  };
 
-  switch(code){
+  switch (code) {
     case code < 400:
       break;
     case 403:

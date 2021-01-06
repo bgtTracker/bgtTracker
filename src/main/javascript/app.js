@@ -9,26 +9,25 @@ import {
 import Login from "./Components/Login/Login";
 import Register from "./Components/Login/Register";
 import MainPage from "./Components/MainPage";
-import firebase from 'firebase/app';
-import 'firebase/messaging';
-import clientJson from './clientJson.js';
+import firebase from "firebase/app";
+import "firebase/messaging";
+import clientJson from "./clientJson.js";
 import AuthenticatedRoute from "./Components/AuthenticatedRoute";
 import AuthService from "./api/AuthService";
 
-async function initPush()
-{
-    if ("serviceWorker" in navigator)
-    {
-        const registration = await navigator.serviceWorker.register('../firebase-messaging-sw.js').then(function(registration) {
-            console.log("Registration successful, scope is:", registration.scope);
-        })
-        .catch(function(err) {
-            console.log("Service worker registration failed, error:", err);
-        });
-    }
-    else {
-        console.log('not service worker in navigator');
-    }
+async function initPush() {
+  if ("serviceWorker" in navigator) {
+    const registration = await navigator.serviceWorker
+      .register("../firebase-messaging-sw.js")
+      .then(function (registration) {
+        console.log("Registration successful, scope is:", registration.scope);
+      })
+      .catch(function (err) {
+        console.log("Service worker registration failed, error:", err);
+      });
+  } else {
+    console.log("not service worker in navigator");
+  }
 }
 
 export default function App() {
@@ -56,9 +55,6 @@ export default function App() {
   );
 }
 
-ReactDOM.render(
-    <App/>,
-    document.getElementById('root')
-);
+ReactDOM.render(<App />, document.getElementById("root"));
 
 initPush();

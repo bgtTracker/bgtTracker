@@ -1,7 +1,7 @@
-import React from 'react'
+import React from "react";
 
 export default function ErrorRedirect404() {
-  if (typeof window !== 'undefined') {
+  if (typeof window !== "undefined") {
     window.location.replace("/404");
   }
   return (
@@ -9,5 +9,5 @@ export default function ErrorRedirect404() {
       <h1> Not found - error occured - redirectig</h1>
       <h1 href="/"> HomePage</h1>
     </div>
-  )
+  );
 }

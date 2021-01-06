@@ -1,3 +1,9 @@
 #!/bin/sh
 
-npx prettier --write .
+if command -v npx &> /dev/null; then
+    CHANGED_FILES=$(npx prettier -l . | tr '\n' ' ')
+    npx prettier --write . &> /dev/null
+    if [ ! -z "$CHANGED_FILES" ]; then
+        git add $CHANGED_FILES
+    fi
+fi

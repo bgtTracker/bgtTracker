@@ -1,24 +1,24 @@
-import React from 'react'
+import React from "react";
 import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import Grid from "@material-ui/core/Grid";
 import TextField from "@material-ui/core/TextField";
-import Button from"@material-ui/core/Button";
-import {createMuiTheme, makeStyles} from "@material-ui/core/styles";
-import FormControl from '@material-ui/core/FormControl';
-import Select from '@material-ui/core/Select';
+import Button from "@material-ui/core/Button";
+import { createMuiTheme, makeStyles } from "@material-ui/core/styles";
+import FormControl from "@material-ui/core/FormControl";
+import Select from "@material-ui/core/Select";
 import DateFnsUtils from "@date-io/date-fns";
 import {
   MuiPickersUtilsProvider,
   KeyboardDatePicker
 } from "@material-ui/pickers";
-import InputLabel from '@material-ui/core/InputLabel';
-import Input from '@material-ui/core/Input';
-import MenuItem from '@material-ui/core/MenuItem';
+import InputLabel from "@material-ui/core/InputLabel";
+import Input from "@material-ui/core/Input";
+import MenuItem from "@material-ui/core/MenuItem";
 import AuthService from "../../api/AuthService.js";
-import {Skeleton} from '@material-ui/lab';
+import { Skeleton } from "@material-ui/lab";
 
 const theme = createMuiTheme();
 
@@ -28,11 +28,11 @@ const useStyles = makeStyles({
   },
   bigTextField: {
     height: 150,
-    width: 470,
+    width: 470
   },
   nameTextFile: {
     height: 50,
-    width: 470,
+    width: 470
   },
   dialog: {
     height: 480,
@@ -48,38 +48,37 @@ const useStyles = makeStyles({
     width: 20
   },
   formControl: {
-    minWidth: 220,
-  },
+    minWidth: 220
+  }
 });
 
 export default function ObjectiveDialog(props) {
   const classes = useStyles();
   const maxWidth = "xl";
   const open = props.open;
-  const [date, setDate] = React.useState(
-    props.row.date
-  );
+  const [date, setDate] = React.useState(props.row.date);
   const [category, setCategory] = React.useState(props.row.category);
   const [name, setName] = React.useState(props.row.name);
   const [amount, setAmount] = React.useState(props.row.amount);
   const [description, setDescription] = React.useState(props.row.description);
   const [priority, setPriority] = React.useState(props.row.priority);
   const [categories, setCategories] = React.useState();
-  
-  React.useEffect(() => {
-    fetch("/testapi/getexpensecategory",{
-      method: "GET",
-      headers: AuthService.getAuthHeader(),
-    }).then(res => res.json())
-    .then(res => {
-      console.log("POGGG");
-      console.log(res);
-      setCategories(res.expenseCategories);
-    }).catch(e => {
-      console.error(e);
-    })
 
-  }, [])
+  React.useEffect(() => {
+    fetch("/testapi/getexpensecategory", {
+      method: "GET",
+      headers: AuthService.getAuthHeader()
+    })
+      .then(res => res.json())
+      .then(res => {
+        console.log("POGGG");
+        console.log(res);
+        setCategories(res.expenseCategories);
+      })
+      .catch(e => {
+        console.error(e);
+      });
+  }, []);
 
   const handleDataChange = date => {
     setDate(date);
@@ -87,7 +86,7 @@ export default function ObjectiveDialog(props) {
 
   const handleClose = () => {
     props.handleClose();
-  }
+  };
 
   const handleSave = () => {
     props.handleSave({
@@ -99,7 +98,7 @@ export default function ObjectiveDialog(props) {
       priority: Number.parseInt(priority)
     });
     props.handleClose();
-  }
+  };
 
   return (
     <div>
@@ -114,8 +113,15 @@ export default function ObjectiveDialog(props) {
           Enter new name and last name
         </DialogTitle>
         <DialogContent>
-          <Grid container direction="column"  justify="space-around">
-            <Grid container className={classes.row} spacing={1} direction={"row"} justify="space-around" alignItems="center" >
+          <Grid container direction="column" justify="space-around">
+            <Grid
+              container
+              className={classes.row}
+              spacing={1}
+              direction={"row"}
+              justify="space-around"
+              alignItems="center"
+            >
               <Grid item xs={6}>
                 <TextField
                   className={classes.smalleTextField}
@@ -140,43 +146,56 @@ export default function ObjectiveDialog(props) {
             <Grid item xs={12}>
               <div className={classes.BlankSpace}> </div>
             </Grid>
-            <Grid container className={classes.row}  spacing={1} direction={"row"} justify="space-around" alignItems="center">
-              <Grid item xs={6} >
+            <Grid
+              container
+              className={classes.row}
+              spacing={1}
+              direction={"row"}
+              justify="space-around"
+              alignItems="center"
+            >
+              <Grid item xs={6}>
                 <form className={classes.container} noValidate>
                   <MuiPickersUtilsProvider utils={DateFnsUtils}>
-                    <KeyboardDatePicker 
-                    disableToolbar
-                    variant="inline"
-                    format="yyyy-dd-MM"
-                    margin="normal"
-                    id="demo-date-outlined"
-                    inputVariant="outlined"
-                    label="Date"
-                    variant="outlined"
-                    value={date}
-                    onChange={handleDataChange}
-                    KeyboardButtonProps={{
-                      "aria-label": "change date"
-                    }}
+                    <KeyboardDatePicker
+                      disableToolbar
+                      variant="inline"
+                      format="yyyy-dd-MM"
+                      margin="normal"
+                      id="demo-date-outlined"
+                      inputVariant="outlined"
+                      label="Date"
+                      variant="outlined"
+                      value={date}
+                      onChange={handleDataChange}
+                      KeyboardButtonProps={{
+                        "aria-label": "change date"
+                      }}
                     />
                   </MuiPickersUtilsProvider>
                 </form>
               </Grid>
-              <Grid item xs={6} >
+              <Grid item xs={6}>
                 <FormControl variant="outlined" className={classes.formControl}>
-                  <InputLabel id="demo-category-outlined-label">Category</InputLabel>
+                  <InputLabel id="demo-category-outlined-label">
+                    Category
+                  </InputLabel>
                   <Select
                     labelId="demo-category-outlined-label"
                     id="demo-category-outlined"
                     value={category}
-                    onChange={(e) => setCategory(e.target.value)}
+                    onChange={e => setCategory(e.target.value)}
                     label="Category"
                   >
-                    {categories === undefined? <Skeleton animation="wave" variant="react"/> :
+                    {categories === undefined ? (
+                      <Skeleton animation="wave" variant="react" />
+                    ) : (
                       categories.map(element => (
-                        <MenuItem key={element.id} value={element.id}>{element.name}</MenuItem>
+                        <MenuItem key={element.id} value={element.id}>
+                          {element.name}
+                        </MenuItem>
                       ))
-                    }
+                    )}
                   </Select>
                 </FormControl>
               </Grid>
@@ -186,28 +205,28 @@ export default function ObjectiveDialog(props) {
             </Grid>
             <Grid item xs={12}>
               <TextField
-                  className={classes.nameTextFile}
-                  id="Name"
-                  label="Name"
-                  variant="outlined"
-                  value={name}
-                  onChange={e => setName(e.target.value)}
+                className={classes.nameTextFile}
+                id="Name"
+                label="Name"
+                variant="outlined"
+                value={name}
+                onChange={e => setName(e.target.value)}
               />
             </Grid>
             <Grid item xs={12}>
               <div className={classes.BlankSpace}> </div>
             </Grid>
             <Grid item xs={12}>
-            <TextField
-              className={classes.bigTextField}
-              id="outlined-multiline-static"
-              label="Multiline"
-              multiline
-              rows={4}
-              variant="outlined"
-              value={description}
-              onChange={e => setDescription(e.target.value)}
-            />
+              <TextField
+                className={classes.bigTextField}
+                id="outlined-multiline-static"
+                label="Multiline"
+                multiline
+                rows={4}
+                variant="outlined"
+                value={description}
+                onChange={e => setDescription(e.target.value)}
+              />
             </Grid>
           </Grid>
         </DialogContent>
@@ -221,7 +240,5 @@ export default function ObjectiveDialog(props) {
         </DialogActions>
       </Dialog>
     </div>
-  )
+  );
 }
-
-

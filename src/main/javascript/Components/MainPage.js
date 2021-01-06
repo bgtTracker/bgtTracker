@@ -48,12 +48,12 @@ import Settings from "./Settings/Settings.js";
 import Income from "./Tables/Income/Income";
 import Expense from "./Tables/Expense/Expense";
 import Bill from "./Tables/Expense/Expense";
-import firebase from 'firebase/app';
-import 'firebase/messaging';
-import clientJson from '../clientJson.js';
-import NotificationSystem from 'react-notification-system';
+import firebase from "firebase/app";
+import "firebase/messaging";
+import clientJson from "../clientJson.js";
+import NotificationSystem from "react-notification-system";
 import NotificationMenu from "./Notifications/NotificationMenu.js";
-import {Skeleton} from '@material-ui/lab';
+import { Skeleton } from "@material-ui/lab";
 import AuthService from "../api/AuthService";
 import Objectives from "./Objectives/Objectives.js";
 import ErrorRedirect from "./ErrorRedirect404.js";
@@ -181,46 +181,44 @@ function drawerItems(classes, url) {
   );
 }
 
-async function InitFireBase()
-{
-    const initializedFirebaseApp = firebase.initializeApp({
-        apiKey: "AIzaSyCoy2KVfE3CotDEwJk5X5xbkA0HMa0O5L0",
-        authDomain: "bgttracket.firebaseapp.com",
-        projectId: "bgttracket",
-        storageBucket: "bgttracket.appspot.com",
-        messagingSenderId: "487395361382",
-        appId: "1:487395361382:web:9b492dcbfa3b77339923a7"
-    });
+async function InitFireBase() {
+  const initializedFirebaseApp = firebase.initializeApp({
+    apiKey: "AIzaSyCoy2KVfE3CotDEwJk5X5xbkA0HMa0O5L0",
+    authDomain: "bgttracket.firebaseapp.com",
+    projectId: "bgttracket",
+    storageBucket: "bgttracket.appspot.com",
+    messagingSenderId: "487395361382",
+    appId: "1:487395361382:web:9b492dcbfa3b77339923a7"
+  });
 }
 
+async function SubscribeToUserTopic(user) {
+  // !!!!!!!!
+  // to do replace with actuac user id
+  // !!!!!!!!
 
-async function SubscribeToUserTopic(user)
-{
-    // !!!!!!!!
-    // to do replace with actuac user id
-    // !!!!!!!!
+  const messaging = firebase.messaging();
 
-    const messaging = firebase.messaging();
-
-    try{
-        const currentToken = await messaging.getToken({
-            vapidKey: 'BAxFZLrrh8nZ_BmuUYpkYjL3s6plsYNWZjou86Fys3w1zfZThBjmR3Kv12D5nP8B2Wv8VKS_SGY0NF9rOkSXt4M',
-        });
-        // console.log("Token: " + currentToken);
-        clientJson({method: 'POST', path: '/api/pushsubscribe', 
-        headers: AuthService.getAuthHeader(),
-        params: {
-            token: currentToken,
-            }}).then((response) => {
-                console.log("push subsciption");
-                console.log(response);
-            })
-    }catch (e) {
-        console.log('somthing went wrong', e);
-
-
-    }
-
+  try {
+    const currentToken = await messaging.getToken({
+      vapidKey:
+        "BAxFZLrrh8nZ_BmuUYpkYjL3s6plsYNWZjou86Fys3w1zfZThBjmR3Kv12D5nP8B2Wv8VKS_SGY0NF9rOkSXt4M"
+    });
+    // console.log("Token: " + currentToken);
+    clientJson({
+      method: "POST",
+      path: "/api/pushsubscribe",
+      headers: AuthService.getAuthHeader(),
+      params: {
+        token: currentToken
+      }
+    }).then(response => {
+      console.log("push subsciption");
+      console.log(response);
+    });
+  } catch (e) {
+    console.log("somthing went wrong", e);
+  }
 }
 
 const userId = 2;
@@ -235,30 +233,31 @@ export default function MainPage() {
   const [notifications, setNotfications] = React.useState();
   const [lodaing, setLodaing] = React.useState(false);
 
-  if (firebase.apps.length === 0)
-  {
+  if (firebase.apps.length === 0) {
     InitFireBase();
   }
-  
-  if(!userSubscribed)
-  {
-      SubscribeToUserTopic(userId); //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-      setUserSubscribed(true);
+
+  if (!userSubscribed) {
+    SubscribeToUserTopic(userId); //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    setUserSubscribed(true);
   }
   // !!!!!!!!
   // to do replace with user id
   // !!!!!!!!
 
-  function removeNotication(notificationId)
-  {
-      clientJson({method: 'POST', path: "/api/notificationsread",  
-      headers : AuthService.getAuthHeader(),
+  function removeNotication(notificationId) {
+    clientJson({
+      method: "POST",
+      path: "/api/notificationsread",
+      headers: AuthService.getAuthHeader(),
       params: {
-          id: notificationId
-      }}).then((response) => {
-      }).catch(e => {
+        id: notificationId
+      }
+    })
+      .then(response => {})
+      .catch(e => {
         ErrorCodeHandling(e.status.code);
-      })
+      });
   }
 
   let notificationSystem = React.createRef();
@@ -271,54 +270,57 @@ export default function MainPage() {
       level: data.level,
       title: data.title,
       action: {
-      label: 'Got it!',
-      callback: function() {
+        label: "Got it!",
+        callback: function () {
           removeNotication(data.id);
-      }
+        }
       },
       onRemove: () => {
-          reloadNotifications();
+        reloadNotifications();
       }
     };
     notification.addNotification(not);
   };
 
-  navigator.serviceWorker.addEventListener('message', event => {
-      if (event.data.firebaseMessaging.payload.data.action === 'showNotification')
-      {
-          try
-          {
-              addNotification(event.data.firebaseMessaging.payload.data);
-          }
-          catch(e)
-          {
-            //no idea why it works so i don't bother rn
-            //of course i'm sorry for this horrible thing but liblary has forced my hand 
-          }
+  navigator.serviceWorker.addEventListener("message", event => {
+    if (
+      event.data.firebaseMessaging.payload.data.action === "showNotification"
+    ) {
+      try {
+        addNotification(event.data.firebaseMessaging.payload.data);
+      } catch (e) {
+        //no idea why it works so i don't bother rn
+        //of course i'm sorry for this horrible thing but liblary has forced my hand
       }
+    }
   });
 
   const reloadNotifications = () => {
-      setNotfications(undefined);
-      setLodaing(!lodaing);
-      //yes it is not good
-      //yes i have no enefry and time to think of better 
-      //it works so it stays for no 
-  }
+    setNotfications(undefined);
+    setLodaing(!lodaing);
+    //yes it is not good
+    //yes i have no enefry and time to think of better
+    //it works so it stays for no
+  };
 
   React.useEffect(() => {
-      clientJson({method: 'GET', path: '/api/getNotifications/', headers: AuthService.getAuthHeader()}).then((response) => {
+    clientJson({
+      method: "GET",
+      path: "/api/getNotifications/",
+      headers: AuthService.getAuthHeader()
+    })
+      .then(response => {
         console.log(response);
         let nots = response.entity.notifications;
-        for(var n of nots)
-        {
+        for (var n of nots) {
           n.open = true;
-        } 
+        }
         setNotfications(nots);
-    }).catch(e => {
-      ErrorCodeHandling(e.status.code);
-    })
-    }, [lodaing]);
+      })
+      .catch(e => {
+        ErrorCodeHandling(e.status.code);
+      });
+  }, [lodaing]);
 
   const handleLogout = event => {
     AuthService.logout();
@@ -353,7 +355,20 @@ export default function MainPage() {
           >
             bgtTracker
           </Typography>
-            {notifications === undefined ? <Skeleton animation="wave" variant="circle" width={40} height={40} /> : <NotificationMenu removeNotication={removeNotication} reloadnotifications={reloadNotifications} notifications={notifications}/> }
+          {notifications === undefined ? (
+            <Skeleton
+              animation="wave"
+              variant="circle"
+              width={40}
+              height={40}
+            />
+          ) : (
+            <NotificationMenu
+              removeNotication={removeNotication}
+              reloadnotifications={reloadNotifications}
+              notifications={notifications}
+            />
+          )}
           <IconButton color="inherit" onClick={handleLogout}>
             <ExitToAppIcon />
           </IconButton>
@@ -392,7 +407,7 @@ export default function MainPage() {
             <Route exact path={`${path}/expenses`} component={Expense} />
             <Route exact path={`${path}/bills`} component={Bill} />
             <Route exact path={`${path}/objectives`} component={Objectives} />
-            <Route path='*' component={ErrorRedirect}/>
+            <Route path="*" component={ErrorRedirect} />
           </Switch>
         </Container>
       </main>

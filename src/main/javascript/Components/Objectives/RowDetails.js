@@ -12,17 +12,17 @@ import Box from "@material-ui/core/Box";
 import Button from "@material-ui/core/Button";
 import Grid from "@material-ui/core/Grid";
 import LinearProgress from "@material-ui/core/LinearProgress";
-import CircularProgress from '@material-ui/core/CircularProgress';
+import CircularProgress from "@material-ui/core/CircularProgress";
 import ObjectiveDialog from "./ObjectiveDialog.js";
-import clientJson from '../../clientJson.js';
-import AuthService from '../../api/AuthService.js';
+import clientJson from "../../clientJson.js";
+import AuthService from "../../api/AuthService.js";
 
 function LinearProgressWithLabel(props) {
   return (
     <Box display="flex" alignItems="center">
       <Box minWidth={80}>
         <Typography variant="body2" component="div">
-          Progress: 
+          Progress:
         </Typography>
       </Box>
       <Box width="100%" mr={1}>
@@ -30,7 +30,7 @@ function LinearProgressWithLabel(props) {
       </Box>
       <Box minWidth={35}>
         <Typography variant="body2" color="textSecondary">{`${Math.round(
-          props.value,
+          props.value
         )}%`}</Typography>
       </Box>
     </Box>
@@ -42,7 +42,7 @@ LinearProgressWithLabel.propTypes = {
    * The value of the progress indicator for the determinate and buffer variants.
    * Value between 0 and 100.
    */
-  value: PropTypes.number.isRequired,
+  value: PropTypes.number.isRequired
 };
 
 function CircularProgressWithLabel(props) {
@@ -59,9 +59,11 @@ function CircularProgressWithLabel(props) {
         alignItems="center"
         justifyContent="center"
       >
-        <Typography variant="caption" component="div" color="textSecondary">{`${Math.round(
-          props.value,
-        )}%`}</Typography>
+        <Typography
+          variant="caption"
+          component="div"
+          color="textSecondary"
+        >{`${Math.round(props.value)}%`}</Typography>
       </Box>
     </Box>
   );
@@ -72,10 +74,8 @@ CircularProgressWithLabel.propTypes = {
    * The value of the progress indicator for the determinate variant.
    * Value between 0 and 100.
    */
-  value: PropTypes.number.isRequired,
+  value: PropTypes.number.isRequired
 };
-
-
 
 export default function Row(props) {
   const row = props.row;
@@ -85,28 +85,27 @@ export default function Row(props) {
   let editDialogOpenTemp = editDialogOpen;
 
   const handleClose = () => {
-    if(editDialogOpenTemp === false)
-    {
+    if (editDialogOpenTemp === false) {
       setOpen(!open);
     }
-  }
+  };
 
   const handleCloseEdit = () => {
     setEditDialogOpen(false);
-  }
+  };
 
-  const handleSave = (toSave) => {
-      props.handleSave(toSave);
-  }
+  const handleSave = toSave => {
+    props.handleSave(toSave);
+  };
 
   const handleOpenEdit = () => {
     editDialogOpenTemp = true;
     setEditDialogOpen(true);
-  }
+  };
 
   const handleDelete = () => {
     props.handleDelete(row.id);
-  }
+  };
 
   const isItemSelected = props.isSelected(row.id);
   const labelId = `enhanced-table-checkbox-${index}`;
@@ -147,7 +146,7 @@ export default function Row(props) {
           {row.category}
         </TableCell>
         <TableCell align="right" onClick={handleClose}>
-            <CircularProgressWithLabel value={(row.amount/props.money)*100}/>
+          <CircularProgressWithLabel value={(row.amount / props.money) * 100} />
         </TableCell>
         <TableCell align="right" onClick={handleClose}>
           {row.amount}
@@ -162,30 +161,37 @@ export default function Row(props) {
         >
           <Collapse in={open} timeout="auto" unmountOnExit>
             <Box margin={1}>
-              <Typography variant="h6" gutterBottom component="div" align="center">
+              <Typography
+                variant="h6"
+                gutterBottom
+                component="div"
+                align="center"
+              >
                 Description: {row.description}
               </Typography>
-              <LinearProgressWithLabel value={(row.amount/props.money)*100}/>
-              <Grid container  
-                direction={"row"}   
+              <LinearProgressWithLabel
+                value={(row.amount / props.money) * 100}
+              />
+              <Grid
+                container
+                direction={"row"}
                 justify="space-evenly"
                 alignItems="center"
               >
                 <Grid item>
-                <Button onClick={handleOpenEdit}>
-                      Edit              
-                  </Button>
-                  <ObjectiveDialog open={editDialogOpen} row={row} handleClose={handleCloseEdit} handleSave={handleSave}/>
+                  <Button onClick={handleOpenEdit}>Edit</Button>
+                  <ObjectiveDialog
+                    open={editDialogOpen}
+                    row={row}
+                    handleClose={handleCloseEdit}
+                    handleSave={handleSave}
+                  />
                 </Grid>
                 <Grid item>
-                  <Button>
-                      Confirm              
-                  </Button>
+                  <Button>Confirm</Button>
                 </Grid>
                 <Grid item>
-                  <Button onClick={handleDelete}>
-                      Delete           
-                  </Button>
+                  <Button onClick={handleDelete}>Delete</Button>
                 </Grid>
               </Grid>
             </Box>

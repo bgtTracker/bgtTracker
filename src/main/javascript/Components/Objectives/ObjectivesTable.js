@@ -17,12 +17,12 @@ import Checkbox from "@material-ui/core/Checkbox";
 import IconButton from "@material-ui/core/IconButton";
 import Tooltip from "@material-ui/core/Tooltip";
 import ImportExportIcon from "@material-ui/icons/ImportExport";
-import AddCircleOutlineOutlinedIcon from '@material-ui/icons/AddCircleOutlineOutlined';
+import AddCircleOutlineOutlinedIcon from "@material-ui/icons/AddCircleOutlineOutlined";
 import CSVexporter from "../History/CSVexporter.js";
 import RowDetails from "./RowDetails.js";
 import RowNoDetails from "../History/Row.js";
 import DataConverter from "../History/DataConveret.js";
-import ObjectiveDialog from "./ObjectiveDialog.js"
+import ObjectiveDialog from "./ObjectiveDialog.js";
 import AuthService from "../../api/AuthService.js";
 
 const money = 10000;
@@ -47,10 +47,10 @@ function createData(id, name, date, category, amount, d) {
 let rows = [
   createData(101, "test", new Date(), "3000", 7000, 4000),
   createData(102, "test", new Date(), "2000", 1000, -100),
-  createData(103, "test", new Date(), '1000', 2000, 1000),
-  createData(104, "test", new Date(), '1500', 3000, 1500),
-  createData(105, "test", new Date(), '3000', 7000, 4000),
-  createData(106, "test", new Date(), '2000', 1000, -100),
+  createData(103, "test", new Date(), "1000", 2000, 1000),
+  createData(104, "test", new Date(), "1500", 3000, 1500),
+  createData(105, "test", new Date(), "3000", 7000, 4000),
+  createData(106, "test", new Date(), "2000", 1000, -100)
 ];
 
 function descendingComparator(a, b, orderBy) {
@@ -82,7 +82,7 @@ function stableSort(array, comparator) {
 let headCells = [
   { id: "name", numeric: false, disablePadding: false, label: "Name" },
   { id: "date", numeric: false, disablePadding: false, label: "End date" },
-  { id: "category", numeric: false, disablePadding: false, label: "Category"}, //?? acount numberic or not
+  { id: "category", numeric: false, disablePadding: false, label: "Category" }, //?? acount numberic or not
   { id: "amount", numeric: true, disablePadding: false, label: "Amount" }
 ];
 
@@ -182,8 +182,7 @@ const EnhancedTableToolbar = props => {
     category: 1,
     priority: 0,
     description: "New description"
-  }
-
+  };
 
   function HandleDownloadCSV() {
     let d = DataConverter(headCells, rows, props.selected);
@@ -197,11 +196,11 @@ const EnhancedTableToolbar = props => {
 
   const closeDialog = () => {
     setOpenDialog(false);
-  }
+  };
 
-  const addObjective = (toSave) => {
+  const addObjective = toSave => {
     props.addObjective(toSave);
-  }
+  };
 
   return (
     <Toolbar
@@ -246,12 +245,22 @@ const EnhancedTableToolbar = props => {
         </Tooltip>
       ) : (
         <div>
-        <Tooltip title="Add new objective">
-          <IconButton aria-label="objectives" onClick={e =>{ setOpenDialog(true)}}>
-            <AddCircleOutlineOutlinedIcon />
-          </IconButton>
-        </Tooltip>
-        <ObjectiveDialog open={openDialog} row={row} handleClose={closeDialog} handleSave={addObjective}/>
+          <Tooltip title="Add new objective">
+            <IconButton
+              aria-label="objectives"
+              onClick={e => {
+                setOpenDialog(true);
+              }}
+            >
+              <AddCircleOutlineOutlinedIcon />
+            </IconButton>
+          </Tooltip>
+          <ObjectiveDialog
+            open={openDialog}
+            row={row}
+            handleClose={closeDialog}
+            handleSave={addObjective}
+          />
         </div>
       )}
     </Toolbar>
@@ -261,7 +270,7 @@ const EnhancedTableToolbar = props => {
 EnhancedTableToolbar.propTypes = {
   numSelected: PropTypes.number.isRequired,
   selected: PropTypes.array.isRequired,
-  addObjective: PropTypes.func.isRequired,
+  addObjective: PropTypes.func.isRequired
   // getDataForCVS: PropTypes.func.isRequired,
 };
 
@@ -324,7 +333,6 @@ export default function ObjectivesTable(props) {
     setSelected([]);
   };
 
-
   const handleCheckBoxClick = (event, name) => {
     const selectedIndex = selected.indexOf(name);
     let newSelected = [];
@@ -358,9 +366,9 @@ export default function ObjectivesTable(props) {
   const emptyRows =
     rowsPerPage - Math.min(rowsPerPage, rows.length - page * rowsPerPage);
 
-  const editObjective = (toSave) =>{
-      props.editObjective(toSave);
-  }
+  const editObjective = toSave => {
+    props.editObjective(toSave);
+  };
 
   return (
     <div className={classes.root}>
