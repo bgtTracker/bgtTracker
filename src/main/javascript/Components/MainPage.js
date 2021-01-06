@@ -56,6 +56,8 @@ import NotificationMenu from "./Notifications/NotificationMenu.js";
 import {Skeleton} from '@material-ui/lab';
 import AuthService from "../api/AuthService";
 import Objectives from "./Objectives/Objectives.js";
+import ErrorRedirect from "./ErrorRedirect404.js";
+import ErrorCodeHandling from "./ErrorCodeHandling.js";
 
 const drawerWidth = 240;
 
@@ -254,16 +256,8 @@ export default function MainPage() {
       params: {
           id: notificationId
       }}).then((response) => {
-              console.log("notification Read");
-              console.log(response);
       }).catch(e => {
-        switch (error.response.status) {
-          case 403:
-              console.error("403");
-              break
-          default:
-              console.error(e);
-        }
+        ErrorCodeHandling(e.status.code);
       })
   }
 
@@ -314,12 +308,15 @@ export default function MainPage() {
 
   React.useEffect(() => {
       clientJson({method: 'GET', path: '/api/getNotifications/', headers: AuthService.getAuthHeader()}).then((response) => {
+        console.log(response);
         let nots = response.entity.notifications;
         for(var n of nots)
         {
           n.open = true;
         } 
         setNotfications(nots);
+    }).catch(e => {
+      ErrorCodeHandling(e.status.code);
     })
     }, [lodaing]);
 
@@ -395,6 +392,7 @@ export default function MainPage() {
             <Route exact path={`${path}/expenses`} component={Expense} />
             <Route exact path={`${path}/bills`} component={Bill} />
             <Route exact path={`${path}/objectives`} component={Objectives} />
+            <Route path='*' component={ErrorRedirect}/>
           </Switch>
         </Container>
       </main>
@@ -402,146 +400,3 @@ export default function MainPage() {
     </div>
   );
 }
-
-
-// const classes = useStyles();
-// const [drawerOpen, setDrawerOpen] = React.useState(true);
-// const {path, url} = useRouteMatch();
-// const [fireBaseInit, setFireBaseInit] = React.useState(false);
-// const [userSubscribed, setUserSubscribed] = React.useState(false);
-// const [notifications, setNotfications] = React.useState();
-// const [lodaing, setLodaing] = React.useState(false);
-
-// if (!fireBaseInit)
-// {
-//     InitFireBase();
-//     setFireBaseInit(true);
-// }
-// if(!userSubscribed)
-// {
-//     SubscribeToUserTopic(userId); //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-//     setUserSubscribed(true);
-// }
-// // !!!!!!!!
-// // to do replace with user id
-// // !!!!!!!!
-
-// function removeNotication(notificationId)
-// {
-//     clientJson({method: 'POST', path: "/api/notificationsread", params: {
-//         id: notificationId
-//         }}).then((response) => {
-//             console.log("notification Read");
-//             console.log(response);
-//         })
-// }
-
-// let notificationSystem = React.createRef();
-
-// const addNotification = data => {
-//   const notification = notificationSystem.current;
-//   let not = {
-//     id: data.id,
-//     message: data.msg,
-//     level: data.level,
-//     title: data.title,
-//     action: {
-//     label: 'Got it!',
-//     callback: function() {
-//         removeNotication(data.id);
-//     }
-//     },
-//     onRemove: () => {
-//         reloadNotifications();
-//     }
-//   };
-//   notification.addNotification(not);
-// };
-
-// navigator.serviceWorker.addEventListener('message', event => {
-//     if (event.data.firebaseMessaging.payload.data.action === 'showNotification')
-//     {
-//         try
-//         {
-//             addNotification(event.data.firebaseMessaging.payload.data);
-//         }
-//         catch(e)
-//         {
-//            //no idea why it works so i don't bother rn
-//            //of course i'm sorry for this horrible thing but liblary has forced my hand 
-//         }
-//     }
-// });
-
-// const reloadNotifications = () => {
-//     setNotfications(undefined);
-//     setLodaing(!lodaing);
-//     //yes it is not good
-//     //yes i have no enefry and time to think of better 
-//     //it works so it stays for no 
-// }
-
-// React.useEffect(() => {
-//     clientJson({method: 'GET', path: '/api/getNotifications/', params: {
-//       user: userId
-//   }}).then((response) => {
-//       let nots = response.entity.notifications;
-//       for(var n of nots)
-//       {
-//         n.open = true;
-//       } 
-//       setNotfications(nots);
-//   })
-//   }, [lodaing]);
-
-// return (
-//     <div className={classes.root}>
-//         <ChangeTitle title='bgtTracker'/>
-//         <CssBaseline/>
-//         <AppBar position="absolute" className={clsx(classes.appBar, drawerOpen && classes.appBarShift)}>
-//             <Toolbar className={classes.toolbar}>
-//                 <IconButton
-//                     edge="start"
-//                     color="inherit"
-//                     onClick={() => setDrawerOpen(true)}
-//                     className={clsx(classes.menuButton, drawerOpen && classes.menuButtonHidden)}
-//                 >
-//                     <MenuIcon/>
-//                 </IconButton>
-//                 <Typography variant="h6" color="inherit" noWrap className={classes.title}>
-//                     bgtTracker
-//                 </Typography>
-//                     {notifications === undefined ? <Skeleton animation="wave" variant="circle" width={40} height={40} /> : <NotificationMenu removeNotication={removeNotication} reloadnotifications={reloadNotifications} notifications={notifications}/> }
-//             </Toolbar>
-//         </AppBar>
-//         <Drawer
-//             variant="permanent"
-//             classes={{paper: clsx(classes.drawerPaper, !drawerOpen && classes.drawerPaperClose)}}
-//             open={drawerOpen}
-//         >
-//             <div className={classes.toolbarIcon}>
-//                 <IconButton onClick={() => setDrawerOpen(false)}>
-//                     <ChevronLeftIcon/>
-//                 </IconButton>
-//             </div>
-//             <Divider/>
-//             <List>{drawerItems(classes, url)}</List>
-//         </Drawer>
-//         <main className={classes.content}>
-//             <div className={classes.appBarSpacer}/>
-//             <Container maxWidth="xl" className={classes.container}>
-//                 <Switch>
-//                     <Route exact path={path}>
-//                         <Redirect to={`${path}/dashboard`}/>
-//                     </Route>
-//                     <Route exact path={`${path}/dashboard`} component={Dashboard}/>
-//                     <Route exact path={`${path}/stats`} component={Summary}/>
-//                     <Route exact path={`${path}/history`} component={History}/>
-//                     <Route exact path={`${path}/settings`} component={Settings}/>
-//                     <Route exact path={`${path}/incomes`} component={Income}/>
-//                     <Route exact path={`${path}/expenses`} component={Expense}/>
-//                     <Route exact path={`${path}/bills`} component={Bill}/>
-//                 </Switch>
-//             </Container>
-//         </main>
-//         <NotificationSystem ref={notificationSystem} />
