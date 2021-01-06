@@ -16,7 +16,7 @@ public class Objective {
     private String description;
     private long amount;
     private Date date;
-    private int priority;
+    private long priority;
 
     @ManyToOne
     @JoinColumn(name = "user_id", referencedColumnName = "id")

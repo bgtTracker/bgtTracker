@@ -31,7 +31,7 @@ public class ObjectivesController {
    public JSONObject addObjective(Authentication auth, @RequestBody String bodyString, HttpServletResponse httpServletResponse)
    {
       AppUser appuser = userRepository.findByEmail(auth.getName());
-
+      System.out.println(bodyString);
       JSONObject body = this.paresStringToJson(bodyString, httpServletResponse);
 
       objectivesService.addObjective(body, appuser);

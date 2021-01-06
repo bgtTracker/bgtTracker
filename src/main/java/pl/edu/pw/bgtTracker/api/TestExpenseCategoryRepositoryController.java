@@ -12,16 +12,16 @@ import net.minidev.json.JSONArray;
 import net.minidev.json.JSONObject;
 import pl.edu.pw.bgtTracker.db.entities.AppUser;
 import pl.edu.pw.bgtTracker.db.entities.ExpenseCategory;
-import pl.edu.pw.bgtTracker.db.repos.ExpenseCategoryRepository;
+import pl.edu.pw.bgtTracker.db.repos.TestExpenseCategoryRepository;
 import pl.edu.pw.bgtTracker.db.repos.UserRepository;
 
 @RestController
-public class ExpenseCategoryRepositoryController
+public class TestExpenseCategoryRepositoryController
 {
-  @Autowired private ExpenseCategoryRepository expenseCategoryRepository;
+  @Autowired private TestExpenseCategoryRepository expenseCategoryRepository;
   @Autowired private UserRepository userRepository;
 
-  @GetMapping(value={"/api/getexpensecategory"}, produces=MediaType.APPLICATION_JSON_VALUE)
+  @GetMapping(value={"/testapi/getexpensecategory"}, produces=MediaType.APPLICATION_JSON_VALUE)
   public JSONObject getExpenseCategory(Authentication auth)
   {
     AppUser user = userRepository.findByEmail(auth.getName());

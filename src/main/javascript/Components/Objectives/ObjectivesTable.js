@@ -180,6 +180,7 @@ const EnhancedTableToolbar = props => {
     amount: 1000,
     date: new Date(),
     category: 1,
+    priority: 0,
     description: "New description"
   }
 

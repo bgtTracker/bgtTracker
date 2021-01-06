@@ -67,7 +67,7 @@ export default function ObjectiveDialog(props) {
   const [categories, setCategories] = React.useState();
   
   React.useEffect(() => {
-    fetch("/api/getexpensecategory",{
+    fetch("/testapi/getexpensecategory",{
       method: "GET",
       headers: AuthService.getAuthHeader(),
     }).then(res => res.json())
@@ -92,11 +92,11 @@ export default function ObjectiveDialog(props) {
   const handleSave = () => {
     props.handleSave({
       name: name,
-      amount: amount,
+      amount: Number.parseInt(amount),
       description: description,
       date: date.getTime(),
       category: category,
-      priority: priority
+      priority: Number.parseInt(priority)
     });
     props.handleClose();
   }

@@ -10,23 +10,24 @@ import net.minidev.json.JSONArray;
 import net.minidev.json.JSONObject;
 import pl.edu.pw.bgtTracker.db.entities.AppUser;
 import pl.edu.pw.bgtTracker.db.entities.Objective;
-import pl.edu.pw.bgtTracker.db.repos.ExpenseCategoryRepository;
+// import pl.edu.pw.bgtTracker.db.repos.ExpenseCategoryRepository;
 import pl.edu.pw.bgtTracker.db.repos.ObjectiveRepository;
+import pl.edu.pw.bgtTracker.db.repos.TestExpenseCategoryRepository;
 import pl.edu.pw.bgtTracker.db.repos.UserRepository;
 
 @Service
 public class ObjectivesService {
 
   @Autowired private ObjectiveRepository objectiveRepository;
-  @Autowired private ExpenseCategoryRepository expenseCategoryRepository;
+  @Autowired private TestExpenseCategoryRepository expenseCategoryRepository;
   @Autowired private UserRepository userRepository;
+
   public void addObjective(JSONObject objectiveJson, AppUser user)
   {
     //Objective objective
     System.out.println(objectiveJson.toString());
     Objective objective = new Objective();
     objective = setObjectivToJson(objectiveJson, objective);
-    objective.setCategory(expenseCategoryRepository.findById(1L).get());
     objective.setUser(user);
     objectiveRepository.save(objective);
   }
@@ -65,7 +66,7 @@ public class ObjectivesService {
     objective.setName((String)newObjective.get("name"));
     objective.setDescription((String)newObjective.get("description"));
     objective.setDate(new Date((Long) newObjective.get("date")));
-    //objective.setPriority((int) newObjective.get("priority"));
+    objective.setPriority((Long)newObjective.get("priority"));
     objective.setCategory(expenseCategoryRepository.findById((Long) newObjective.get("category")).get());
     return objective;
   }
