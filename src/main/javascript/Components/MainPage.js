@@ -57,7 +57,7 @@ import {Skeleton} from '@material-ui/lab';
 import AuthService from "../api/AuthService";
 import Objectives from "./Objectives/Objectives.js";
 import ErrorRedirect from "./ErrorRedirect404.js";
-import ErrorCodeHandling from "./ErrorCodeHandling.js";
+import ErrorCodeHandling from "./ErrorCodeHandler.js";
 
 const drawerWidth = 240;
 
