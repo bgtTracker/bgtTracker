@@ -31,11 +31,12 @@ public class IncomeCategoriesController {
     }
 
     @PostMapping("/api/newIncomeCategory")
-    public void newIncomeCategoryData(Authentication auth, @RequestParam(value = "name") String name)
+    public long newIncomeCategoryData(Authentication auth, @RequestParam(value = "name") String name)
     {
         long usrId = this.getUserId(auth);
         String newName = name;
-        incomeCategoriesService.putIncomeCategory(usrId, newName);
+        long newId2 = incomeCategoriesService.putIncomeCategory(usrId, newName);
+        return newId2;
     }
 
     @PostMapping("/api/editIncomeCategory")

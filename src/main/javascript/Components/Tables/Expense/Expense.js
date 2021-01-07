@@ -1,47 +1,52 @@
 import React from "react";
 import CustomPaginationTable from "../Table";
 import { Container, Row, Col } from "reactstrap";
-
-const expense = [];
-const categorie = [];
-
-function addExpense(quantity) {
-  const startId = expense.length;
-  for (let i = 1; i < quantity; i++) {
-    const id = startId + i;
-    expense.push({
-      id: id,
-      name: "Expense name " + id,
-      category: "shopping",
-      date: "05.12.2020",
-      amount: 2100 + i,
-      expand: true
-    });
-  }
-}
-
-function addCategories(quantity) {
-  const startId = categorie.length;
-  for (let i = 1; i < quantity; i++) {
-    const id = startId + i;
-    let randomC = Math.floor(Math.random() * 16777215).toString(16);
-    var randomColor =
-      randomC.length === 6
-        ? randomC
-        : Math.floor(Math.random() * 16777215).toString(16);
-    console.log(randomColor);
-    categorie.push({
-      id: id,
-      name: "Category " + id,
-      color: "#" + randomColor,
-      expand: true
-    });
-  }
-}
-addCategories(5);
-addExpense(89);
+import clientJson from "../../../clientJson";
+import AuthService from "../../../api/AuthService";
 
 export default function Expense() {
+  const [userExpense, setExpense] = React.useState([]);
+  const [userCategory, setCategory] = React.useState([]);
+
+  const loadExpenseData =  () => {
+    clientJson({method: 'GET', path: '/api/getExpenses/', headers:AuthService.getAuthHeader() }).then((response) => {
+      setExpense(response.entity.expense)
+    });
+  }
+  const loadCategoryData =  () => {
+    clientJson({method: 'GET', path: '/api/getExpenseCategory/', headers:AuthService.getAuthHeader()}).then((response) => {
+      setCategory(response.entity.category)
+    });
+  }
+
+  const deleteExpenseData = async (delId) => {
+    clientJson({method: 'POST', path: '/api/deleteExpense/', headers:AuthService.getAuthHeader(),
+      params: {
+        id: delId
+      }
+    }).then((response) => {
+      console.log(response)
+    })
+  }
+
+  const deleteExpenseCategory = async (delId) => {
+    clientJson({method: 'POST', path: '/api/deleteExpenseCategory/', headers:AuthService.getAuthHeader(),
+      params: {
+        id: delId
+      }
+    }).then((response) => {
+      console.log(response)
+    })
+  }
+
+  React.useEffect(() => {
+    loadExpenseData();
+  },[])
+
+  React.useEffect(() => {
+    loadCategoryData();
+  },[])
+
   return (
     <div>
       <Container className="themed-container" fluid={true}>
@@ -49,15 +54,18 @@ export default function Expense() {
           <Col xs="8">
             <CustomPaginationTable
               type="expense"
-              data={expense}
-              category={categorie}
+              data={userExpense}
+              handleDel={deleteExpenseData}
+              handleEdit={[]}
             />
           </Col>
           <Col xs="4">
             <CustomPaginationTable
               type="category"
-              data={categorie}
-              category={categorie}
+              subType="expense"
+              data={userCategory}
+              handleDel={deleteExpenseCategory}
+              handleEdit={[]}
             />
           </Col>
         </Row>

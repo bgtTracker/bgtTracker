@@ -14,139 +14,307 @@ import {Input, FormGroup, Label } from 'reactstrap';
 
 import "../../../../../node_modules/react-bootstrap-table/dist/react-bootstrap-table-all.min.css";
 import "../../../../../node_modules/bootstrap/dist/css/bootstrap.min.css";
+import clientJson from "../../clientJson";
+import AuthService from "../../api/AuthService";
 
 function colorFormat(cell, row) {
   return <Badge style={{ backgroundColor: cell, color: cell }}>{cell}</Badge>;
 }
 
-function editRow(rowId) {
-  /*clintJson({method: 'POST', path:"/api/getincomes"})*/
-}
-function deleteRow(rowId) {
 
-}
-function insertRow() {
-
-}
+const userId = 15;
 
 export default class CustomPaginationTable extends React.Component {
 
-    constructor(props) {
-      super();
-      this.state = {
-          data: [],
-          cellEditMode: "none",
-          selected: -1,
-          
+  constructor(props) {
+    super(props);
+    this.state = {
+      data: [],
+      cellEditMode: "none",
+      selected: -1,
+      test: [],
+
+    }
+    this.refs = React.createRef();
+
+    this.handleEditButtonClick = this.handleEditButtonClick.bind(this)
+    this.insertData = this.insertData.bind(this)
+    this.handleDeleteButtonClick = this.handleDeleteButtonClick.bind(this)
+    this.handleRowSelect = this.handleRowSelect.bind(this)
+    this.isD2 = this.isD2.bind(this)
+    //this.testClick = this.testClick.bind(this)
+  }
+
+  /*testClick(){
+    const t = this.props.test3()
+    console.log("test clicked !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
+    console.log(t)
+  }*/
+  handleEditButtonClick() {
+
+    this.setState((prevState) => {
+      console.log(prevState)
+      let ret
+      if(prevState.cellEditMode === "dbclick"){
+        console.log("tak")
+        alert("Edit mode disactivated")
+        ret = {cellEditMode: "none"}
       }
-      this.refs = React.createRef();
+      if(prevState.cellEditMode === "none") {
+        alert("Edit mode activated")
+        console.log("taktak")
+        ret = {cellEditMode: "dbclick"}
+      }
+      return ret
 
+    })
+  }
 
-      this.handleEditButtonClick = this.handleEditButtonClick.bind(this)
-      this.insertData = this.insertData.bind(this)
-      this.handleDeleteButtonClick = this.handleDeleteButtonClick.bind(this)
-      this.handleRowSelect = this.handleRowSelect.bind(this)
-    }
-
-    
-    handleEditButtonClick() {
-        this.setState((prevState) => {
-          console.log(prevState)
-          let ret
-          if(prevState.cellEditMode === "dbclick"){
-            console.log("tak")
-            alert("Edit mode disactivated")
-            ret = {cellEditMode: "none"}
-          } 
-          if(prevState.cellEditMode === "none") {
-            alert("Edit mode activated")
-            console.log("taktak")
-            ret = {cellEditMode: "dbclick"}
-          }
-          return ret
-          
-        })
-    }
-    
-    insertData(newData) {
-        this.setState((prevState) => {
-            //console.log(prevState)
+  insertData(newData) {
+    if(this.props.type === "income")
+    {
+      this.setState((prevState) => {
+        var newId;
+        clientJson({method: 'POST', path: '/api/newIncome/', headers:AuthService.getAuthHeader(),
+          params: {
+            name: newData.name,
+            category_id: newData.category,
+            amount: newData.amount
+          }}).then((response) => {
+          newId = response.entity
+        }).then((response) => {
+          this.setState((prevState) => {
             return {
               data: this.state.data.push({
-                id: 100,
+                id: newId,
                 name: newData.name,
-                category: newData.category,
-                date: (newData.date.substring(8,10)+'.'+newData.date.substring(5,7)+'.'+newData.date.substring(0,4)),
+                category: newData.categoryName,
+                date: "05.12.2020",
                 amount: newData.amount,
-                color: newData.color,
+                note: "Jest dobrze",
                 expand: true
               })
             }
+          })
         })
+      })
     }
-
-/*
-    newTry (newData) {
-      return(
-        {
-            id:100,
+    else if(this.props.type === "expense"){
+      this.setState((prevState) => {
+        var newId;
+        clientJson({method: 'POST', path: '/api/newExpense/', headers:AuthService.getAuthHeader(),
+          params: {
             name: newData.name,
-            category: newData.category,
-            date: newData.date,
-            amount: newData.amount,
-            color: newData.color,
-            expand: true
-        }
-      )
-    }*/
-
-    isExpandableRow(row) {
-      return true;
+            category_id: newData.category,
+            amount: newData.amount
+          }}).then((response) => {
+          newId = response.entity
+        }).then((response) => {
+          this.setState((prevState) => {
+            return {
+              data: this.state.data.push({
+                id: newId,
+                name: newData.name,
+                category: newData.categoryName,
+                date: "05.12.2020",
+                amount: newData.amount,
+                note: "Jest dobrze",
+                expand: true
+              })
+            }
+          })
+        })
+      })
     }
-    
-    expandComponent(row) {
-      return (
+    else if(this.props.type === "bill")
+    {
+      this.setState((prevState) => {
+        var newId;
+        clientJson({method: 'POST', path: '/api/newBill/', headers:AuthService.getAuthHeader(),
+          params: {
+            name: newData.name,
+            category_id: newData.category,
+            amount: newData.amount
+          }}).then((response) => {
+          newId = response.entity
+        }).then((response) => {
+          this.setState((prevState) => {
+            return {
+              data: this.state.data.push({
+                id: newId,
+                name: newData.name,
+                category: newData.categoryName,
+                date: "05.12.2020",
+                amount: newData.amount,
+                note: "Jest dobrze",
+                expand: true
+              })
+            }
+          })
+        })
+      })
+    }
+    else if(this.props.type === "category"){
+      if(this.props.subType === "income")
+      {
+        this.setState(() => {
+          var newId;
+          clientJson({method: 'POST', path: '/api/newIncomeCategory/', headers:AuthService.getAuthHeader(),
+            params: {
+              name: newData.name,
+              color: newData.color,
+              note: newData.note
+            }
+          }).then((response) => {
+            newId = response.entity
+            console.log(response)
+          }).then((response) => {
+            this.setState((prevState) => {
+              return {
+                data: this.state.data.push({
+                  id: newId,
+                  name: newData.name,
+                  color: newData.color,
+                  note: newData.note
+                })
+              }
+            })
+          })
+        })
+      }
+      else if(this.props.subType === "expense")
+      {
+        this.setState(() => {
+          var newId;
+          clientJson({method: 'POST', path: '/api/newExpenseCategory/', headers:AuthService.getAuthHeader(),
+            params: {
+              name: newData.name,
+              color: newData.color,
+              note: newData.note
+            }
+          }).then((response) => {
+            newId = response.entity
+            console.log(response)
+          }).then((response) => {
+            this.setState((prevState) => {
+              return {
+                data: this.state.data.push({
+                  id: newId,
+                  name: newData.name,
+                  color: newData.color,
+                  note: newData.note
+                })
+              }
+            })
+          })
+        })
+      }
+      else{console.log("Wystapil problem")}
+
+
+    }
+    else {console.log("Wystapil problem")}
+  }
+
+  isD2(newData){
+      console.log("Lets try it again")
+      //this.props.insertFun(newData)
+  }
+
+  isExpandableRow(row) {
+    return true;
+  }
+
+  expandComponent(row) {
+    return (
         <div>
           <FormGroup>
-              <Label >Note</Label>
-              <Input type="textarea" name="note" id="note"   value={row.note} disabled/>
+            <Label >Note</Label>
+            <Input type="textarea" name="note" id="note"   value={row.note} disabled/>
           </FormGroup>
         </div>
-      );
-    } 
-    handleDeleteButtonClick() {
-      let selectedId = this.state.selected // id to delete
-      if(selectedId === -1)
-        return
-      let data = this.state.data
-      let tableId = -1;
-      for (var i=0; i<this.state.data.length; i++)
-      {
-          if(this.state.data[i].id == selectedId)
-            tableId = i
-      }
-      data.splice(tableId, 1)
-      this.setState({data: data})
-      this.setState({selected: -1})
+    );
+  }
+
+  expandComponentBill(row) {
+
+    return (
+
+        <div>
+          <div>
+            <Row>
+              <Col xs="3">
+                <FormGroup>
+                  <Label>Payment to</Label>
+                  <Input type="date" name="date" id="date" value={"2000-01-01"}  disabled/>
+                </FormGroup>
+              </Col>
+              <Col xs="3">
+                <FormGroup>
+                  <Label>State</Label>
+                  <Input type="text" name="state" id="state" value={"PAID"}  disabled/>
+                </FormGroup>
+              </Col>
+              <Col xs="6">
+                <FormGroup>
+                  <Label>Bank account</Label>
+                  <Input type="text" name="account" id="account" value={"95235565554000125"}  disabled/>
+                </FormGroup>
+              </Col>
+            </Row>
+            <FormGroup>
+              <Label >Note</Label>
+              <Input type="textarea" name="note" id="note"   value={row.note} disabled/>
+            </FormGroup>
+          </div>
+        </div>
+    );
+  }
+
+  handleDeleteButtonClick() {
+    let selectedId = this.state.selected // id to delete
+    if(selectedId === -1)
+    {
+      alert("You have to choose row")
+      return
     }
-    handleRowSelect(row) {
-      this.setState((prevState) => { 
-        return {selected: row.id}
-        })
+    let data = this.state.data
+    let tableId = -1;
+    for (var i=0; i<this.state.data.length; i++)
+    {
+      if(this.state.data[i].id == selectedId)
+        tableId = i
     }
+    //console.log("dziejej sie ?")
+
+    this.props.handleDel(selectedId)
+    data.splice(tableId, 1)
+    this.setState({data: data})
+    this.setState({selected: -1})
+
+  }
+  handleRowSelect(row) {
+    //console.log(this.state.test)
+    this.setState((prevState) => {
+      return {selected: row.id}
+    })
+  }
+  handletest(){
+    console.log("working")
+  }
   render() {
-    console.log("Wyswietlam tabele")
-    console.log(this.state.data[0])
+    //console.log("Wyswietlam tabele")
+    //console.log(this.state.data[0])
     const type = this.props.type
-    
+
     this.state.data =  this.props.data
     var category = this.props.category
-    
+
     var rows
     var modalType
     var modalLabel
     var modalButtonLabel
-    
+
     if (type === "income") {
       rows = [
         {dataField: "id", label: "ID", isKey: true, hidden: true},
@@ -163,7 +331,7 @@ export default class CustomPaginationTable extends React.Component {
         {dataField: "id", label: "ID", isKey: true, hidden: true},
         {dataField: "name", label: "Expense Name", isKey: false, hidden: false},
         {dataField: "category", label: "Category", isKey: false, hidden: false},
-        {dataField: "date", label: "Date", isKey: false, hidden: false},
+        {dataField: "dateStamp", label: "Date", isKey: false, hidden: false},//zmiana
         {dataField: "amount", label: "Amount", isKey: false, hidden: false},
       ]
       modalButtonLabel = "Add new Expense"
@@ -190,13 +358,14 @@ export default class CustomPaginationTable extends React.Component {
       modalLabel = "New category"
       modalType = "category"
     }
-    
-  
+
+
 
     const tableBody = rows.map((foo) => (
         foo.dataField==="color" ? <TableHeaderColumn dataField={foo.dataField} hidden={foo.hidden} dataFormat={colorFormat}>{foo.label}</TableHeaderColumn>:
-      <TableHeaderColumn dataField={foo.dataField} hidden={foo.hidden} dataSort>{foo.label}</TableHeaderColumn>))
-    
+            <TableHeaderColumn dataField={foo.dataField} hidden={foo.hidden} dataSort={true}>{foo.label}</TableHeaderColumn>))
+
+    console.log("props2", this.props.type)
     const options = {
       page: 1,  // which page you want to show as default
       sizePerPageList: [ {
@@ -217,11 +386,11 @@ export default class CustomPaginationTable extends React.Component {
       clearnBtn: true,
       noDataText: 'Nothing here',
       searchDelayTime: 200 // delay in ms
-      
+
     };
-    
+
     let selectRow = {
-      mode: "radio", 
+      mode: "radio",
       columnWidth: "40px",
       onSelect: this.handleRowSelect,
       clickToExpand: true,
@@ -229,37 +398,39 @@ export default class CustomPaginationTable extends React.Component {
 
 
     return (
-    <div>
-      <BootstrapTable 
-            data={ this.state.data }
-            keyField="id"
-            pagination={ true } 
-            options={ options }   
-            search
-            searchPlaceholder='What are u looking for..'
-            selectRow={ selectRow }
-            expandableRow={ this.isExpandableRow }
-            expandComponent={ this.expandComponent }
-            exportCSV
-            csvFileName="CSV_DATA.csv"
-            > 
-           {tableBody}
-      </BootstrapTable>
-      
-      <Row>
-        &nbsp;&nbsp;&nbsp;
-        {console.log("Selected row to edit/delete: " + this.state.selected)}
-        <ModalWithForm buttonLabel={modalButtonLabel} type={modalType} mode={"insert"} color={"success"} row={this.state.selected} category={category} handleNew={this.insertData}/>&nbsp;
-        <ModalWithForm buttonLabel={"Edit"} type={modalType} mode={"edit"} color={"warning"} row={this.state.selected} category={category} handleNew={this.insertData}/>&nbsp;
-        {/*<Button color="warning" onClick={() => this.handleEditButtonClick()}>
-          Edit
-        </Button>&nbsp;*/}
-        <Button color="danger" onClick={this.handleDeleteButtonClick}>
-          Delete
-        </Button>
-        {console.log(typeof this.state.data[0])}
-      </Row>
-    </div>
+        <div>
+          {console.log("props3", this.props.type)}
+          {/*this.componentDidMount()*/}
+          {/*console.log(this.props.test)*/}
+          <BootstrapTable
+              data={ this.state.data }
+              keyField="id"
+              pagination={ true }
+              options={ options }
+              search
+              searchPlaceholder='What are u looking for..'
+              selectRow={ selectRow }
+              expandableRow={ this.isExpandableRow }
+              expandComponent={ this.props.type==="bill"?this.expandComponentBill:this.expandComponent }
+              exportCSV
+              csvFileName="CSV_DATA.csv"
+          >
+            {tableBody}
+          </BootstrapTable>
+
+          <Row>
+            &nbsp;&nbsp;&nbsp;
+            {console.log("Selected row to edit/delete: " + this.state.selected)}
+            <ModalWithForm buttonLabel={modalButtonLabel} type={modalType} mode={"insert"} color={"success"} row={this.state.selected} category={[]} handleNew={this.insertData}/>&nbsp;
+
+            {/*<ModalWithForm buttonLabel={"Edit"} type={modalType} mode={"edit"} color={"warning"} row={this.state.selected} category={category} handleNew={this.insertData}/>&nbsp;*/}
+
+            <Button color="danger" onClick={this.handleDeleteButtonClick}>
+              Delete
+            </Button>
+            {console.log(typeof this.state.data[0])}
+          </Row>
+        </div>
     );
   }
 }

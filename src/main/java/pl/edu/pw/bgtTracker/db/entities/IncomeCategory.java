@@ -14,15 +14,25 @@ import java.util.List;
 public class IncomeCategory {
     private @Id @GeneratedValue long id;
     private String name;
+    //private String note;
+    //private String color;
 
     @OneToMany(mappedBy = "category")
     private List<Income> incomes = new ArrayList<>();
+
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "user_id", referencedColumnName = "id")
+    private AppUser user;
 
     public JSONObject toJSON(){
         JSONObject json = new JSONObject();
         json.put("id", Long.toString(id));
         json.put("name", name);
+        //json.put("note", note);
+        //json.put("color", color);
+        json.put("note", "Notatka do kategori");
         json.put("color", "#d64526");
+
         return json;
     }
 }

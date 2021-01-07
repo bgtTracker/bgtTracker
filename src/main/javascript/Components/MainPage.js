@@ -47,7 +47,7 @@ import History from "./History/History";
 import Settings from "./Settings/Settings.js";
 import Income from "./Tables/Income/Income";
 import Expense from "./Tables/Expense/Expense";
-import Bill from "./Tables/Expense/Expense";
+import Bill from "./Tables/Bill/Bill";
 import firebase from 'firebase/app';
 import 'firebase/messaging';
 import clientJson from '../clientJson.js';
@@ -310,7 +310,12 @@ export default function MainPage() {
       //yes i have no enefry and time to think of better 
       //it works so it stays for no 
   }
-
+  /*
+  React.useEffect(() => {
+        clientJson({method: 'GET', path: '/api/getIncomes/', headers:AuthService.getAuthHeader()}).then((response) => {
+            console.log(response)
+        })
+  })*/
   React.useEffect(() => {
       clientJson({method: 'GET', path: '/api/getNotifications/', headers: AuthService.getAuthHeader()}).then((response) => {
         let nots = response.entity.notifications;

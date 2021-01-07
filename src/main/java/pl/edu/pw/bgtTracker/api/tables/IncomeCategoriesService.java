@@ -30,44 +30,39 @@ public class IncomeCategoriesService {
     private IncomeCategoryRepository incomeCategoryRepository;
 
     public JSONObject getCategories(long userId){
+
+
         AppUser user = userRepository.findById(userId).get();
-        List<Income> incomes = incomeRepository.findByUser(user);
-        //List<IncomeCategory> in = incomeCategoryRepository.findByUserId(userId);
+        List<IncomeCategory> in = incomeCategoryRepository.findByUserId(userId);
 
         JSONObject js = new JSONObject();
         JSONArray jsArr = new JSONArray();
-        ArrayList<Long> uniqueCategoryId = new ArrayList<Long>();
-        for(var i : incomes)
+
+        for(var i : in)
         {
-            uniqueCategoryId.add(i.getCategory().getId());
-            System.out.println(i.getCategory().getId());
+            JSONObject jsObj = i.toJSON();
+            jsArr.add(jsObj);
         }
-        HashSet<Long> hSetUniqueCategory = new HashSet(uniqueCategoryId);
-
-        for (var i : hSetUniqueCategory)
-        {
-            System.out.println(i);
-            /*
-            IncomeCategory incomeCategory = incomeCategoryRepository.findById(i).get(); // get ?
-            JSONObject jsObj = incomeCategory.toJSON();
-            jsArr.add(jsObj);*/
-        }
-        //js.put("category", jsArr);
-
-
-        /*JSONObject jsObj = new JSONObject();
-        jsObj.put("t0","test0");
-        jsArr.add(jsObj);
-        js.put("tak", jsArr);*/
+        js.put("category", jsArr);
         return js;
     }
 
-    public void putIncomeCategory(long usrId, String newName) {
+    public long putIncomeCategory(long usrId, String newName) {
+        IncomeCategory newCategory = new IncomeCategory();
+        AppUser u = userRepository.findById(usrId).get();
+        newCategory.setName(newName);
+        newCategory.setUser(u);
+        incomeCategoryRepository.save(newCategory);
+        return newCategory.getId();
     }
 
     public void editIncomeCategory(long cat_id, String name) {
+        IncomeCategory findCategory = incomeCategoryRepository.findById(cat_id);
+        findCategory.setName(name);
+        incomeCategoryRepository.save(findCategory);
     }
 
     public void deleteIncomeCategory(long cat_id) {
+        incomeCategoryRepository.deleteById(cat_id);
     }
 }

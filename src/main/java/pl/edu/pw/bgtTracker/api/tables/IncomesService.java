@@ -117,7 +117,7 @@ public class IncomesService {
         return js;*/
     }
 
-    public void putIncome(long usrId, String newName, long newAmount, long categoryId) {
+    public long putIncome(long usrId, String newName, long newAmount, long categoryId) {
         Income newIncome = new Income();
         AppUser u = userRepository.findById(usrId).get();
         IncomeCategory cat = incomeCategoryRepository.findById(categoryId); // nie dalo sie get()
@@ -126,11 +126,41 @@ public class IncomesService {
         newIncome.setCategory(cat);
         newIncome.setUser(u);
         incomeRepository.save(newIncome);
-        //return newIncome;
+        System.out.println("test na konsoli");
+        System.out.println(newIncome.getId());
+        return newIncome.getId();
     }
 
-    public void deleteIncome(String id) {
-        long categoryId = Long.parseLong(id);
-        incomeRepository.deleteById(categoryId);
+    /*public long putIncome2(long usrId, String newName, long newAmount, long categoryId) {
+        Income newIncome = new Income();
+        AppUser u = userRepository.findById(usrId).get();
+        IncomeCategory cat = incomeCategoryRepository.findById(categoryId); // nie dalo sie get()
+        newIncome.setName(newName);
+        newIncome.setAmount(newAmount);
+        newIncome.setCategory(cat);
+        newIncome.setUser(u);
+        incomeRepository.save(newIncome);
+        System.out.println("test na konsoli");
+        System.out.println(newIncome.getId());
+
+        //return newIncome;
+    }*/
+
+    public void editIncome(long incomeId, String newName, long newCatId, long newAmount) {
+        Income findIncome = incomeRepository.findById(incomeId).get();
+        IncomeCategory newCategory = incomeCategoryRepository.findById(newCatId);
+        findIncome.setName(newName);
+        findIncome.setCategory(newCategory);
+        findIncome.setAmount(newAmount);
+        incomeRepository.save(findIncome);
+        //return;
     }
+
+    public void deleteIncome(long id) {
+        //long categoryId = Long.parseLong(id);
+        incomeRepository.deleteById(id);
+    }
+
+
+
 }

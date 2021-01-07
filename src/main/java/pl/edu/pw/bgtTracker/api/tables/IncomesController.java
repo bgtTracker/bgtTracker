@@ -37,57 +37,36 @@ public class IncomesController {
     public JSONObject getIncomeData(Authentication auth)
     {
         /* Zwraca [JSONObjects] ktore sa uzywane w tabeli income*/
-    /*
-        JSONObject data = new JSONObject();
-        System.out.println("Jest");
 
-        data.put("not1", 12);
-        data.put("not2", 14);
-        data.put("not3", 16);
-
-        return data;*/
         long id = this.getUserId(auth);
-
-        /*JSONObject js = new JSONObject();
-        JSONArray jsArr = new JSONArray();
-        JSONObject jsObj = new JSONObject();
-        jsObj.put("t0","test0");
-        jsObj.put("t0","test0");
-        jsObj.put("t1","test0");
-        jsObj.put("t2","test0");
-        jsObj.put("userID",id);
-        jsArr.add(jsObj);
-        js.put("tak", jsArr);*/
-        //JSONArray jsArr = new JSONArray();
-        //jsArr.put(jsObj.toMap());
-
-
-
         return incomesService.getIncomes(id);
         //return js;
     }
     @PostMapping("/api/newIncome")
-    public void newIncomaData(Authentication auth, @RequestParam(value = "name") String name, @RequestParam(value="category_id") String category, @RequestParam(value="amount") String amount)
-    {
-        /* Tworzy nowy obiekt w repozytorium przez service*/
-        /*
-        * */
+    public long newIncomeData(Authentication auth, @RequestParam(value = "name") String name, @RequestParam(value="category_id") String category, @RequestParam(value="amount") String amount)
+    { //@RequestParam(value = "note") String note, @RequestParam(value = "dateStamp") String dateStamp
 
         long usrId = this.getUserId(auth);
         String newName = name;
         long newAmount = Long.parseLong(amount);
         long categoryId = Long.parseLong(category);
 
-
-        incomesService.putIncome(usrId, newName, newAmount, categoryId);
-        //return;
+        long newId2 = incomesService.putIncome(usrId, newName, newAmount, categoryId);
+        //long newId = incomesService.putIncome(usrId, newName, newAmount, categoryId, note, dateStamp);
+        //return newId
+        return newId2;
     }
 
     @PostMapping("/api/editIncome")
-    public void updateIncomeData(@RequestParam(value = "id") String id, @RequestParam(value="name") String name, @RequestParam(value = "category_id") String category, @RequestParam(value="amount") String amount)
+    public void updateIncomeData(Authentication auth, @RequestParam(value = "id") String id, @RequestParam(value="name") String name, @RequestParam(value = "category_id") String category, @RequestParam(value="amount") String amount)
     {
         /* Odanajduje i zmienia zawartosc w bazie danych*/
-
+        long incomeId = Long.parseLong(id);
+        String newName = name;
+        long newAmount = Long.parseLong(amount);
+        long newCatId =  Long.parseLong(category);
+        incomesService.editIncome(incomeId, newName, newCatId, newAmount);
+        //incomesService.editIncome(usrId, newName, newAmount, categoryId, note, dateStamp);
 
     }
 
@@ -95,7 +74,8 @@ public class IncomesController {
     public void deleteIncomeData(Authentication auth, @RequestParam(value = "id") String id)
     {
         /* Znajduje obiekt w bazie danych i usuwa go */
-        incomesService.deleteIncome(id);
+        long incomeId = Long.parseLong(id);
+        incomesService.deleteIncome(incomeId);
     }
 
 
@@ -104,29 +84,5 @@ public class IncomesController {
         AppUser u = userRepository.findByEmail(auth.getName());
         return u.getId();
     }
-/*
-    @GetMapping(value = "/api/3")
-    public JSONObject getIncomes(@RequestParam(value = "user") String user){
-        return incomesService.getIncomes(Long.parseLong(user));
-    }*/
-/*
-    @GetMapping("/api/incomes/get")
-    //public List<Income> getIncomes(@RequestParam(value = "user") String user){
-    public List<Income> getIncomes(@RequestParam(value = "user") String user){
-        user = "2";
-        return incomesService.getIncomes(Long.parseLong(user));
-    }*/
-    /*
-    @GetMapping(value="/{id}")
-    //public List<Income> getIncomes(@RequestParam(value = "user") String user){
-    public List<Income> getIncomes(@PathVariable("id") String user){
-
-        return incomesService.getIncomes(Long.parseLong(user));
-}*/
-    /*@GetMapping(value="/{id}")
-    public JSONObject getIncomes(@PathVariable("id") String user){
-
-        return incomesService.getIncomes2(Long.parseLong(user));
-}*/
 
 }
