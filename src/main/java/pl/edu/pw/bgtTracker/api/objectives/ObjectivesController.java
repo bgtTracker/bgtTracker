@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 import net.minidev.json.JSONObject;
 import net.minidev.json.parser.JSONParser;
 import net.minidev.json.parser.ParseException;
+import pl.edu.pw.bgtTracker.BgtTrackerApplication;
 import pl.edu.pw.bgtTracker.db.entities.AppUser;
 import pl.edu.pw.bgtTracker.db.repos.UserRepository;
 
@@ -61,6 +62,29 @@ public class ObjectivesController {
         objectivesService.deleteObjectives(id);
     }
 
+    @DeleteMapping("/api/deleteobjectives")
+    public void deleteObjectives(Authentication auth, @RequestBody Long[] ids, HttpServletResponse httpServletResponse) {
+        for(var id : ids){
+            objectivesService.deleteObjectives(id);
+        }
+    }
+
+    @PostMapping("/api/confimobjective")
+    public void confirmObjective(Authentication auth, @RequestParam(value = "id") Long id, HttpServletResponse httpServletResponse)
+    {
+        if (id == null) {
+            httpServletResponse.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            return;
+        }
+        BgtTrackerApplication.logger.info("confiming objective" + id);
+    }
+    
+    @PostMapping("/api/confimobjectives")
+    public void confirmObjectives(Authentication auth, @RequestBody Long[] ids, HttpServletResponse httpServletResponse)
+    {
+        BgtTrackerApplication.logger.info("confiming objectives" + ids);
+    }
+
     private JSONObject paresStringToJson(String bodyString, HttpServletResponse httpServletResponse) {
         JSONParser parser = new JSONParser(JSONParser.MODE_JSON_SIMPLE);
         JSONObject body;
@@ -71,7 +95,7 @@ public class ObjectivesController {
         } catch (ParseException pe) {
             body = new JSONObject();
             body.put("error", "bad parsing-bad data to parse");
-            httpServletResponse.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            httpServletResponse.setStatus(HttpServletResponse.SC_BAD_REQUEST);  
         } catch (Exception e) {
             body = new JSONObject();
             body.put("error", "unknwonn error");

@@ -44,6 +44,7 @@ public class ObjectivesService {
      *  objectives:  [
      *         {
      *              //objective 1 json
+     *              //added progres to json
      *          },
      *          {},{},...
      *      ]
@@ -54,12 +55,19 @@ public class ObjectivesService {
     public JSONObject getObjectives(AppUser user) {
         List<Objective> objectives = user.getObjectives();
         JSONObject data = new JSONObject();
-
+        long money = 5000; //to do get correct balance
+        if(money < 0)
+          money = 0;
         JSONArray arr = new JSONArray();
         for (var o : objectives) {
-            arr.add(o.toJSON());
+            JSONObject oJson = o.toJSON();
+            float proggres = ((float)o.getAmount()/money)*100;
+            if(proggres > 100)
+              proggres = 100;
+            oJson.put("progress", proggres);
+            arr.add(oJson);
         }
-        System.out.println(arr);
+
         data.put("objectives", arr);
         return data;
     }

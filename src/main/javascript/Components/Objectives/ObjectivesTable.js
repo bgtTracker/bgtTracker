@@ -16,14 +16,14 @@ import Paper from "@material-ui/core/Paper";
 import Checkbox from "@material-ui/core/Checkbox";
 import IconButton from "@material-ui/core/IconButton";
 import Tooltip from "@material-ui/core/Tooltip";
-import ImportExportIcon from "@material-ui/icons/ImportExport";
 import AddCircleOutlineOutlinedIcon from "@material-ui/icons/AddCircleOutlineOutlined";
-import CSVexporter from "../History/CSVexporter.js";
+import DeleteForeverIcon from "@material-ui/icons/DeleteForever";
+import AttachMoneyOutlinedIcon from "@material-ui/icons/AttachMoneyOutlined";
 import RowDetails from "./RowDetails.js";
 import RowNoDetails from "../History/Row.js";
-import DataConverter from "../History/DataConveret.js";
 import ObjectiveDialog from "./ObjectiveDialog.js";
 import AuthService from "../../api/AuthService.js";
+import Grid from "@material-ui/core/Grid";
 
 const money = 10000;
 
@@ -170,9 +170,6 @@ const useToolbarStyles = makeStyles(theme => ({
 const EnhancedTableToolbar = props => {
   const classes = useToolbarStyles();
   const { numSelected } = props;
-  const [downloadCVS, setDownloadCSV] = React.useState(false);
-  const [data, setData] = React.useState();
-  const [downloaded, sedDownloaded] = React.useState(false);
   const [openDialog, setOpenDialog] = React.useState(false);
   let row = {
     id: -1,
@@ -182,17 +179,7 @@ const EnhancedTableToolbar = props => {
     category: 1,
     priority: 0,
     description: "New description"
-  };
-
-  function HandleDownloadCSV() {
-    let d = DataConverter(headCells, rows, props.selected);
-    setData(d);
-    setDownloadCSV(true);
-  }
-
-  const onDownloaded = () => {
-    setDownloadCSV(false);
-  };
+  }; //def objective
 
   const closeDialog = () => {
     setOpenDialog(false);
@@ -200,6 +187,14 @@ const EnhancedTableToolbar = props => {
 
   const addObjective = toSave => {
     props.addObjective(toSave);
+  };
+
+  const handleDelete = () => {
+    props.deleteObjectives(numSelected);
+  };
+
+  const handleConfim = () => {
+    props.confimObjectives(numSelected);
   };
 
   return (
@@ -229,20 +224,22 @@ const EnhancedTableToolbar = props => {
       )}
 
       {numSelected > 0 ? (
-        <Tooltip title="Export to csv">
-          <IconButton aria-label="export" onClick={HandleDownloadCSV}>
-            <ImportExportIcon />
-            {downloadCVS === true && downloaded === false ? (
-              <CSVexporter
-                data={data.data}
-                labels={data.labels}
-                onDownloaded={onDownloaded}
-              />
-            ) : (
-              <div />
-            )}
-          </IconButton>
-        </Tooltip>
+        <Grid container direction="row" justify="flex-end" alignItems="center">
+          <Grid item>
+            <Tooltip title="Delete objectives">
+              <IconButton aria-label="export" onClick={handleDelete}>
+                <DeleteForeverIcon />
+              </IconButton>
+            </Tooltip>
+          </Grid>
+          <Grid item>
+            <Tooltip title="Confim objectives">
+              <IconButton aria-label="export" onClick={handleConfim}>
+                <AttachMoneyOutlinedIcon />
+              </IconButton>
+            </Tooltip>
+          </Grid>
+        </Grid>
       ) : (
         <div>
           <Tooltip title="Add new objective">
@@ -305,7 +302,7 @@ const useStyles = makeStyles(theme => ({
 export default function ObjectivesTable(props) {
   const classes = useStyles();
   const [order, setOrder] = React.useState("asc");
-  const [orderBy, setOrderBy] = React.useState("calories");
+  const [orderBy, setOrderBy] = React.useState("priority");
   const [selected, setSelected] = React.useState([]);
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
@@ -377,6 +374,8 @@ export default function ObjectivesTable(props) {
           numSelected={selected.length}
           selected={selected}
           addObjective={props.addObjective}
+          confimObjectives={props.confimObjectives}
+          deleteObjectives={props.deleteObjectives}
         />
         <TableContainer>
           <Table
@@ -406,6 +405,7 @@ export default function ObjectivesTable(props) {
                     handleCheckBoxClick={handleCheckBoxClick}
                     handleSave={editObjective}
                     handleDelete={props.deleteObjective}
+                    handleConfim={props.confimObjective}
                     money={money}
                   />
                 ))}

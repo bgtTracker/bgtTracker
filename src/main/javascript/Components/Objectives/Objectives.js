@@ -2,6 +2,7 @@ import React from "react";
 import ObjectivesTable from "./ObjectivesTable.js";
 import AuthService from "../../api/AuthService.js";
 import clientJson from "../../clientJson.js";
+import ErrorCodeHandler from "../ErrorCodeHandler.js";
 
 export default function Objectives() {
   const [rows, setRows] = React.useState();
@@ -10,15 +11,15 @@ export default function Objectives() {
   let headCells = [
     { id: "name", numeric: false, disablePadding: false, label: "Name" },
     { id: "date", numeric: true, disablePadding: false, label: "End date" },
-    { id: "piority", numeric: true, disablePadding: false, label: "Piority" },
+    { id: "priority", numeric: true, disablePadding: false, label: "Piority" },
     { id: "category", numeric: true, disablePadding: false, label: "Category" }, //?? acount numberic or not
-    { id: "Progress", numeric: true, disablePadding: false, label: "Progress" },
+    { id: "progress", numeric: true, disablePadding: false, label: "Progress" },
     { id: "amount", numeric: true, disablePadding: false, label: "Amount" }
   ];
 
   React.useEffect(() => {
     fetch("/api/getobjectives", {
-      method: "get",
+      method: "GET",
       headers: AuthService.getAuthHeader()
     })
       .then(respone => respone.json())
@@ -34,6 +35,7 @@ export default function Objectives() {
       })
       .catch(error => {
         console.log(error);
+        ErrorCodeHandler(error.status.code);
       });
   }, [reload]);
 
@@ -49,6 +51,7 @@ export default function Objectives() {
       })
       .catch(error => {
         console.log(error);
+        ErrorCodeHandler(error.status.code);
       });
   };
 
@@ -65,6 +68,7 @@ export default function Objectives() {
       })
       .catch(error => {
         console.log(error);
+        ErrorCodeHandler(error.status.code);
       });
   };
 
@@ -92,6 +96,57 @@ export default function Objectives() {
       });
   };
 
+  const deleteObjectives = ids => {
+    fetch("/api/deleteobjectives", {
+      method: "DELETE",
+      body: JSON.stringify(ids),
+      headers: AuthService.getAuthHeader()
+    })
+      .then(respone => {
+        console.log(respone);
+        reloadNotifications();
+      })
+      .catch(error => {
+        console.log(error);
+        ErrorCodeHandler(error.status.code);
+      });
+  };
+
+  const confimObjective = id => {
+    clientJson({
+      method: "POST",
+      path: "/api/confimobjective",
+      headers: AuthService.getAuthHeader(),
+      params: {
+        id: id
+      }
+    })
+      .then(response => {
+        console.log(response);
+        reloadNotifications();
+      })
+      .catch(e => {
+        console.log(e);
+        ErrorCodeHandler(e.status.code);
+      });
+  };
+
+  const confimObjectives = ids => {
+    fetch("/api/confimobjectives", {
+      method: "POST",
+      body: JSON.stringify(ids),
+      headers: AuthService.getAuthHeader()
+    })
+      .then(respone => {
+        console.log(respone);
+        reloadNotifications();
+      })
+      .catch(error => {
+        console.log(error);
+        ErrorCodeHandler(error.status.code);
+      });
+  };
+
   const reloadNotifications = () => {
     setRealod(!reload);
   };
@@ -108,7 +163,10 @@ export default function Objectives() {
           addObjective={addObjective}
           editObjective={editObjective}
           deleteObjective={deleteObjective}
+          deleteObjectives={deleteObjectives}
           reloadFunc={reloadNotifications}
+          confimObjective={confimObjective}
+          confimObjectives={confimObjectives}
         />
       )}
     </div>

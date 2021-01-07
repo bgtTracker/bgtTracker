@@ -107,6 +107,10 @@ export default function Row(props) {
     props.handleDelete(row.id);
   };
 
+  const handleConfim = () => {
+    props.handleConfim(row.id);
+  };
+
   const isItemSelected = props.isSelected(row.id);
   const labelId = `enhanced-table-checkbox-${index}`;
 
@@ -146,7 +150,7 @@ export default function Row(props) {
           {row.category}
         </TableCell>
         <TableCell align="right" onClick={handleClose}>
-          <CircularProgressWithLabel value={(row.amount / props.money) * 100} />
+          <CircularProgressWithLabel value={row.progress} />
         </TableCell>
         <TableCell align="right" onClick={handleClose}>
           {row.amount}
@@ -169,9 +173,7 @@ export default function Row(props) {
               >
                 Description: {row.description}
               </Typography>
-              <LinearProgressWithLabel
-                value={(row.amount / props.money) * 100}
-              />
+              <LinearProgressWithLabel value={row.progress} />
               <Grid
                 container
                 direction={"row"}
@@ -188,7 +190,7 @@ export default function Row(props) {
                   />
                 </Grid>
                 <Grid item>
-                  <Button>Confirm</Button>
+                  <Button onClick={handleConfim}>Confirm</Button>
                 </Grid>
                 <Grid item>
                   <Button onClick={handleDelete}>Delete</Button>
