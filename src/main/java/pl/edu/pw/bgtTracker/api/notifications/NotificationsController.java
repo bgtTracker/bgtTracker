@@ -46,8 +46,8 @@ public class NotificationsController {
     }
 
     @PostMapping("/api/notificationsread")
-    public void alertRead(Authentication auth, @RequestParam(value = "id") String id) {
-        notificationsService.readNotifications(Integer.parseInt(id));
+    public void alertRead(Authentication auth, @RequestParam(value = "id") Long id) {
+        notificationsService.deleteNotifications(id);
         BgtTrackerApplication.logger.info("Notifications has been reed " + id);
         //to do handle response correntyl
         return;

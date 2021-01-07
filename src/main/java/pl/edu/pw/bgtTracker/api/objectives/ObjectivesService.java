@@ -22,6 +22,11 @@ public class ObjectivesService {
     @Autowired private TestExpenseCategoryRepository expenseCategoryRepository;
     @Autowired private UserRepository userRepository;
 
+    /**
+     * Add new objective with data form json, addionaly setting user 
+     * @param objectiveJson - data for objective
+     * @param user - user that will have the objective
+     */
     public void addObjective(JSONObject objectiveJson, AppUser user) {
         //Objective objective
         System.out.println(objectiveJson.toString());
@@ -30,7 +35,22 @@ public class ObjectivesService {
         objective.setUser(user);
         objectiveRepository.save(objective);
     }
-
+    
+    /**
+     * Returns json with notifications 
+     * 
+     * Json schema
+     * {
+     *  objectives:  [
+     *         {
+     *              //objective 1 json
+     *          },
+     *          {},{},...
+     *      ]
+     * }
+     * @param user- which user objectives to return
+     * @return
+     */
     public JSONObject getObjectives(AppUser user) {
         List<Objective> objectives = user.getObjectives();
         JSONObject data = new JSONObject();
@@ -49,12 +69,22 @@ public class ObjectivesService {
         objectiveRepository.delete(objective);
     }
 
+    /**
+     * Updates objective in db with data from given json
+     * @param newObjective - new data to 
+     */
     public void editObjective(JSONObject newObjective) {
         Objective objective = objectiveRepository.findById((Long) newObjective.get("id")).get();
         setObjectivToJson(newObjective, objective);
         objectiveRepository.save(objective);
     }
 
+    /**
+     * sets objective data to data from given json
+     * @param newObjective - json with new data
+     * @param objective - objectives to set
+     * @return
+     */
     private Objective setObjectivToJson(JSONObject newObjective, Objective objective) {
         objective.setAmount((Long) newObjective.get("amount"));
         objective.setName((String) newObjective.get("name"));

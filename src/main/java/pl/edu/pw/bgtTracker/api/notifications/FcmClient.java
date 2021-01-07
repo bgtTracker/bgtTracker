@@ -38,6 +38,13 @@ public class FcmClient {
         }
     }
 
+    /**
+     * Performs actual send to fcm servers 
+     * @param data - contnets of the notifications
+     * @param topic - topic that will recive the notification
+     * @throws InterruptedException
+     * @throws ExecutionException
+     */
     public void send(Map<String, String> data, String topic)
             throws InterruptedException, ExecutionException {
 
@@ -56,6 +63,11 @@ public class FcmClient {
         BgtTrackerApplication.logger.info("Sent message: " + response);
     }
 
+    /**
+     * Subscribes user with given token to a topic
+     * @param topic
+     * @param clientToken
+     */
     public void subscribe(String topic, String clientToken) {
         try {
             TopicManagementResponse response = FirebaseMessaging.getInstance()
