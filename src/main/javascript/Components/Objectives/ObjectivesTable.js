@@ -29,30 +29,6 @@ const money = 10000;
 
 const theme = createMuiTheme();
 
-function createDetails(id, date, type, name, amount) {
-  return { id, date, type, name, amount };
-}
-
-function createData(id, name, date, category, amount, d) {
-  return {
-    id,
-    name,
-    date,
-    category,
-    amount,
-    description: "testtest"
-  };
-}
-
-let rows = [
-  createData(101, "test", new Date(), "3000", 7000, 4000),
-  createData(102, "test", new Date(), "2000", 1000, -100),
-  createData(103, "test", new Date(), "1000", 2000, 1000),
-  createData(104, "test", new Date(), "1500", 3000, 1500),
-  createData(105, "test", new Date(), "3000", 7000, 4000),
-  createData(106, "test", new Date(), "2000", 1000, -100)
-];
-
 function descendingComparator(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
     return -1;
@@ -81,8 +57,10 @@ function stableSort(array, comparator) {
 
 let headCells = [
   { id: "name", numeric: false, disablePadding: false, label: "Name" },
-  { id: "date", numeric: false, disablePadding: false, label: "End date" },
-  { id: "category", numeric: false, disablePadding: false, label: "Category" }, //?? acount numberic or not
+  { id: "date", numeric: true, disablePadding: false, label: "End date" },
+  { id: "priority", numeric: true, disablePadding: false, label: "Piority" },
+  { id: "category", numeric: true, disablePadding: false, label: "Category" }, //?? acount numberic or not
+  { id: "progress", numeric: true, disablePadding: false, label: "Progress" },
   { id: "amount", numeric: true, disablePadding: false, label: "Amount" }
 ];
 
@@ -307,9 +285,9 @@ export default function ObjectivesTable(props) {
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
 
-  if (props.headCells != undefined) headCells = props.headCells;
+  let headCells = props.headCells;
 
-  if (props.rows != undefined) rows = props.rows;
+  let rows = props.rows;
 
   let Row;
   if (props.details) Row = RowDetails;

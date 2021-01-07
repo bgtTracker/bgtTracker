@@ -43,7 +43,6 @@ public class ObjectivesController {
     public JSONObject getObjectives(Authentication auth) {
         AppUser appuser = userRepository.findByEmail(auth.getName());
         JSONObject data = objectivesService.getObjectives(appuser);
-        System.out.println(data);
         return data;
     }
 
@@ -78,7 +77,7 @@ public class ObjectivesController {
         }
         BgtTrackerApplication.logger.info("confiming objective" + id);
     }
-    
+
     @PostMapping("/api/confimobjectives")
     public void confirmObjectives(Authentication auth, @RequestBody Long[] ids, HttpServletResponse httpServletResponse)
     {

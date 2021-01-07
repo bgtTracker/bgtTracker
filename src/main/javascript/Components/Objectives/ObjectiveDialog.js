@@ -63,6 +63,8 @@ export default function ObjectiveDialog(props) {
   const [description, setDescription] = React.useState(props.row.description);
   const [priority, setPriority] = React.useState(props.row.priority);
   const [categories, setCategories] = React.useState();
+  const [amountError, setAmountError] = React.useState(false);
+  const [priError, setPriError] = React.useState(false);
 
   React.useEffect(() => {
     fetch("/testapi/getexpensecategory", {
@@ -89,15 +91,37 @@ export default function ObjectiveDialog(props) {
   };
 
   const handleSave = () => {
-    props.handleSave({
-      name: name,
-      amount: Number.parseInt(amount),
-      description: description,
-      date: date.getTime(),
-      category: category,
-      priority: Number.parseInt(priority)
-    });
-    props.handleClose();
+    if (!amountError && !priError) {
+      props.handleSave({
+        name: name,
+        amount: Number.parseInt(amount),
+        description: description,
+        date: date.getTime(),
+        category: category,
+        priority: Number.parseInt(priority)
+      });
+      props.handleClose();
+    } else {
+      // to do notifications that cannot save with error
+    }
+  };
+
+  const checkAmount = event => {
+    if (isNaN(event.target.value)) {
+      setAmountError(true);
+    } else {
+      setAmountError(false);
+    }
+    setAmount(event.target.value);
+  };
+
+  const checkPri = event => {
+    if (isNaN(event.target.value)) {
+      setPriError(true);
+    } else {
+      setPriError(false);
+    }
+    setPriority(event.target.value);
   };
 
   return (
@@ -109,9 +133,7 @@ export default function ObjectiveDialog(props) {
         onClose={handleClose}
         aria-labelledby="max-width-dialog-title"
       >
-        <DialogTitle id="max-width-dialog-title">
-          Enter new name and last name
-        </DialogTitle>
+        <DialogTitle id="max-width-dialog-title">Objective:</DialogTitle>
         <DialogContent>
           <Grid container direction="column" justify="space-around">
             <Grid
@@ -129,7 +151,9 @@ export default function ObjectiveDialog(props) {
                   label="Piority"
                   variant="outlined"
                   value={priority}
-                  onChange={e => setPriority(e.target.value)}
+                  error={priError}
+                  helperText={"Must be a number"}
+                  onChange={checkPri}
                 />
               </Grid>
               <Grid item xs={6}>
@@ -139,7 +163,9 @@ export default function ObjectiveDialog(props) {
                   label="Amount"
                   variant="outlined"
                   value={amount}
-                  onChange={e => setAmount(e.target.value)}
+                  error={amountError}
+                  helperText={"Must be a number"}
+                  onChange={checkAmount}
                 />
               </Grid>
             </Grid>
