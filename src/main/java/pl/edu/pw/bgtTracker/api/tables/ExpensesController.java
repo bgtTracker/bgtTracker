@@ -28,7 +28,7 @@ public class ExpensesController {
     }
 
     @PostMapping("/api/newExpense")
-    public long newExpenseData(Authentication auth, @RequestParam(value = "name") String name, @RequestParam(value="category_id") String category, @RequestParam(value="amount") String amount)
+    public long newExpenseData(Authentication auth, @RequestParam(value = "name") String name, @RequestParam(value="category_id") String category, @RequestParam(value="amount") String amount, @RequestParam String date ,@RequestParam String note)
     {
 
 
@@ -36,10 +36,12 @@ public class ExpensesController {
         String newName = name;
         long newAmount = Long.parseLong(amount);
         long categoryId = Long.parseLong(category);
+        String newDate = date;
+        String newNote = note;
 
 
-        long newId2 = expensesService.putExpense(usrId, newName, newAmount, categoryId);
-        return newId2;
+        long newId = expensesService.putExpense(usrId, newName, newAmount, categoryId, newDate, newNote);
+        return newId;
     }
 
     @PostMapping("/api/editExpense")

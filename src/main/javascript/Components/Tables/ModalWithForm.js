@@ -21,21 +21,24 @@ export default class ModalWithForm extends React.Component {
         var today = new Date(),
             nowDate = today.getFullYear() + '-' + ((today.getMonth() + 1)<10 ? '0' + (today.getMonth() + 1) : (today.getMonth() + 1)) + '-' + (today.getDate()<10 ? '0' + today.getDate(): today.getDate());
 
+
         this.state = {
             type: this.props.type,
+            //basic
             name: "",
-            amount: '',
+            amount: "",
             category: "",
             category_id: -1,
             color: "#000000",
-            date: nowDate,
+            //date: nowDate,
+            date: "",
             note: "",
             bankAccount: "",
 
             categories: "",
             categoryName: "1",
-            isFetching: false,
 
+            isFetching: false,
             buttonLabel: "New row",
             modalLabel: "New row",
             modal: false,
@@ -57,6 +60,11 @@ export default class ModalWithForm extends React.Component {
 
     toggle () {
         this.componentDidMount()
+        this.resetState()
+        if(this.state.categories !== "")
+        {
+            this.setState({category: this.state.categories[0].id})
+        }
         this.setState((prevState) => {
             if(this.props.mode === "edit" && this.props.row === -1){
                 return { modal: this.state.modal}
@@ -64,10 +72,32 @@ export default class ModalWithForm extends React.Component {
             else {
                 return { modal: !this.state.modal }
             }
-
         })
-
     }
+
+    resetState(){
+        this.setState({
+            type: this.props.type,
+            //basic
+            name: "",
+            amount: "",
+            category: "",
+            category_id: -1,
+            color: "#000000",
+            //date: nowDate,
+            date: "",
+            note: "",
+            bankAccount: "",
+
+            categoryName: "1",
+
+            isFetching: false,
+            buttonLabel: "New row",
+            modalLabel: "New row",
+            modal: false,
+        })
+    }
+
     changeName(event) {
         this.setState({ name: event.target.value })
     }
@@ -98,24 +128,46 @@ export default class ModalWithForm extends React.Component {
         }
     }
     checkData() {
+        var errorAlert = ""
         if(this.state.type !== "category")
         {
-            if(this.state.name !== "" &&  this.state.category !== "" && this.state.amount !== 0)
+            // for income 1.name 2.amount 3.category 4.date
+            if(this.state.name !== "" && this.state.amount !== "" && this.state.category !== "" && this.state.date !== "")
+            {
+                if(this.state.type === "bill")
+                {
+                    console.log("bank Account type", typeof this.state.bankAccount)
+                    if(this.state.bankAccount.length>0 && this.state.bankAccount.length<26)
+                    {
+                        alert("Invalid bank account number! Check again")
+                        return false;
+                    }
+                }
                 return true;
-            else {
-                return false;
+            }else {
+                alert("You have to choose category and name, amount and date")
+                return false
             }
 
-        } else {
+            // if(this.state.name !== "" &&  this.state.category !== "" && this.state.amount !== 0)
+            //     return true;
+            // else {
+            //     return false;
+            // }
+
+        }
+        else {
             if(this.state.name !== "")
                 return true;
             else {
+                alert("You have to give category a name!")
                 return false;
             }
         }
     }
 
     handleSubmit() {
+        console.log(this.state.category)
         if(this.checkData()){
             if(this.state.type !== "category")
             {
@@ -133,14 +185,15 @@ export default class ModalWithForm extends React.Component {
                 this.toggle()
             }
         }
-        else{
-            if(this.state.type !== "category") {
-                alert("Name, amount and category are nessessary!")
-            }
-            else{
-                alert("Category name is nessessary!")
-            }
-        }
+        // else{
+        //     if(this.state.type !== "category") {
+        //         alert("Name, amount and category are nessessary!")
+        //     }
+        //     else{
+        //         alert("Category name is nessessary!")
+        //     }
+        // }
+        console.log("HandleSubmitData",this.state.date)
 
     }
 
@@ -155,7 +208,7 @@ export default class ModalWithForm extends React.Component {
     }
 
     fetchData(){
-        console.log("Fetuje", this.state.type)
+        console.log("Modal is fatching category data")
         if(this.state.type === "income")
         {
             this.setState(()=>{
@@ -173,6 +226,10 @@ export default class ModalWithForm extends React.Component {
                 })
             })
         }
+        console.log("fet",this.state.categories)
+
+
+
 
     }
 
@@ -215,13 +272,13 @@ export default class ModalWithForm extends React.Component {
                         <Col xs="4">
                             <FormGroup>
                                 <Label >Amount</Label>
-                                <Input type="number" name="amount" id="amount" placeholder="Enter amount" onChange={this.changeAmount} value={this.state.amount} step="0.01" />
+                                <Input type="number" name="amount" id="amount" placeholder="Enter amount" onChange={this.changeAmount} value={this.state.amount} step="0.01" maxLength={7}/>
                             </FormGroup>
                         </Col>
                         <Col xs="8">
                             <FormGroup>
                                 <Label >Bank account</Label>
-                                <Input type="text" name="bank" id="bank" placeholder="Enter bank account"  value={this.state.bankAccount} />
+                                <Input type="text" name="bank" id="bank" placeholder="Enter bank account" onChange={this.changeBankAccount} value={this.state.bankAccount} maxLength={26}/>
                             </FormGroup>
                         </Col>
                     </Row>
@@ -236,7 +293,7 @@ export default class ModalWithForm extends React.Component {
                     <Col>
                         <FormGroup>
                             <Label>{this.state.type === "bill"? "Payment to" :"Date"}</Label>
-                            <Input type="date" name="date" id="date" placeholder="Enter date" defaultValue={"NULL"} onChange={this.changeDate} value={this.state.date}/>
+                            <Input type="date" name="date" id="date" placeholder="Enter date" defaultValue={"NULL"} onChange={this.changeDate} value={this.state.date} />
                         </FormGroup>
                     </Col>
                     <Col>
@@ -277,6 +334,7 @@ export default class ModalWithForm extends React.Component {
 
             </div>
         )
+
         return (
             <div>
                 <Button color={buttonColor} onClick={this.toggle}>{this.state.buttonLabel}</Button>

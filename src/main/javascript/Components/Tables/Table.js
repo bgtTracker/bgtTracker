@@ -21,8 +21,57 @@ function colorFormat(cell, row) {
   return <Badge style={{ backgroundColor: cell, color: cell }}>{cell}</Badge>;
 }
 
+function sortData(c,d, order){
 
-const userId = 15;
+  var a = c.date
+  var b = d.date
+
+  if(order === 'desc'){
+    if(a.slice(6,10) > b.slice(6,10)){
+      return -1;
+    } else if(a.slice(6,10) < b.slice(6,10)) {
+      return 1;
+    } else {
+      if(a.slice(3,5) > b.slice(3,5)){
+        return -1;
+      } else if(a.slice(3,5) < b.slice(3,5)) {
+        return 1;
+      } else {
+        if(a.slice(0,2) > b.slice(0,2)){
+          return -1;
+        } else if(a.slice(0,2) < b.slice(0,2)) {
+          return 1;
+        } else {
+          return 0;
+        }
+      }
+    }
+  }
+  else {
+    if(a.slice(6,10) < b.slice(6,10)){
+      return -1;
+    } else if(a.slice(6,10) > b.slice(6,10)) {
+      return 1;
+    } else {
+      if(a.slice(3,5) < b.slice(3,5)){
+        return -1;
+      } else if(a.slice(3,5) > b.slice(3,5)) {
+        return 1;
+      } else {
+        if(a.slice(0,2) < b.slice(0,2)){
+          return -1;
+        } else if(a.slice(0,2) > b.slice(0,2)) {
+          return 1;
+        } else {
+          return 0;
+        }
+      }
+    }
+
+  }
+}
+
+//const userId = 15;
 
 export default class CustomPaginationTable extends React.Component {
 
@@ -44,12 +93,51 @@ export default class CustomPaginationTable extends React.Component {
     this.isD2 = this.isD2.bind(this)
     //this.testClick = this.testClick.bind(this)
   }
+  componentDidMount() {
+    this.fetchData()
+  }
+  fetchData(){
+    if(this.props.type === "income"){
+      //console.log("Pobieram dane income")
+        this.setState(() => {
+          clientJson({method: 'GET', path: '/api/getIncomes/', headers:AuthService.getAuthHeader()}).then((response) => {
+            //console.log("Pobrane entitty", response.entity)
+            this.setState({data: response.entity.income})
+          });
+        })
+      //console.log("Pobrane dane to", this.state.data)
+    } else if(this.props.type === "expense"){
+      this.setState(() => {
+        clientJson({method: 'GET', path: '/api/getExpenses/', headers:AuthService.getAuthHeader() }).then((response) => {
+          this.setState({data: response.entity.expense})
+        });
+      })
+    } else if(this.props.type === "bill"){
+      this.setState(() => {
+        clientJson({method: 'GET', path: '/api/getBills/', headers:AuthService.getAuthHeader() }).then((response) => {
+          this.setState({data: response.entity.bill})
+        });
+      })
+    } else {
+      if(this.props.subType === "income"){
+        this.setState(() => {
+          clientJson({method: 'GET', path: '/api/getIncomeCategory/', headers:AuthService.getAuthHeader()}).then((response) => {
+            this.setState({data: response.entity.category})
+          });
+        })
+      }
+      else
+      {
+        this.setState(() => {
+          clientJson({method: 'GET', path: '/api/getExpenseCategory/', headers:AuthService.getAuthHeader()}).then((response) => {
+            this.setState({data: response.entity.category})
+          });
+        })
+      }
+    }
 
-  /*testClick(){
-    const t = this.props.test3()
-    console.log("test clicked !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
-    console.log(t)
-  }*/
+  }
+
   handleEditButtonClick() {
 
     this.setState((prevState) => {
@@ -79,50 +167,30 @@ export default class CustomPaginationTable extends React.Component {
           params: {
             name: newData.name,
             category_id: newData.category,
-            amount: newData.amount
+            amount: newData.amount,
+            date: newData.date,
+            note: newData.note
           }}).then((response) => {
           newId = response.entity
         }).then((response) => {
-          this.setState((prevState) => {
-            return {
-              data: this.state.data.push({
-                id: newId,
-                name: newData.name,
-                category: newData.categoryName,
-                date: "05.12.2020",
-                amount: newData.amount,
-                note: "Jest dobrze",
-                expand: true
-              })
-            }
-          })
+          this.fetchData()
         })
       })
     }
     else if(this.props.type === "expense"){
       this.setState((prevState) => {
         var newId;
-        clientJson({method: 'POST', path: '/api/newExpense/', headers:AuthService.getAuthHeader(),
+        clientJson({
+          method: 'POST', path: '/api/newExpense/', headers: AuthService.getAuthHeader(),
           params: {
             name: newData.name,
             category_id: newData.category,
-            amount: newData.amount
-          }}).then((response) => {
-          newId = response.entity
+            amount: newData.amount,
+            date: newData.date,
+            note: newData.note
+          }
         }).then((response) => {
-          this.setState((prevState) => {
-            return {
-              data: this.state.data.push({
-                id: newId,
-                name: newData.name,
-                category: newData.categoryName,
-                date: "05.12.2020",
-                amount: newData.amount,
-                note: "Jest dobrze",
-                expand: true
-              })
-            }
-          })
+          this.fetchData()
         })
       })
     }
@@ -134,23 +202,12 @@ export default class CustomPaginationTable extends React.Component {
           params: {
             name: newData.name,
             category_id: newData.category,
-            amount: newData.amount
+            amount: newData.amount,
+            dueDate: newData.date,
+            note: newData.note,
+            bankNumber: newData.bankAccount
           }}).then((response) => {
-          newId = response.entity
-        }).then((response) => {
-          this.setState((prevState) => {
-            return {
-              data: this.state.data.push({
-                id: newId,
-                name: newData.name,
-                category: newData.categoryName,
-                date: "05.12.2020",
-                amount: newData.amount,
-                note: "Jest dobrze",
-                expand: true
-              })
-            }
-          })
+          this.fetchData()
         })
       })
     }
@@ -166,19 +223,7 @@ export default class CustomPaginationTable extends React.Component {
               note: newData.note
             }
           }).then((response) => {
-            newId = response.entity
-            console.log(response)
-          }).then((response) => {
-            this.setState((prevState) => {
-              return {
-                data: this.state.data.push({
-                  id: newId,
-                  name: newData.name,
-                  color: newData.color,
-                  note: newData.note
-                })
-              }
-            })
+            this.fetchData()
           })
         })
       }
@@ -193,19 +238,7 @@ export default class CustomPaginationTable extends React.Component {
               note: newData.note
             }
           }).then((response) => {
-            newId = response.entity
-            console.log(response)
-          }).then((response) => {
-            this.setState((prevState) => {
-              return {
-                data: this.state.data.push({
-                  id: newId,
-                  name: newData.name,
-                  color: newData.color,
-                  note: newData.note
-                })
-              }
-            })
+            this.fetchData()
           })
         })
       }
@@ -237,7 +270,7 @@ export default class CustomPaginationTable extends React.Component {
   }
 
   expandComponentBill(row) {
-
+    console.log("ROW data", row)
     return (
 
         <div>
@@ -245,20 +278,20 @@ export default class CustomPaginationTable extends React.Component {
             <Row>
               <Col xs="3">
                 <FormGroup>
-                  <Label>Payment to</Label>
-                  <Input type="date" name="date" id="date" value={"2000-01-01"}  disabled/>
+                  <Label>Last payment:</Label>
+                  <Input type="text" name="date" id="date" value={row.paymentDay}  disabled/>
                 </FormGroup>
               </Col>
               <Col xs="3">
                 <FormGroup>
                   <Label>State</Label>
-                  <Input type="text" name="state" id="state" value={"PAID"}  disabled/>
+                  <Input type="text" name="state" id="state" value={row.isPaid==true?"PAID":"NOT PAID"}  disabled/>
                 </FormGroup>
               </Col>
               <Col xs="6">
                 <FormGroup>
                   <Label>Bank account</Label>
-                  <Input type="text" name="account" id="account" value={"95235565554000125"}  disabled/>
+                  <Input type="text" name="account" id="account" value={row.bankAccount}  disabled/>
                 </FormGroup>
               </Col>
             </Row>
@@ -285,16 +318,15 @@ export default class CustomPaginationTable extends React.Component {
       if(this.state.data[i].id == selectedId)
         tableId = i
     }
-    //console.log("dziejej sie ?")
 
     this.props.handleDel(selectedId)
     data.splice(tableId, 1)
     this.setState({data: data})
+    //this.setState(() => {this.fetchData()})
     this.setState({selected: -1})
 
   }
   handleRowSelect(row) {
-    //console.log(this.state.test)
     this.setState((prevState) => {
       return {selected: row.id}
     })
@@ -303,11 +335,12 @@ export default class CustomPaginationTable extends React.Component {
     console.log("working")
   }
   render() {
+    console.log("czemu niedziala", this.state.data)
     //console.log("Wyswietlam tabele")
     //console.log(this.state.data[0])
     const type = this.props.type
 
-    this.state.data =  this.props.data
+    //this.state.data =  this.props.data
     var category = this.props.category
 
     var rows
@@ -331,7 +364,7 @@ export default class CustomPaginationTable extends React.Component {
         {dataField: "id", label: "ID", isKey: true, hidden: true},
         {dataField: "name", label: "Expense Name", isKey: false, hidden: false},
         {dataField: "category", label: "Category", isKey: false, hidden: false},
-        {dataField: "dateStamp", label: "Date", isKey: false, hidden: false},//zmiana
+        {dataField: "date", label: "Date", isKey: false, hidden: false},//zmiana
         {dataField: "amount", label: "Amount", isKey: false, hidden: false},
       ]
       modalButtonLabel = "Add new Expense"
@@ -342,7 +375,7 @@ export default class CustomPaginationTable extends React.Component {
         {dataField: "id", label: "ID", isKey: true, hidden: true},
         {dataField: "name", label: "Bill Name", isKey: false, hidden: false},
         {dataField: "category", label: "Category", isKey: false, hidden: false},
-        {dataField: "date", label: "Date", isKey: false, hidden: false},
+        {dataField: "date", label: "Payment to", isKey: false, hidden: false},
         {dataField: "amount", label: "Amount", isKey: false, hidden: false},
       ]
       modalButtonLabel = "Add new bill"
@@ -363,6 +396,7 @@ export default class CustomPaginationTable extends React.Component {
 
     const tableBody = rows.map((foo) => (
         foo.dataField==="color" ? <TableHeaderColumn dataField={foo.dataField} hidden={foo.hidden} dataFormat={colorFormat}>{foo.label}</TableHeaderColumn>:
+            foo.dataField==="date" ? <TableHeaderColumn dataField={foo.dataField} hidden={foo.hidden} dataSort={true} sortFunc={sortData}>{foo.label}</TableHeaderColumn>:
             <TableHeaderColumn dataField={foo.dataField} hidden={foo.hidden} dataSort={true}>{foo.label}</TableHeaderColumn>))
 
     console.log("props2", this.props.type)

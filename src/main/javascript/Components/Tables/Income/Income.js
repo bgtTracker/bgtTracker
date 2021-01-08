@@ -11,7 +11,7 @@ export default function IncomePage() {
   const [newCategory, postCategory] = React.useState(false);
 
   //const forceUpdate = useForceUpdate(); // test
-
+  // to delete
   const loadIncomeData =  () => {
     clientJson({method: 'GET', path: '/api/getIncomes/', headers:AuthService.getAuthHeader()}).then((response) => {
       //console.log(response.entity.income)
@@ -31,16 +31,20 @@ export default function IncomePage() {
     });
   }
 
-  /*
-  const insertIncomeData = async (newData) => {
+
+  const insertIncomeData =  (newData) => {
+    console.log("Wstawianie 1")
     clientJson({method: 'POST', path: '/api/newIncome/', headers:AuthService.getAuthHeader(),
       params: {
         name: newData.name,
         category_id: newData.category,
-        amount: newData.amount
+        amount: newData.amount,
+        date: newData.date,
+        note: newData.note
       }}).then((response) => {
       console.log(response)
     })
+    console.log("Wstawianie 2")
   }
   const insertCategoryData = async (newData) => {
     clientJson({method: 'POST', path: '/api/newIncomeCategory/', headers:AuthService.getAuthHeader(),
@@ -49,9 +53,14 @@ export default function IncomePage() {
       }
     }).then((response) => {
         console.log(response)
-    })*
-  }*/
+    })
+  }
 
+  const loadIncomeData2 = async () => {
+    clientJson({method: 'GET', path: '/api/getIncomes/', headers:AuthService.getAuthHeader()}).then((response) => {
+      setIncomes(response.entity.income)
+    });
+  }
   const deleteIncomeData = async (delId) => {
     clientJson({method: 'POST', path: '/api/deleteIncome/', headers:AuthService.getAuthHeader(),
       params: {
@@ -95,18 +104,21 @@ export default function IncomePage() {
             <Col xs="8">
               <CustomPaginationTable
                   type="income"
-                  data={userIncome}
+                  //data={userIncome}
+                  //data={[]}
                   //category={[]}
                   //category={[]}
+                  handleIns={insertIncomeData}
                   handleDel={deleteIncomeData}
                   handleEdit={[]}
+                  //handleData={loadIncomeData2}
               />
             </Col>
             <Col xs="4">
               <CustomPaginationTable
                   type="category"
                   subType="income"
-                  data={userCategory}
+                  //data={userCategory}
                   //category={[]}
                   handleDel={deleteIncomeCategory}
                   handleEdit={[]}

@@ -5,6 +5,9 @@ import lombok.NoArgsConstructor;
 import net.minidev.json.JSONObject;
 
 import javax.persistence.*;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 @Entity
 @Data
@@ -12,9 +15,9 @@ import javax.persistence.*;
 public class Income {
     private @Id @GeneratedValue long id;
     private long amount;
+    private Date date;
     private String name;
-    //private Date dateStamp;
-    //private String note;
+    private String note;
 
 
     @ManyToOne(optional = false)
@@ -33,14 +36,14 @@ public class Income {
         json.put("category", category.getName());
         json.put("category_id", category.getId());
         json.put("user", user.getId());
+        // mozna dodac if - a sprawdzajacego czy nie null
+        DateFormat dateFromat = new SimpleDateFormat("dd.MM.yyyy"); // dobrze zwraca 20.12.2020
+        String strDate = dateFromat.format(date);
 
-        //json.put("expand", true); // not used
-        //json.put("dateStamp", dateStamp);
-        //json.put("note", note)
+        json.put("date", strDate);
+        json.put("note", note);
+        json.put("dataStamp", date);
 
-        json.put("date", "05.12.2020"); // stary format daty
-        json.put("dateStamp", "2000-01-01");
-        json.put("note", "Notatka kota filemona");
         return json;
     }
 }

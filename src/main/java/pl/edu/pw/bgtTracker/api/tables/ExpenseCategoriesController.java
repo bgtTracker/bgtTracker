@@ -31,11 +31,11 @@ public class ExpenseCategoriesController {
     }
 
     @PostMapping("/api/newExpenseCategory")
-    public long newExpenseCategoryData(Authentication auth, @RequestParam(value = "name") String name)
+    public long newExpenseCategoryData(Authentication auth, @RequestParam(value = "name") String name, @RequestParam(value = "color") String color, @RequestParam(value = "note") String note)
     {
         long usrId = this.getUserId(auth);
         String newName = name;
-        long newId2 = expenseCategoriesService.putExpenseCategory(usrId, newName);
+        long newId2 = expenseCategoriesService.putExpenseCategory(usrId, newName, color, note);
         return newId2;
     }
 

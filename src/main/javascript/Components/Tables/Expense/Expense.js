@@ -54,7 +54,7 @@ export default function Expense() {
           <Col xs="8">
             <CustomPaginationTable
               type="expense"
-              data={userExpense}
+              //data={userExpense}
               handleDel={deleteExpenseData}
               handleEdit={[]}
             />
@@ -63,7 +63,7 @@ export default function Expense() {
             <CustomPaginationTable
               type="category"
               subType="expense"
-              data={userCategory}
+              //data={userCategory}
               handleDel={deleteExpenseCategory}
               handleEdit={[]}
             />

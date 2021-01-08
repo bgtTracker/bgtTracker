@@ -5,6 +5,8 @@ import lombok.NoArgsConstructor;
 import net.minidev.json.JSONObject;
 
 import javax.persistence.*;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 @Entity
@@ -16,8 +18,7 @@ public class Expense {
     private long amount;
     private Date date;
     private String name;
-    //private Date dateStamp; //zamiast date
-    //private String note;
+    private String note;
 
 
     @ManyToOne(optional = false)
@@ -37,14 +38,13 @@ public class Expense {
         json.put("category", category.getName());
         json.put("category_id", category.getId());
         json.put("user", user.getId());
-        //json.put("expand", true);
 
-        //json.put("dateStamp", date.getTime());
-        //json.put("note", note);
-
-        json.put("date", "05.12.2020");
-        json.put("note", "Notatka kota filemlotka");
+        DateFormat dateFromat = new SimpleDateFormat("dd.MM.yyyy"); // dobrze zwraca 20.12.2020
+        String strDate = dateFromat.format(date);
+        json.put("date", strDate);
+        json.put("note", note);
         json.put("dateStamp", date);
+
         return json;
     }
 }

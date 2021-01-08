@@ -47,11 +47,15 @@ public class IncomeCategoriesService {
         return js;
     }
 
-    public long putIncomeCategory(long usrId, String newName) {
+    public long putIncomeCategory(long usrId, String newName, String color, String note) {
         IncomeCategory newCategory = new IncomeCategory();
         AppUser u = userRepository.findById(usrId).get();
+
         newCategory.setName(newName);
+        newCategory.setColor(color);
+        newCategory.setNote(note);
         newCategory.setUser(u);
+
         incomeCategoryRepository.save(newCategory);
         return newCategory.getId();
     }

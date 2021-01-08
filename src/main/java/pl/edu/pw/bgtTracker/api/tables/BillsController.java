@@ -28,7 +28,7 @@ public class BillsController {
     }
 
     @PostMapping("/api/newBill")
-    public long newBillData(Authentication auth, @RequestParam(value = "name") String name, @RequestParam(value="category_id") String category, @RequestParam(value="amount") String amount)
+    public long newBillData(Authentication auth, @RequestParam(value = "name") String name, @RequestParam(value="category_id") String category, @RequestParam(value="amount") String amount, @RequestParam(value="dueDate") String dueDate, @RequestParam(value="note") String note, @RequestParam(value = "bankNumber") String bankNumber)
     {
 
         long usrId = this.getUserId(auth);
@@ -37,7 +37,7 @@ public class BillsController {
         long categoryId = Long.parseLong(category);
 
         /* poprawic o date*/
-        long newId2 = billsService.putBill(usrId, newName, newAmount, categoryId);
+        long newId2 = billsService.putBill(usrId, newName, newAmount, categoryId, dueDate, note, bankNumber);
         return newId2;
     }
 

@@ -26,35 +26,29 @@ public class IncomesController {
         this.userRepository = userRepository;
     }
 
-    /*@GetMapping(value = {"/"}, produces=MediaType.APPLICATION_JSON_VALUE)
-    public String getUserIncome(@RequestParam(value = "userId", defaultValue = "15") String usrId){
-        long userID = Long.parseLong(usrId);
 
-        return getExampleData(userID).toString();
-
-    }*/
     @GetMapping(value ={"/api/getIncomes"},produces = MediaType.APPLICATION_JSON_VALUE)
     public JSONObject getIncomeData(Authentication auth)
     {
-        /* Zwraca [JSONObjects] ktore sa uzywane w tabeli income*/
 
         long id = this.getUserId(auth);
         return incomesService.getIncomes(id);
-        //return js;
+
     }
+
     @PostMapping("/api/newIncome")
-    public long newIncomeData(Authentication auth, @RequestParam(value = "name") String name, @RequestParam(value="category_id") String category, @RequestParam(value="amount") String amount)
-    { //@RequestParam(value = "note") String note, @RequestParam(value = "dateStamp") String dateStamp
+    public long newIncomeData(Authentication auth, @RequestParam(value = "name") String name, @RequestParam(value="category_id") String category, @RequestParam(value="amount") String amount , @RequestParam(value = "date") String date, @RequestParam(value = "note") String note)
+    {
 
         long usrId = this.getUserId(auth);
         String newName = name;
         long newAmount = Long.parseLong(amount);
         long categoryId = Long.parseLong(category);
 
-        long newId2 = incomesService.putIncome(usrId, newName, newAmount, categoryId);
-        //long newId = incomesService.putIncome(usrId, newName, newAmount, categoryId, note, dateStamp);
-        //return newId
-        return newId2;
+        //long newId2 = incomesService.putIncome(usrId, newName, newAmount, categoryId);
+        long newId = incomesService.putIncome(usrId, newName, newAmount, categoryId, date, note);
+        return newId;
+        //return newId2;
     }
 
     @PostMapping("/api/editIncome")

@@ -5,6 +5,8 @@ import lombok.NoArgsConstructor;
 import net.minidev.json.JSONObject;
 
 import javax.persistence.*;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 @Entity
@@ -17,9 +19,10 @@ public class Bill {
 
     private Date dueDate;
     private Date paymentDate;
-    private boolean paid;
+    private String bankNumber;
 
-    //private String note;
+    private boolean paid;
+    private String note;
 
     @ManyToOne(optional = false)
     @JoinColumn(name = "category_id", referencedColumnName = "id")
@@ -39,19 +42,21 @@ public class Bill {
         json.put("category", category.getName());
         json.put("category_id", category.getId());
         json.put("user", user.getId());
-        if(dueDate == null)
+
+        DateFormat dateFromat = new SimpleDateFormat("dd.MM.yyyy"); // dobrze zwraca 20.12.2020
+        String strDate = dateFromat.format(dueDate);
+        json.put("date", strDate);
+        if(paymentDate == null)
         {
-            json.put("XD","yes it is");
+            json.put("paymentDay","");
         }
-        //json.put("dueDate", dueDate.getTime());
-        //json.put("paymentDate", paymentDate.getTime());
+        else{
+            String strDate2 = dateFromat.format(paymentDate);
+            json.put("paymentDay",strDate2);
+        }
+        json.put("bankAccount", bankNumber);
         json.put("isPaid", paid);
-
-        //json.put("note", note);
-
-        //.put("expand", true);
-        json.put("note", "Notatka kota filemlotka");
-        json.put("date", "05.12.2020");
+        json.put("note", note);
 
         return json;
     }

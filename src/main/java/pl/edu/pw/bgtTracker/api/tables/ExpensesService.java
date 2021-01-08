@@ -10,6 +10,7 @@ import pl.edu.pw.bgtTracker.db.repos.*;
 
 
 import java.util.Collection;
+import java.util.Date;
 import java.util.List;
 @Service
 public class ExpensesService {
@@ -36,14 +37,18 @@ public class ExpensesService {
         return js;
     }
 
-    public long putExpense(long usrId, String newName, long newAmount, long categoryId) {
+    public long putExpense(long usrId, String newName, long newAmount, long categoryId, String date, String note) {
         Expense newExpense = new Expense();
         AppUser u = userRepository.findById(usrId).get();
         ExpenseCategory cat = expenseCategoryRepository.findById(categoryId); // nie dalo sie get()
+        String dateString = date.substring(5,7) + '/' + date.substring(8,10) + '/' + date.substring(0,4);
+        Date newDate = new Date(dateString);
         newExpense.setName(newName);
         newExpense.setAmount(newAmount);
         newExpense.setCategory(cat);
+        newExpense.setDate(newDate);
         newExpense.setUser(u);
+        newExpense.setNote(note);
         expenseRepository.save(newExpense);
 
         return newExpense.getId();

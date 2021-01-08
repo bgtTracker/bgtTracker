@@ -56,7 +56,7 @@ export default function Bill() {
           <Col xs="8">
             <CustomPaginationTable
               type="bill"
-              data={userBill}
+              //data={userBill}
               handleDel={deleteBillData}
               handleEdit={[]}
             />
@@ -65,7 +65,7 @@ export default function Bill() {
             <CustomPaginationTable
               type="category"
               subType="expense"
-              data={userCategory}
+              //data={userCategory}
               handleDel={deleteExpenseCategory}
               handleEdit={[]}
             />

@@ -10,6 +10,7 @@ import pl.edu.pw.bgtTracker.db.repos.*;
 
 
 import java.util.Collection;
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -37,14 +38,21 @@ public class BillsService {
         return js;
     }
 
-    public long putBill(long usrId, String newName, long newAmount, long categoryId) {
+    public long putBill(long usrId, String newName, long newAmount, long categoryId, String dueDate, String note, String bank) {
         Bill newBill = new Bill();
         AppUser u = userRepository.findById(usrId).get();
         ExpenseCategory cat = expenseCategoryRepository.findById(categoryId);
 
+        String dateString = dueDate.substring(5,7) + '/' + dueDate.substring(8,10) + '/' + dueDate.substring(0,4);
+        Date newDate = new Date(dateString);
+
         newBill.setName(newName);
         newBill.setAmount(newAmount);
         newBill.setCategory(cat);
+        newBill.setDueDate(newDate);
+        newBill.setNote(note);
+        newBill.setBankNumber(bank);
+
         newBill.setUser(u);
         billRepository.save(newBill);
 

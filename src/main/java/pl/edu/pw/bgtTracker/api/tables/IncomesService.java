@@ -14,6 +14,7 @@ import pl.edu.pw.bgtTracker.db.entities.AppUser;
 
 
 import java.util.Collection;
+import java.util.Date;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
@@ -26,70 +27,7 @@ public class IncomesService {
     private UserRepository userRepository;
     @Autowired
     private IncomeCategoryRepository incomeCategoryRepository;
-/*
-    public JSONObject getIncomes(long userid){
-        User u = userRepository.findById(userid).get();
-        List<Income> income = incomeRepository.findByUser(u);
 
-
-        JSONObject newD = new JSONObject();
-        JSONArray arr = new JSONArray();
-
-
-    }*/
-    /*public Income saveIncome(long userid, String name, long amount, long category_id){
-        Income newIncome = new Income();
-        //AppUser u = userRepository.findById(userid).get();
-        //IncomeCategory iCat = incomeCategoryRepository.findById(category_id);
-
-        newIncome.setName(name);
-        newIncome.setAmount(amount);
-        newIncome.setUser(u);
-        newIncome.setCategory(iCat);
-        incomeRepository.save(newIncome);
-        return newIncome;
-    }*/
-
-    /*public void updateIncome(Income income){
-        try{
-            Income oldIncome = incomeRepository.findById(income.getId()).get();
-            oldIncome.setName(income.getName());
-            oldIncome.setAmount(income.getAmount());
-            oldIncome.setCategory(income.getCategory());
-            incomeRepository.save(oldIncome);
-        }catch (Exception e) {
-
-        }
-    }
-
-    public void deleteIncome(long id){
-        incomeRepository.deleteById(id);
-    }
-
-    public List<Income> getIncomes(long userID) {
-        AppUser u = userRepository.findById(userId).get();
-        //User u2 =userRepository.findAll()
-        //List<Income> income = incomeRepository.findByUser(u);
-        List<Income> income = incomeRepository.findByUser(u);
-        return income;
-    }*/
-
-    /*public JSONObject getIncomes2(String userEmail) {
-        AppUser usr = userRepository.findByEmail(userEmail); // getting user
-        //AppUser u = userRepository.findById(userID).get(); //geting user object
-        List<Income> incomes = incomeRepository.findByUser(usr);
-
-        JSONObject dataFeed = new JSONObject();
-        JSONArray arr = new JSONArray();
-        
-
-        for(var a: incomes){
-            JSONObject n = a.toJSON();
-            arr.add(n);
-        }
-        dataFeed.put("incomes", arr);
-        return dataFeed;
-    }*/
     public JSONObject getIncomes(long userId)
     {
         AppUser user = userRepository.findById(userId).get();
@@ -104,30 +42,25 @@ public class IncomesService {
         }
         js.put("income", jsArr);
         return js;
-/*
-        JSONArray jsArr = new JSONArray();
-        JSONObject jsObj = new JSONObject();
-        jsObj.put("t0","test0");
-        jsObj.put("t0","test0");
-        jsObj.put("t1","test0");
-        jsObj.put("t2","test0");
-        jsObj.put("userID",userId);
-        jsArr.add(jsObj);
-        js.put("tak", jsArr);
-        return js;*/
     }
 
-    public long putIncome(long usrId, String newName, long newAmount, long categoryId) {
+    public long putIncome(long usrId, String newName, long newAmount, long categoryId, String date, String note) {
         Income newIncome = new Income();
         AppUser u = userRepository.findById(usrId).get();
         IncomeCategory cat = incomeCategoryRepository.findById(categoryId); // nie dalo sie get()
+        String dateString = date.substring(5,7) + '/' + date.substring(8,10) + '/' + date.substring(0,4);
+        Date newDate = new Date(dateString);
+        //Date newDate = new Date("10/12/2020");
         newIncome.setName(newName);
         newIncome.setAmount(newAmount);
         newIncome.setCategory(cat);
+
+        newIncome.setDate(newDate);
         newIncome.setUser(u);
+        newIncome.setNote(note);
+
         incomeRepository.save(newIncome);
-        System.out.println("test na konsoli");
-        System.out.println(newIncome.getId());
+
         return newIncome.getId();
     }
 

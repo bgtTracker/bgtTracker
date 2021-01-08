@@ -39,10 +39,12 @@ public class ExpenseCategoriesService {
         return js;
     }
 
-    public long putExpenseCategory(long usrId, String newName) {
+    public long putExpenseCategory(long usrId, String newName, String color, String note) {
         ExpenseCategory newCategory = new ExpenseCategory();
         AppUser u = userRepository.findById(usrId).get();
         newCategory.setName(newName);
+        newCategory.setColor(color);
+        newCategory.setNote(note);
         newCategory.setUser(u);
          expenseCategoryRepository.save(newCategory);
         return newCategory.getId();
