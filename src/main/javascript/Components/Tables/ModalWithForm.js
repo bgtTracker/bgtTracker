@@ -61,11 +61,13 @@ export default class ModalWithForm extends React.Component {
     toggle () {
         this.componentDidMount()
         this.resetState()
-        if(this.state.categories !== "")
+        if(this.state.categories.length !== 0)
         {
             this.setState({category: this.state.categories[0].id})
         }
-        this.setState((prevState) => {
+        console.log("this.state.categories.length", this.state.categories.length)
+
+                this.setState((prevState) => {
             if(this.props.mode === "edit" && this.props.row === -1){
                 return { modal: this.state.modal}
             }
@@ -81,17 +83,16 @@ export default class ModalWithForm extends React.Component {
             //basic
             name: "",
             amount: "",
-            category: "",
+            category: -1,
             category_id: -1,
             color: "#000000",
-            //date: nowDate,
             date: "",
             note: "",
             bankAccount: "",
+            test: false,
 
             categoryName: "1",
 
-            isFetching: false,
             buttonLabel: "New row",
             modalLabel: "New row",
             modal: false,
@@ -131,8 +132,15 @@ export default class ModalWithForm extends React.Component {
         var errorAlert = ""
         if(this.state.type !== "category")
         {
+            //console.log("this.state.category",typeof this.state.category)
+            if(this.state.category == -1)
+            {
+                alert("You have to choose category")
+                return false;
+            }
+
             // for income 1.name 2.amount 3.category 4.date
-            if(this.state.name !== "" && this.state.amount !== "" && this.state.category !== "" && this.state.date !== "")
+            if(this.state.name !== "" && this.state.amount !== "" && this.state.category !== -1 && this.state.date !== "")
             {
                 if(this.state.type === "bill")
                 {
@@ -185,16 +193,6 @@ export default class ModalWithForm extends React.Component {
                 this.toggle()
             }
         }
-        // else{
-        //     if(this.state.type !== "category") {
-        //         alert("Name, amount and category are nessessary!")
-        //     }
-        //     else{
-        //         alert("Category name is nessessary!")
-        //     }
-        // }
-        console.log("HandleSubmitData",this.state.date)
-
     }
 
 
@@ -204,11 +202,11 @@ export default class ModalWithForm extends React.Component {
 
     componentDidMount() {
         this.fetchData()
-        console.log("elo")
     }
 
     fetchData(){
         console.log("Modal is fatching category data")
+
         if(this.state.type === "income")
         {
             this.setState(()=>{
@@ -223,6 +221,7 @@ export default class ModalWithForm extends React.Component {
                 clientJson({method: 'GET', path: '/api/getExpenseCategory/', headers:AuthService.getAuthHeader()}).then((response) => {
                     //console.log("tak to to", response.entity.category)
                     this.setState({categories: response.entity.category})
+                    console.log("fetfet",this.state.categories)
                 })
             })
         }
@@ -234,7 +233,7 @@ export default class ModalWithForm extends React.Component {
     }
 
     render() {
-
+        console.log("fetreder",this.state.categories)
         const buttonColor = this.props.color
         const modalMode = this.props.mode
 
@@ -248,7 +247,9 @@ export default class ModalWithForm extends React.Component {
         if(this.state.categories !== "")
         {
             console.log("JEST")
+            var categoryDefult = (<option value={-1}></option>)
             categorySelect = selectOpt2.map((cat) => (<option value={cat.id}> {cat.name} </option>))
+            console.log("please", categorySelect)
         }
         else {
             console.log("NIE JEST")
@@ -293,13 +294,14 @@ export default class ModalWithForm extends React.Component {
                     <Col>
                         <FormGroup>
                             <Label>{this.state.type === "bill"? "Payment to" :"Date"}</Label>
-                            <Input type="date" name="date" id="date" placeholder="Enter date" defaultValue={"NULL"} onChange={this.changeDate} value={this.state.date} />
+                            <Input type="date" name="date" id="date" placeholder="Enter date"  onChange={this.changeDate} value={this.state.date} />
                         </FormGroup>
                     </Col>
                     <Col>
                         <FormGroup>
                             <Label >Choose category</Label>
                             <Input type="select" name="category" id="category"  onChange={this.changeCategory} value={this.state.category} placeholder={"Choose category"}>
+                                {categoryDefult}
                                 {categorySelect}
                             </Input>
                         </FormGroup>
