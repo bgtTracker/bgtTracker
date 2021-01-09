@@ -51,7 +51,7 @@ export default function Objectives() {
       })
       .catch(error => {
         console.log(error);
-        ErrorCodeHandler(error.status.code);
+        ErrorCodeHandler(error.status);
       });
   };
 
@@ -68,7 +68,7 @@ export default function Objectives() {
       })
       .catch(error => {
         console.log(error);
-        ErrorCodeHandler(error.status.code);
+        ErrorCodeHandler(error.status);
       });
   };
 
@@ -86,13 +86,7 @@ export default function Objectives() {
         reloadNotifications();
       })
       .catch(e => {
-        switch (error.response.status) {
-          case 403:
-            console.error("403");
-            break;
-          default:
-            console.error(e);
-        }
+        ErrorCodeHandler(error.status.code);
       });
   };
 
@@ -100,7 +94,10 @@ export default function Objectives() {
     fetch("/api/deleteobjectives", {
       method: "DELETE",
       body: JSON.stringify(ids),
-      headers: AuthService.getAuthHeader()
+      headers: new Headers({
+        Authorization: "Bearer " + AuthService.getToken(),
+        "Content-Type": "application/json"
+      })
     })
       .then(respone => {
         console.log(respone);
@@ -108,7 +105,7 @@ export default function Objectives() {
       })
       .catch(error => {
         console.log(error);
-        ErrorCodeHandler(error.status.code);
+        ErrorCodeHandler(error.status);
       });
   };
 
@@ -132,10 +129,14 @@ export default function Objectives() {
   };
 
   const confimObjectives = ids => {
+    console.log(ids);
     fetch("/api/confimobjectives", {
       method: "POST",
       body: JSON.stringify(ids),
-      headers: AuthService.getAuthHeader()
+      headers: new Headers({
+        Authorization: "Bearer " + AuthService.getToken(),
+        "Content-Type": "application/json"
+      })
     })
       .then(respone => {
         console.log(respone);
@@ -143,7 +144,7 @@ export default function Objectives() {
       })
       .catch(error => {
         console.log(error);
-        ErrorCodeHandler(error.status.code);
+        ErrorCodeHandler(error.status);
       });
   };
 

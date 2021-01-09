@@ -167,14 +167,6 @@ const EnhancedTableToolbar = props => {
     props.addObjective(toSave);
   };
 
-  const handleDelete = () => {
-    props.deleteObjectives(numSelected);
-  };
-
-  const handleConfim = () => {
-    props.confimObjectives(numSelected);
-  };
-
   return (
     <Toolbar
       className={clsx(classes.root, {
@@ -205,14 +197,14 @@ const EnhancedTableToolbar = props => {
         <Grid container direction="row" justify="flex-end" alignItems="center">
           <Grid item>
             <Tooltip title="Delete objectives">
-              <IconButton aria-label="export" onClick={handleDelete}>
+              <IconButton aria-label="export" onClick={props.deleteObjectives}>
                 <DeleteForeverIcon />
               </IconButton>
             </Tooltip>
           </Grid>
           <Grid item>
             <Tooltip title="Confim objectives">
-              <IconButton aria-label="export" onClick={handleConfim}>
+              <IconButton aria-label="export" onClick={props.confimObjectives}>
                 <AttachMoneyOutlinedIcon />
               </IconButton>
             </Tooltip>
@@ -345,6 +337,16 @@ export default function ObjectivesTable(props) {
     props.editObjective(toSave);
   };
 
+  const confimMultipleObjectives = () => {
+    props.confimObjectives(selected);
+    setSelected([]);
+  };
+
+  const deleteMultipleObjectives = () => {
+    props.deleteObjectives(selected);
+    setSelected([]);
+  };
+
   return (
     <div className={classes.root}>
       <Paper className={classes.paper}>
@@ -352,8 +354,8 @@ export default function ObjectivesTable(props) {
           numSelected={selected.length}
           selected={selected}
           addObjective={props.addObjective}
-          confimObjectives={props.confimObjectives}
-          deleteObjectives={props.deleteObjectives}
+          confimObjectives={confimMultipleObjectives}
+          deleteObjectives={deleteMultipleObjectives}
         />
         <TableContainer>
           <Table

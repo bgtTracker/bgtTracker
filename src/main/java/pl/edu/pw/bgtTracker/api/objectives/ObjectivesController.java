@@ -63,6 +63,11 @@ public class ObjectivesController {
 
     @DeleteMapping("/api/deleteobjectives")
     public void deleteObjectives(Authentication auth, @RequestBody Long[] ids, HttpServletResponse httpServletResponse) {
+        if (ids == null) {
+            httpServletResponse.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            return;
+        }
+        
         for(var id : ids){
             objectivesService.deleteObjectives(id);
         }
@@ -75,13 +80,25 @@ public class ObjectivesController {
             httpServletResponse.setStatus(HttpServletResponse.SC_BAD_REQUEST);
             return;
         }
+        AppUser u = userRepository.findByEmail(auth.getName());
+        objectivesService.confirmObjective(u, id);
         BgtTrackerApplication.logger.info("confiming objective" + id);
     }
 
     @PostMapping("/api/confimobjectives")
     public void confirmObjectives(Authentication auth, @RequestBody Long[] ids, HttpServletResponse httpServletResponse)
     {
-        BgtTrackerApplication.logger.info("confiming objectives" + ids);
+        if (ids == null) {
+            httpServletResponse.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            return;
+        }
+        AppUser u = userRepository.findByEmail(auth.getName());
+        
+        for( var id: ids) 
+        {
+            objectivesService.confirmObjective(u, id);
+            BgtTrackerApplication.logger.info("confiming objective" + id);
+        }
     }
 
     private JSONObject paresStringToJson(String bodyString, HttpServletResponse httpServletResponse) {

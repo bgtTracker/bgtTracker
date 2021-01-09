@@ -54,6 +54,21 @@ public class ExpensesService {
         return newExpense.getId();
     }
 
+    public long putExpense(AppUser user, String newName, long newAmount, ExpenseCategory category, Date date, String note) {
+        Expense newExpense = new Expense();
+        newExpense.setName(newName);
+        newExpense.setAmount(newAmount);
+        newExpense.setCategory(category);
+        newExpense.setDate(date);
+        newExpense.setUser(user);
+        newExpense.setNote(note);
+        expenseRepository.save(newExpense);
+
+        return newExpense.getId();
+    }
+
+    
+
     public void editExpense(long expenseId, String newName, long newCatId, long newAmount) {
         Expense findExpense = expenseRepository.findById(expenseId).get();
         ExpenseCategory newCategory = expenseCategoryRepository.findById(newCatId);

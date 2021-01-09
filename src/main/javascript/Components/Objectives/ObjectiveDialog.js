@@ -19,6 +19,7 @@ import Input from "@material-ui/core/Input";
 import MenuItem from "@material-ui/core/MenuItem";
 import AuthService from "../../api/AuthService.js";
 import { Skeleton } from "@material-ui/lab";
+import ErrorCodeHandler from "../ErrorCodeHandler.js";
 
 const theme = createMuiTheme();
 
@@ -65,20 +66,26 @@ export default function ObjectiveDialog(props) {
   const [categories, setCategories] = React.useState();
   const [amountError, setAmountError] = React.useState(false);
   const [priError, setPriError] = React.useState(false);
+  const [descriptionError, setDescriptionError] = React.useState(false);
+  const [nameError, setNameError] = React.useState(false);
+  const [errorCategory, setCatError] = React.useState(false);
 
   React.useEffect(() => {
-    fetch("/testapi/getexpensecategory", {
+    fetch("/api/getExpenseCategory", {
       method: "GET",
       headers: AuthService.getAuthHeader()
     })
       .then(res => res.json())
       .then(res => {
-        console.log("POGGG");
+        if (res.category === undefined || res.category.length === 0) {
+          console.log("caterror");
+          setCatError(true);
+        }
         console.log(res);
-        setCategories(res.expenseCategories);
+        setCategories(res.category);
       })
       .catch(e => {
-        console.error(e);
+        ErrorCodeHandler(e.status);
       });
   }, []);
 
@@ -91,7 +98,7 @@ export default function ObjectiveDialog(props) {
   };
 
   const handleSave = () => {
-    if (!amountError && !priError) {
+    if (!amountError && !priError && !descriptionError && !nameError) {
       props.handleSave({
         name: name,
         amount: Number.parseInt(amount),
@@ -124,150 +131,220 @@ export default function ObjectiveDialog(props) {
     setPriority(event.target.value);
   };
 
+  const checkDecription = event => {
+    if (event.target.value.length > 255) {
+      setDescriptionError(true);
+    } else {
+      setDescriptionError(false);
+    }
+    setDescription(event.target.value);
+  };
+
+  const checkName = event => {
+    if (event.target.value.length > 50) {
+      setNameError(true);
+    } else {
+      setNameError(false);
+    }
+    setName(event.target.value);
+  };
+
+  const redirectToExpensePage = () => {
+    if (typeof window !== "undefined") {
+      window.location.replace("/app/expenses");
+    }
+  };
+
   return (
     <div>
-      <Dialog
-        className={classes.dialogHeight}
-        maxWidth={maxWidth}
-        open={open}
-        onClose={handleClose}
-        aria-labelledby="max-width-dialog-title"
-      >
-        <DialogTitle id="max-width-dialog-title">Objective:</DialogTitle>
-        <DialogContent>
-          <Grid container direction="column" justify="space-around">
-            <Grid
-              container
-              className={classes.row}
-              spacing={1}
-              direction={"row"}
-              justify="space-around"
-              alignItems="center"
-            >
-              <Grid item xs={6}>
-                <TextField
-                  className={classes.smalleTextField}
-                  id="Piority"
-                  label="Piority"
-                  variant="outlined"
-                  value={priority}
-                  error={priError}
-                  helperText={"Must be a number"}
-                  onChange={checkPri}
-                />
+      {errorCategory ? (
+        <div>
+          <Dialog
+            className={classes.dialogHeight}
+            maxWidth={maxWidth}
+            open={open}
+            onClose={handleClose}
+            aria-labelledby="max-width-dialog-title"
+          >
+            <DialogTitle id="max-width-dialog-title">
+              Error with categories
+            </DialogTitle>
+            <DialogContent>
+              <Grid container justify="space-between">
+                <Grid item xs={12}>
+                  <h3>
+                    {" "}
+                    Add category before adding objective, you can do that in
+                    expenses page
+                  </h3>
+                </Grid>
+                <Grid item xs={6}>
+                  <Button onClick={redirectToExpensePage} color="primary">
+                    Go to expense page
+                  </Button>
+                </Grid>
+                <Grid item xs={6}>
+                  <Button onClick={handleClose} color="primary">
+                    Close
+                  </Button>
+                </Grid>
               </Grid>
-              <Grid item xs={6}>
-                <TextField
-                  className={classes.smalleTextField}
-                  id="Amount"
-                  label="Amount"
-                  variant="outlined"
-                  value={amount}
-                  error={amountError}
-                  helperText={"Must be a number"}
-                  onChange={checkAmount}
-                />
-              </Grid>
-            </Grid>
-            <Grid item xs={12}>
-              <div className={classes.BlankSpace}> </div>
-            </Grid>
-            <Grid
-              container
-              className={classes.row}
-              spacing={1}
-              direction={"row"}
-              justify="space-around"
-              alignItems="center"
-            >
-              <Grid item xs={6}>
-                <form className={classes.container} noValidate>
-                  <MuiPickersUtilsProvider utils={DateFnsUtils}>
-                    <KeyboardDatePicker
-                      disableToolbar
-                      variant="inline"
-                      format="yyyy-dd-MM"
-                      margin="normal"
-                      id="demo-date-outlined"
-                      inputVariant="outlined"
-                      label="Date"
+            </DialogContent>
+          </Dialog>
+        </div>
+      ) : (
+        <div>
+          <Dialog
+            className={classes.dialogHeight}
+            maxWidth={maxWidth}
+            open={open}
+            onClose={handleClose}
+            aria-labelledby="max-width-dialog-title"
+          >
+            <DialogTitle id="max-width-dialog-title">Objective:</DialogTitle>
+            <DialogContent>
+              <Grid container direction="column" justify="space-around">
+                <Grid
+                  container
+                  className={classes.row}
+                  spacing={1}
+                  direction={"row"}
+                  justify="space-around"
+                  alignItems="center"
+                >
+                  <Grid item xs={6}>
+                    <TextField
+                      className={classes.smalleTextField}
+                      id="Piority"
+                      label="Piority"
                       variant="outlined"
-                      value={date}
-                      onChange={handleDataChange}
-                      KeyboardButtonProps={{
-                        "aria-label": "change date"
-                      }}
+                      value={priority}
+                      error={priError}
+                      helperText={"Must be a number"}
+                      onChange={checkPri}
                     />
-                  </MuiPickersUtilsProvider>
-                </form>
+                  </Grid>
+                  <Grid item xs={6}>
+                    <TextField
+                      className={classes.smalleTextField}
+                      id="Amount"
+                      label="Amount"
+                      variant="outlined"
+                      value={amount}
+                      error={amountError}
+                      helperText={"Must be a number"}
+                      onChange={checkAmount}
+                    />
+                  </Grid>
+                </Grid>
+                <Grid item xs={12}>
+                  <div className={classes.BlankSpace}> </div>
+                </Grid>
+                <Grid
+                  container
+                  className={classes.row}
+                  spacing={1}
+                  direction={"row"}
+                  justify="space-around"
+                  alignItems="center"
+                >
+                  <Grid item xs={6}>
+                    <form className={classes.container} noValidate>
+                      <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                        <KeyboardDatePicker
+                          disableToolbar
+                          variant="inline"
+                          format="yyyy-dd-MM"
+                          margin="normal"
+                          id="demo-date-outlined"
+                          inputVariant="outlined"
+                          label="Date"
+                          variant="outlined"
+                          value={date}
+                          onChange={handleDataChange}
+                          KeyboardButtonProps={{
+                            "aria-label": "change date"
+                          }}
+                        />
+                      </MuiPickersUtilsProvider>
+                    </form>
+                  </Grid>
+                  <Grid item xs={6}>
+                    <FormControl
+                      variant="outlined"
+                      className={classes.formControl}
+                    >
+                      <InputLabel id="demo-category-outlined-label">
+                        Category
+                      </InputLabel>
+                      <Select
+                        labelId="demo-category-outlined-label"
+                        id="demo-category-outlined"
+                        value={category}
+                        onChange={e => {
+                          console.log(e.target.value);
+                          setCategory(e.target.value);
+                        }}
+                        label="Category"
+                      >
+                        {categories === undefined ? (
+                          <Skeleton animation="wave" variant="react" />
+                        ) : (
+                          categories.map(element => (
+                            <MenuItem key={element.id} value={element.id}>
+                              {element.name}
+                            </MenuItem>
+                          ))
+                        )}
+                      </Select>
+                    </FormControl>
+                  </Grid>
+                </Grid>
+                <Grid item xs={12}>
+                  <div className={classes.BlankSpace}> </div>
+                </Grid>
+                <Grid item xs={12}>
+                  <TextField
+                    className={classes.nameTextFile}
+                    id="Name"
+                    label="Name"
+                    variant="outlined"
+                    value={name}
+                    helperText="Max 50 characters"
+                    error={nameError}
+                    onChange={checkName}
+                  />
+                </Grid>
+                <Grid item xs={12}>
+                  <div className={classes.BlankSpace}> </div>
+                </Grid>
+                <Grid item xs={12}>
+                  <TextField
+                    className={classes.bigTextField}
+                    id="outlined-multiline-static"
+                    label="Descriptions"
+                    multiline
+                    error={descriptionError}
+                    helperText="Max 255 characters"
+                    rows={4}
+                    variant="outlined"
+                    value={description}
+                    onChange={checkDecription}
+                  />
+                </Grid>
               </Grid>
-              <Grid item xs={6}>
-                <FormControl variant="outlined" className={classes.formControl}>
-                  <InputLabel id="demo-category-outlined-label">
-                    Category
-                  </InputLabel>
-                  <Select
-                    labelId="demo-category-outlined-label"
-                    id="demo-category-outlined"
-                    value={category}
-                    onChange={e => {
-                      console.log(e.target.value);
-                      setCategory(e.target.value);
-                    }}
-                    label="Category"
-                  >
-                    {categories === undefined ? (
-                      <Skeleton animation="wave" variant="react" />
-                    ) : (
-                      categories.map(element => (
-                        <MenuItem key={element.id} value={element.id}>
-                          {element.name}
-                        </MenuItem>
-                      ))
-                    )}
-                  </Select>
-                </FormControl>
-              </Grid>
-            </Grid>
-            <Grid item xs={12}>
-              <div className={classes.BlankSpace}> </div>
-            </Grid>
-            <Grid item xs={12}>
-              <TextField
-                className={classes.nameTextFile}
-                id="Name"
-                label="Name"
-                variant="outlined"
-                value={name}
-                onChange={e => setName(e.target.value)}
-              />
-            </Grid>
-            <Grid item xs={12}>
-              <div className={classes.BlankSpace}> </div>
-            </Grid>
-            <Grid item xs={12}>
-              <TextField
-                className={classes.bigTextField}
-                id="outlined-multiline-static"
-                label="Multiline"
-                multiline
-                rows={4}
-                variant="outlined"
-                value={description}
-                onChange={e => setDescription(e.target.value)}
-              />
-            </Grid>
-          </Grid>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleSave} color="primary">
-            Save
-          </Button>
-          <Button onClick={handleClose} color="primary">
-            Cancel
-          </Button>
-        </DialogActions>
-      </Dialog>
+            </DialogContent>
+            <DialogActions>
+              <Button onClick={handleSave} color="primary">
+                Save
+              </Button>
+              <Button onClick={handleClose} color="primary">
+                Cancel
+              </Button>
+            </DialogActions>
+          </Dialog>
+        </div>
+      )}
     </div>
   );
 }
