@@ -97,7 +97,7 @@ export default function ObjectiveDialog(props) {
         amount: Number.parseInt(amount),
         description: description,
         date: date.getTime(),
-        category: category,
+        category: Number.parseInt(category),
         priority: Number.parseInt(priority)
       });
       props.handleClose();
@@ -210,7 +210,10 @@ export default function ObjectiveDialog(props) {
                     labelId="demo-category-outlined-label"
                     id="demo-category-outlined"
                     value={category}
-                    onChange={e => setCategory(e.target.value)}
+                    onChange={e => {
+                      console.log(e.target.value);
+                      setCategory(e.target.value);
+                    }}
                     label="Category"
                   >
                     {categories === undefined ? (

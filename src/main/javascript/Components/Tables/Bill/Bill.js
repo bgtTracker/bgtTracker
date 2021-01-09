@@ -1,47 +1,67 @@
 import React from "react";
 import CustomPaginationTable from "../Table";
 import { Container, Row, Col } from "reactstrap";
-
-const bill = [];
-const categorie = [];
-
-function addBill(quantity) {
-  const startId = bill.length;
-  for (let i = 1; i < quantity; i++) {
-    const id = startId + i;
-    bill.push({
-      id: id,
-      name: "Bill name " + id,
-      category: "rent",
-      date: "05.12.2020",
-      amount: 2100 + i,
-      expand: true
-    });
-  }
-}
-
-function addCategories(quantity) {
-  const startId = categorie.length;
-  for (let i = 1; i < quantity; i++) {
-    const id = startId + i;
-    let randomC = Math.floor(Math.random() * 16777215).toString(16);
-    var randomColor =
-      randomC.length === 6
-        ? randomC
-        : Math.floor(Math.random() * 16777215).toString(16);
-    console.log(randomColor);
-    categorie.push({
-      id: id,
-      name: "Category " + id,
-      color: "#" + randomColor,
-      expand: true
-    });
-  }
-}
-addCategories(5);
-addBill(89);
+import clientJson from "../../../clientJson";
+import AuthService from "../../../api/AuthService";
 
 export default function Bill() {
+  const [userBill, setBill] = React.useState([]);
+  const [userCategory, setCategory] = React.useState([]);
+
+  const loadBillData = () => {
+    clientJson({
+      method: "GET",
+      path: "/api/getBills/",
+      headers: AuthService.getAuthHeader()
+    }).then(response => {
+      setBill(response.entity.bill);
+    });
+  };
+
+  const loadCategoryData = () => {
+    clientJson({
+      method: "GET",
+      path: "/api/getExpenseCategory/",
+      headers: AuthService.getAuthHeader()
+    }).then(response => {
+      setCategory(response.entity.category);
+    });
+  };
+
+  const deleteBillData = async delId => {
+    clientJson({
+      method: "POST",
+      path: "/api/deleteBill/",
+      headers: AuthService.getAuthHeader(),
+      params: {
+        id: delId
+      }
+    }).then(response => {
+      console.log(response);
+    });
+  };
+
+  const deleteExpenseCategory = async delId => {
+    clientJson({
+      method: "POST",
+      path: "/api/deleteExpenseCategory/",
+      headers: AuthService.getAuthHeader(),
+      params: {
+        id: delId
+      }
+    }).then(response => {
+      console.log(response);
+    });
+  };
+
+  React.useEffect(() => {
+    loadBillData();
+  }, []);
+
+  React.useEffect(() => {
+    loadCategoryData();
+  }, []);
+
   return (
     <div>
       <Container className="themed-container" fluid={true}>
@@ -49,15 +69,18 @@ export default function Bill() {
           <Col xs="8">
             <CustomPaginationTable
               type="bill"
-              data={bill}
-              category={categorie}
+              //data={userBill}
+              handleDel={deleteBillData}
+              handleEdit={[]}
             />
           </Col>
           <Col xs="4">
             <CustomPaginationTable
               type="category"
-              data={categorie}
-              category={categorie}
+              subType="expense"
+              //data={userCategory}
+              handleDel={deleteExpenseCategory}
+              handleEdit={[]}
             />
           </Col>
         </Row>

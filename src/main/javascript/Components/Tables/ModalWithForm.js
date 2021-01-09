@@ -10,6 +10,8 @@ import {
 import { Container, Row, Col } from "reactstrap";
 import { Form, FormGroup, Label, FormText } from "reactstrap";
 import { Badge } from "reactstrap";
+import clientJson from "../../clientJson";
+import AuthService from "../../api/AuthService";
 
 export default class ModalWithForm extends React.Component {
   constructor(props) {
@@ -19,25 +21,34 @@ export default class ModalWithForm extends React.Component {
       nowDate =
         today.getFullYear() +
         "-" +
-        (today.getMonth() + 1) +
+        (today.getMonth() + 1 < 10
+          ? "0" + (today.getMonth() + 1)
+          : today.getMonth() + 1) +
         "-" +
         (today.getDate() < 10 ? "0" + today.getDate() : today.getDate());
 
     this.state = {
-      type: "category",
+      type: this.props.type,
+      //basic
       name: "",
-      amount: 0,
+      amount: "",
       category: "",
+      category_id: -1,
       color: "#000000",
-      date: nowDate,
+      //date: nowDate,
+      date: "",
       note: "",
-      className: "",
+      bankAccount: "",
 
+      categories: "",
+      categoryName: "1",
+
+      isFetching: false,
       buttonLabel: "New row",
       modalLabel: "New row",
-      modal: false,
-      setModal: false // zbedne
+      modal: false
     };
+
     this.toggle = this.toggle.bind(this);
     this.changeName = this.changeName.bind(this);
     this.changeAmount = this.changeAmount.bind(this);
@@ -45,18 +56,51 @@ export default class ModalWithForm extends React.Component {
     this.changeCategory = this.changeCategory.bind(this);
     this.changeColor = this.changeColor.bind(this);
     this.changeNote = this.changeNote.bind(this);
+    this.changeBankAccount = this.changeBankAccount.bind(this);
     this.setState = this.setState.bind(this);
 
     this.handleSubmit = this.handleSubmit.bind(this);
   }
 
   toggle() {
+    this.componentDidMount();
+    this.resetState();
+    if (this.state.categories.length !== 0) {
+      this.setState({ category: this.state.categories[0].id });
+    }
+    console.log("this.state.categories.length", this.state.categories.length);
+
     this.setState(prevState => {
-      return {
-        modal: !this.state.modal
-      };
+      if (this.props.mode === "edit" && this.props.row === -1) {
+        return { modal: this.state.modal };
+      } else {
+        return { modal: !this.state.modal };
+      }
     });
   }
+
+  resetState() {
+    this.setState({
+      type: this.props.type,
+      //basic
+      name: "",
+      amount: "",
+      category: -1,
+      category_id: -1,
+      color: "#000000",
+      date: "",
+      note: "",
+      bankAccount: "",
+      test: false,
+
+      categoryName: "1",
+
+      buttonLabel: "New row",
+      modalLabel: "New row",
+      modal: false
+    });
+  }
+
   changeName(event) {
     this.setState({ name: event.target.value });
   }
@@ -81,23 +125,142 @@ export default class ModalWithForm extends React.Component {
     this.setState({ color: event.target.value });
   }
 
+  changeBankAccount(event) {
+    if (this.state.type === "bill") {
+      this.setState({ bankAccount: event.target.value });
+    }
+  }
+  checkData() {
+    var errorAlert = "";
+    if (this.state.type !== "category") {
+      //console.log("this.state.category",typeof this.state.category)
+      if (this.state.category == -1) {
+        alert("You have to choose category");
+        return false;
+      }
+
+      // for income 1.name 2.amount 3.category 4.date
+      if (
+        this.state.name !== "" &&
+        this.state.amount !== "" &&
+        this.state.category !== -1 &&
+        this.state.date !== ""
+      ) {
+        if (this.state.type === "bill") {
+          console.log("bank Account type", typeof this.state.bankAccount);
+          if (
+            this.state.bankAccount.length > 0 &&
+            this.state.bankAccount.length < 26
+          ) {
+            alert("Invalid bank account number! Check again");
+            return false;
+          }
+        }
+        return true;
+      } else {
+        alert("You have to choose category and name, amount and date");
+        return false;
+      }
+
+      // if(this.state.name !== "" &&  this.state.category !== "" && this.state.amount !== 0)
+      //     return true;
+      // else {
+      //     return false;
+      // }
+    } else {
+      if (this.state.name !== "") return true;
+      else {
+        alert("You have to give category a name!");
+        return false;
+      }
+    }
+  }
+
   handleSubmit() {
-    //console.log("Submit")
-    //console.log(this.state)
-    this.props.handleNew(this.state);
-    this.toggle();
-    //this.props.dispatch()
+    console.log(this.state.category);
+    if (this.checkData()) {
+      if (this.state.type !== "category") {
+        var t = this.state.categories.filter(i => {
+          return i.id == this.state.category;
+        });
+        this.setState({ categoryName: t[0].name }, () => {
+          this.props.handleNew(this.state);
+          this.toggle();
+        });
+      } else if (this.state.type === "category") {
+        this.props.handleNew(this.state);
+        this.toggle();
+      } else {
+        this.toggle();
+      }
+    }
   }
 
   colorFormat(cell) {
     return <Badge style={{ backgroundColor: cell, color: cell }}>{cell}</Badge>;
   }
 
+  componentDidMount() {
+    this.fetchData();
+  }
+
+  fetchData() {
+    console.log("Modal is fatching category data");
+
+    if (this.state.type === "income") {
+      this.setState(() => {
+        clientJson({
+          method: "GET",
+          path: "/api/getIncomeCategory/",
+          headers: AuthService.getAuthHeader()
+        }).then(response => {
+          //console.log("tak to to", response.entity.category)
+          this.setState({ categories: response.entity.category });
+        });
+      });
+    } else {
+      this.setState(() => {
+        clientJson({
+          method: "GET",
+          path: "/api/getExpenseCategory/",
+          headers: AuthService.getAuthHeader()
+        }).then(response => {
+          //console.log("tak to to", response.entity.category)
+          this.setState({ categories: response.entity.category });
+          console.log("fetfet", this.state.categories);
+        });
+      });
+    }
+    console.log("fet", this.state.categories);
+  }
+
   render() {
-    this.state.type = this.props.type;
-    const selectOpt = this.props.category;
+    console.log("fetreder", this.state.categories);
+    const buttonColor = this.props.color;
+    const modalMode = this.props.mode;
+
+    //var selectOpt = this.props.category
+    var selectOpt2 = this.state.categories;
+
     this.state.buttonLabel = this.props.buttonLabel;
-    const categorySelect = selectOpt.map(cat => <option> {cat.name} </option>);
+    var categorySelect;
+    console.log("co jest grane");
+    if (this.state.categories !== "") {
+      console.log("JEST");
+      var categoryDefult = <option value={-1}></option>;
+      categorySelect = selectOpt2.map(cat => (
+        <option value={cat.id}> {cat.name} </option>
+      ));
+      console.log("please", categorySelect);
+    } else {
+      console.log("NIE JEST");
+      categorySelect = <option value={0}> {"Niema"} </option>;
+    }
+
+    /*if(this.state.categories!=""){
+            //console.log("Categorie test", this.state.categories[0].id)
+        }*/
+
     var formBody = (
       <div>
         <FormGroup>
@@ -119,21 +282,59 @@ export default class ModalWithForm extends React.Component {
             value={this.state.name}
           />
         </FormGroup>
-        <FormGroup>
-          <Label>Amount</Label>
-          <Input
-            type="number"
-            name="amount"
-            id="amount"
-            placeholder="Enter amount"
-            onChange={this.changeAmount}
-            value={this.state.value}
-          />
-        </FormGroup>
+        {this.state.type === "bill" && (
+          <Row>
+            <Col xs="4">
+              <FormGroup>
+                <Label>Amount</Label>
+                <Input
+                  type="number"
+                  name="amount"
+                  id="amount"
+                  placeholder="Enter amount"
+                  onChange={this.changeAmount}
+                  value={this.state.amount}
+                  step="0.01"
+                  maxLength={7}
+                />
+              </FormGroup>
+            </Col>
+            <Col xs="8">
+              <FormGroup>
+                <Label>Bank account</Label>
+                <Input
+                  type="text"
+                  name="bank"
+                  id="bank"
+                  placeholder="Enter bank account"
+                  onChange={this.changeBankAccount}
+                  value={this.state.bankAccount}
+                  maxLength={26}
+                />
+              </FormGroup>
+            </Col>
+          </Row>
+        )}
+        {this.state.type !== "bill" && (
+          <FormGroup>
+            <Label>Amount</Label>
+            <Input
+              type="number"
+              name="amount"
+              id="amount"
+              placeholder="Enter amount"
+              onChange={this.changeAmount}
+              value={this.state.amount}
+              step="0.01"
+            />
+          </FormGroup>
+        )}
         <Row>
           <Col>
             <FormGroup>
-              <Label>Date</Label>
+              <Label>
+                {this.state.type === "bill" ? "Payment to" : "Date"}
+              </Label>
               <Input
                 type="date"
                 name="date"
@@ -153,7 +354,9 @@ export default class ModalWithForm extends React.Component {
                 id="category"
                 onChange={this.changeCategory}
                 value={this.state.category}
+                placeholder={"Choose category"}
               >
+                {categoryDefult}
                 {categorySelect}
               </Input>
             </FormGroup>
@@ -166,6 +369,7 @@ export default class ModalWithForm extends React.Component {
             name="note"
             id="note"
             onChange={this.changeNote}
+            value={this.state.note}
           />
         </FormGroup>
       </div>
@@ -211,9 +415,10 @@ export default class ModalWithForm extends React.Component {
         </FormGroup>
       </div>
     );
+
     return (
       <div>
-        <Button color="success" onClick={this.toggle}>
+        <Button color={buttonColor} onClick={this.toggle}>
           {this.state.buttonLabel}
         </Button>
         <Modal
@@ -233,14 +438,16 @@ export default class ModalWithForm extends React.Component {
             overflowY: "auto"
           }}
         >
+          {/*<ModalHeader toggle={this.toggle}>{this.state.type === "income"? "New Income" : this.state.type === "expense" ? "New Expense" : this.state.type === "bill" ? "New Bill " : "New category"}</ModalHeader>*/}
           <ModalHeader toggle={this.toggle}>
-            {this.state.type === "income"
-              ? "New Income"
-              : this.state.type === "expense"
-              ? "New Expense"
-              : this.state.type === "bill"
-              ? "New Bill "
-              : "New category"}
+            {(modalMode === "insert" ? "New " : "Edit ") +
+              (this.state.type === "income"
+                ? "Income"
+                : this.state.type === "expense"
+                ? "Expense"
+                : this.state.type === "bill"
+                ? "Bill "
+                : "category")}
           </ModalHeader>
           <ModalBody>
             <Form onSubmit={this.handleSubmit}>

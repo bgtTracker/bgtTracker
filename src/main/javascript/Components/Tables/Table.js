@@ -10,31 +10,147 @@ import { Button } from "reactstrap";
 import ModalWithForm from "./ModalWithForm";
 import { Container, Row, Col } from "reactstrap";
 import { Badge } from "reactstrap";
+import { Input, FormGroup, Label } from "reactstrap";
 
 import "../../../../../node_modules/react-bootstrap-table/dist/react-bootstrap-table-all.min.css";
 import "../../../../../node_modules/bootstrap/dist/css/bootstrap.min.css";
+import clientJson from "../../clientJson";
+import AuthService from "../../api/AuthService";
 
 function colorFormat(cell, row) {
   return <Badge style={{ backgroundColor: cell, color: cell }}>{cell}</Badge>;
 }
 
+function sortData(c, d, order) {
+  var a = c.date;
+  var b = d.date;
+
+  if (order === "desc") {
+    if (a.slice(6, 10) > b.slice(6, 10)) {
+      return -1;
+    } else if (a.slice(6, 10) < b.slice(6, 10)) {
+      return 1;
+    } else {
+      if (a.slice(3, 5) > b.slice(3, 5)) {
+        return -1;
+      } else if (a.slice(3, 5) < b.slice(3, 5)) {
+        return 1;
+      } else {
+        if (a.slice(0, 2) > b.slice(0, 2)) {
+          return -1;
+        } else if (a.slice(0, 2) < b.slice(0, 2)) {
+          return 1;
+        } else {
+          return 0;
+        }
+      }
+    }
+  } else {
+    if (a.slice(6, 10) < b.slice(6, 10)) {
+      return -1;
+    } else if (a.slice(6, 10) > b.slice(6, 10)) {
+      return 1;
+    } else {
+      if (a.slice(3, 5) < b.slice(3, 5)) {
+        return -1;
+      } else if (a.slice(3, 5) > b.slice(3, 5)) {
+        return 1;
+      } else {
+        if (a.slice(0, 2) < b.slice(0, 2)) {
+          return -1;
+        } else if (a.slice(0, 2) > b.slice(0, 2)) {
+          return 1;
+        } else {
+          return 0;
+        }
+      }
+    }
+  }
+}
+
+//const userId = 15;
+
 export default class CustomPaginationTable extends React.Component {
   constructor(props) {
-    super();
+    super(props);
     this.state = {
-      data: "",
-      cellEditMode: "none"
+      data: [],
+      cellEditMode: "none",
+      selected: -1,
+      test: []
     };
     this.refs = React.createRef();
-    this.handleEditButtonClick2 = this.handleEditButtonClick2.bind(this);
-    this.insertData2 = this.insertData2.bind(this);
+
+    this.handleEditButtonClick = this.handleEditButtonClick.bind(this);
+    this.insertData = this.insertData.bind(this);
+    this.handleDeleteButtonClick = this.handleDeleteButtonClick.bind(this);
+    this.handleRowSelect = this.handleRowSelect.bind(this);
+    this.isD2 = this.isD2.bind(this);
+    //this.testClick = this.testClick.bind(this)
+  }
+  componentDidMount() {
+    this.fetchData();
+  }
+  fetchData() {
+    if (this.props.type === "income") {
+      //console.log("Pobieram dane income")
+      this.setState(() => {
+        clientJson({
+          method: "GET",
+          path: "/api/getIncomes/",
+          headers: AuthService.getAuthHeader()
+        }).then(response => {
+          //console.log("Pobrane entitty", response.entity)
+          this.setState({ data: response.entity.income });
+        });
+      });
+      //console.log("Pobrane dane to", this.state.data)
+    } else if (this.props.type === "expense") {
+      this.setState(() => {
+        clientJson({
+          method: "GET",
+          path: "/api/getExpenses/",
+          headers: AuthService.getAuthHeader()
+        }).then(response => {
+          this.setState({ data: response.entity.expense });
+        });
+      });
+    } else if (this.props.type === "bill") {
+      this.setState(() => {
+        clientJson({
+          method: "GET",
+          path: "/api/getBills/",
+          headers: AuthService.getAuthHeader()
+        }).then(response => {
+          this.setState({ data: response.entity.bill });
+        });
+      });
+    } else {
+      if (this.props.subType === "income") {
+        this.setState(() => {
+          clientJson({
+            method: "GET",
+            path: "/api/getIncomeCategory/",
+            headers: AuthService.getAuthHeader()
+          }).then(response => {
+            this.setState({ data: response.entity.category });
+          });
+        });
+      } else {
+        this.setState(() => {
+          clientJson({
+            method: "GET",
+            path: "/api/getExpenseCategory/",
+            headers: AuthService.getAuthHeader()
+          }).then(response => {
+            this.setState({ data: response.entity.category });
+          });
+        });
+      }
+    }
   }
 
-  expandComponent(row) {
-    return <BSTable data={row.expand} />;
-  }
-
-  handleEditButtonClick2() {
+  handleEditButtonClick() {
     this.setState(prevState => {
       console.log(prevState);
       let ret;
@@ -42,7 +158,8 @@ export default class CustomPaginationTable extends React.Component {
         console.log("tak");
         alert("Edit mode disactivated");
         ret = { cellEditMode: "none" };
-      } else {
+      }
+      if (prevState.cellEditMode === "none") {
         alert("Edit mode activated");
         console.log("taktak");
         ret = { cellEditMode: "dbclick" };
@@ -51,56 +168,230 @@ export default class CustomPaginationTable extends React.Component {
     });
   }
 
-  handleModal(info) {
-    console.log(info);
+  insertData(newData) {
+    if (this.props.type === "income") {
+      this.setState(prevState => {
+        var newId;
+        clientJson({
+          method: "POST",
+          path: "/api/newIncome/",
+          headers: AuthService.getAuthHeader(),
+          params: {
+            name: newData.name,
+            category_id: newData.category,
+            amount: newData.amount,
+            date: newData.date,
+            note: newData.note
+          }
+        })
+          .then(response => {
+            newId = response.entity;
+          })
+          .then(response => {
+            this.fetchData();
+          });
+      });
+    } else if (this.props.type === "expense") {
+      this.setState(prevState => {
+        var newId;
+        clientJson({
+          method: "POST",
+          path: "/api/newExpense/",
+          headers: AuthService.getAuthHeader(),
+          params: {
+            name: newData.name,
+            category_id: newData.category,
+            amount: newData.amount,
+            date: newData.date,
+            note: newData.note
+          }
+        }).then(response => {
+          this.fetchData();
+        });
+      });
+    } else if (this.props.type === "bill") {
+      this.setState(prevState => {
+        var newId;
+        clientJson({
+          method: "POST",
+          path: "/api/newBill/",
+          headers: AuthService.getAuthHeader(),
+          params: {
+            name: newData.name,
+            category_id: newData.category,
+            amount: newData.amount,
+            dueDate: newData.date,
+            note: newData.note,
+            bankNumber: newData.bankAccount
+          }
+        }).then(response => {
+          this.fetchData();
+        });
+      });
+    } else if (this.props.type === "category") {
+      if (this.props.subType === "income") {
+        this.setState(() => {
+          var newId;
+          clientJson({
+            method: "POST",
+            path: "/api/newIncomeCategory/",
+            headers: AuthService.getAuthHeader(),
+            params: {
+              name: newData.name,
+              color: newData.color,
+              note: newData.note
+            }
+          }).then(response => {
+            this.fetchData();
+          });
+        });
+      } else if (this.props.subType === "expense") {
+        this.setState(() => {
+          var newId;
+          clientJson({
+            method: "POST",
+            path: "/api/newExpenseCategory/",
+            headers: AuthService.getAuthHeader(),
+            params: {
+              name: newData.name,
+              color: newData.color,
+              note: newData.note
+            }
+          }).then(response => {
+            this.fetchData();
+          });
+        });
+      } else {
+        console.log("Wystapil problem");
+      }
+    } else {
+      console.log("Wystapil problem");
+    }
   }
 
-  insertData2(newData) {
+  isD2(newData) {
+    console.log("Lets try it again");
+    //this.props.insertFun(newData)
+  }
+
+  isExpandableRow(row) {
+    return true;
+  }
+
+  expandComponent(row) {
+    return (
+      <div>
+        <FormGroup>
+          <Label>Note</Label>
+          <Input
+            type="textarea"
+            name="note"
+            id="note"
+            value={row.note}
+            disabled
+          />
+        </FormGroup>
+      </div>
+    );
+  }
+
+  expandComponentBill(row) {
+    console.log("ROW data", row);
+    return (
+      <div>
+        <div>
+          <Row>
+            <Col xs="3">
+              <FormGroup>
+                <Label>Last payment:</Label>
+                <Input
+                  type="text"
+                  name="date"
+                  id="date"
+                  value={row.paymentDay}
+                  disabled
+                />
+              </FormGroup>
+            </Col>
+            <Col xs="3">
+              <FormGroup>
+                <Label>State</Label>
+                <Input
+                  type="text"
+                  name="state"
+                  id="state"
+                  value={row.isPaid == true ? "PAID" : "NOT PAID"}
+                  disabled
+                />
+              </FormGroup>
+            </Col>
+            <Col xs="6">
+              <FormGroup>
+                <Label>Bank account</Label>
+                <Input
+                  type="text"
+                  name="account"
+                  id="account"
+                  value={row.bankAccount}
+                  disabled
+                />
+              </FormGroup>
+            </Col>
+          </Row>
+          <FormGroup>
+            <Label>Note</Label>
+            <Input
+              type="textarea"
+              name="note"
+              id="note"
+              value={row.note}
+              disabled
+            />
+          </FormGroup>
+        </div>
+      </div>
+    );
+  }
+
+  handleDeleteButtonClick() {
+    let selectedId = this.state.selected; // id to delete
+    if (selectedId === -1) {
+      alert("You have to choose row");
+      return;
+    }
+    let data = this.state.data;
+    let tableId = -1;
+    for (var i = 0; i < this.state.data.length; i++) {
+      if (this.state.data[i].id == selectedId) tableId = i;
+    }
+
+    this.props.handleDel(selectedId);
+    data.splice(tableId, 1);
+    this.setState({ data: data });
+    //this.setState(() => {this.fetchData()})
+    this.setState({ selected: -1 });
+  }
+  handleRowSelect(row) {
     this.setState(prevState => {
-      console.log(prevState);
-      return {
-        data: this.state.data.push({
-          id: 100,
-          name: newData.name,
-          category: newData.category,
-          date:
-            newData.date.substring(8, 10) +
-            "." +
-            newData.date.substring(5, 7) +
-            "." +
-            newData.date.substring(0, 4),
-          amount: newData.amount,
-          color: newData.color,
-          expand: true
-        })
-      };
+      return { selected: row.id };
     });
   }
-
-  newTry(newData) {
-    return {
-      id: 100,
-      name: newData.name,
-      category: newData.category,
-      date: newData.date,
-      amount: newData.amount,
-      color: newData.color,
-      expand: true
-    };
+  handletest() {
+    console.log("working");
   }
-
   render() {
+    console.log("czemu niedziala", this.state.data);
+    //console.log("Wyswietlam tabele")
+    //console.log(this.state.data[0])
     const type = this.props.type;
-    this.state.data = this.props.data;
+
+    //this.state.data =  this.props.data
     var category = this.props.category;
-    console.log("tabela");
-    console.log(this.state.data);
 
     var rows;
     var modalType;
     var modalLabel;
     var modalButtonLabel;
-    var modalRet = {};
 
     if (type === "income") {
       rows = [
@@ -117,18 +408,8 @@ export default class CustomPaginationTable extends React.Component {
           isKey: false,
           hidden: false
         },
-        {
-          dataField: "date",
-          label: "Date",
-          isKey: false,
-          hidden: false
-        },
-        {
-          dataField: "amount",
-          label: "Amount",
-          isKey: false,
-          hidden: false
-        }
+        { dataField: "date", label: "Date", isKey: false, hidden: false },
+        { dataField: "amount", label: "Amount", isKey: false, hidden: false }
       ];
       modalButtonLabel = "Add new Income";
       modalLabel = "New income";
@@ -148,18 +429,8 @@ export default class CustomPaginationTable extends React.Component {
           isKey: false,
           hidden: false
         },
-        {
-          dataField: "date",
-          label: "Date",
-          isKey: false,
-          hidden: false
-        },
-        {
-          dataField: "amount",
-          label: "Amount",
-          isKey: false,
-          hidden: false
-        }
+        { dataField: "date", label: "Date", isKey: false, hidden: false }, //zmiana
+        { dataField: "amount", label: "Amount", isKey: false, hidden: false }
       ];
       modalButtonLabel = "Add new Expense";
       modalLabel = "New Expense";
@@ -167,30 +438,15 @@ export default class CustomPaginationTable extends React.Component {
     } else if (type === "bill") {
       rows = [
         { dataField: "id", label: "ID", isKey: true, hidden: true },
-        {
-          dataField: "name",
-          label: "Bill Name",
-          isKey: false,
-          hidden: false
-        },
+        { dataField: "name", label: "Bill Name", isKey: false, hidden: false },
         {
           dataField: "category",
           label: "Category",
           isKey: false,
           hidden: false
         },
-        {
-          dataField: "date",
-          label: "Date",
-          isKey: false,
-          hidden: false
-        },
-        {
-          dataField: "amount",
-          label: "Amount",
-          isKey: false,
-          hidden: false
-        }
+        { dataField: "date", label: "Payment to", isKey: false, hidden: false },
+        { dataField: "amount", label: "Amount", isKey: false, hidden: false }
       ];
       modalButtonLabel = "Add new bill";
       modalLabel = "New bill";
@@ -198,18 +454,8 @@ export default class CustomPaginationTable extends React.Component {
     } else {
       rows = [
         { dataField: "id", label: "ID", isKey: true, hidden: true },
-        {
-          dataField: "name",
-          label: "Category",
-          isKey: false,
-          hidden: false
-        },
-        {
-          dataField: "color",
-          label: "Color",
-          isKey: false,
-          hidden: false
-        }
+        { dataField: "name", label: "Category", isKey: false, hidden: false },
+        { dataField: "color", label: "Color", isKey: false, hidden: false }
       ];
       modalButtonLabel = "Add new Category";
       modalLabel = "New category";
@@ -225,13 +471,27 @@ export default class CustomPaginationTable extends React.Component {
         >
           {foo.label}
         </TableHeaderColumn>
+      ) : foo.dataField === "date" ? (
+        <TableHeaderColumn
+          dataField={foo.dataField}
+          hidden={foo.hidden}
+          dataSort={true}
+          sortFunc={sortData}
+        >
+          {foo.label}
+        </TableHeaderColumn>
       ) : (
-        <TableHeaderColumn dataField={foo.dataField} hidden={foo.hidden}>
+        <TableHeaderColumn
+          dataField={foo.dataField}
+          hidden={foo.hidden}
+          dataSort={true}
+        >
           {foo.label}
         </TableHeaderColumn>
       )
     );
 
+    console.log("props2", this.props.type);
     const options = {
       page: 1, // which page you want to show as default
       sizePerPageList: [
@@ -256,24 +516,23 @@ export default class CustomPaginationTable extends React.Component {
       firstPage: "<<", // First page button text
       lastPage: ">>", // Last page button text
       paginationPosition: "bottom", // default is bottom, top and both is all available
-      deleteText: "Custom Delete Text",
       clearnBtn: true,
-      noDataText: "Coś tu za cicho",
+      noDataText: "Nothing here",
       searchDelayTime: 200 // delay in ms
     };
 
     let selectRow = {
-      mode: "none", // multi select
-      clickToSelectAndEditCell: true,
-      columnWidth: "40px"
-    };
-
-    const cellEdit = {
-      mode: this.state.cellEditMode // double click cell to edit dbclick
+      mode: "radio",
+      columnWidth: "40px",
+      onSelect: this.handleRowSelect,
+      clickToExpand: true
     };
 
     return (
       <div>
+        {console.log("props3", this.props.type)}
+        {/*this.componentDidMount()*/}
+        {/*console.log(this.props.test)*/}
         <BootstrapTable
           data={this.state.data}
           keyField="id"
@@ -282,27 +541,36 @@ export default class CustomPaginationTable extends React.Component {
           search
           searchPlaceholder="What are u looking for.."
           selectRow={selectRow}
-          cellEdit={cellEdit}
-          height="272"
-          expandComponent={this.expandComponent}
+          expandableRow={this.isExpandableRow}
+          expandComponent={
+            this.props.type === "bill"
+              ? this.expandComponentBill
+              : this.expandComponent
+          }
           exportCSV
-          csvFileName="Income_table.csv"
+          csvFileName="CSV_DATA.csv"
         >
           {tableBody}
         </BootstrapTable>
 
         <Row>
           &nbsp;&nbsp;&nbsp;
+          {console.log("Selected row to edit/delete: " + this.state.selected)}
           <ModalWithForm
             buttonLabel={modalButtonLabel}
             type={modalType}
-            category={category}
-            handleNew={this.insertData2}
+            mode={"insert"}
+            color={"success"}
+            row={this.state.selected}
+            category={[]}
+            handleNew={this.insertData}
           />
           &nbsp;
-          <Button color="warning" onClick={() => this.handleEditButtonClick2()}>
-            Edit
+          {/*<ModalWithForm buttonLabel={"Edit"} type={modalType} mode={"edit"} color={"warning"} row={this.state.selected} category={category} handleNew={this.insertData}/>&nbsp;*/}
+          <Button color="danger" onClick={this.handleDeleteButtonClick}>
+            Delete
           </Button>
+          {console.log(typeof this.state.data[0])}
         </Row>
       </div>
     );

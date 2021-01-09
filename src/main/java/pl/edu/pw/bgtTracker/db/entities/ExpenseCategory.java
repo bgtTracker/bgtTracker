@@ -14,6 +14,8 @@ import java.util.List;
 public class ExpenseCategory {
     private @Id @GeneratedValue long id;
     private String name;
+    private String color;
+    private String note;
 
     @OneToMany(mappedBy = "category")
     private List<Expense> expenses = new ArrayList<>();
@@ -28,10 +30,12 @@ public class ExpenseCategory {
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     private AppUser user;
 
-    public JSONObject toJSON() {
-        JSONObject data = new JSONObject();
-        data.put("id", id);
-        data.put("name", name);
-        return data;
+    public JSONObject toJSON(){
+        JSONObject json = new JSONObject();
+        json.put("id", Long.toString(id));
+        json.put("name", name);
+        json.put("color", color);
+        json.put("note", note);
+        return json;
     }
 }

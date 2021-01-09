@@ -47,7 +47,7 @@ import History from "./History/History";
 import Settings from "./Settings/Settings.js";
 import Income from "./Tables/Income/Income";
 import Expense from "./Tables/Expense/Expense";
-import Bill from "./Tables/Expense/Expense";
+import Bill from "./Tables/Bill/Bill";
 import firebase from "firebase/app";
 import "firebase/messaging";
 import clientJson from "../clientJson.js";
