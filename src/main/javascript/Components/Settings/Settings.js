@@ -11,6 +11,8 @@ import DialogTitle from "@material-ui/core/DialogTitle";
 import { makeStyles, createMuiTheme } from "@material-ui/core/styles";
 import TextField from "@material-ui/core/TextField";
 import { set } from "date-fns";
+import AuthService from "../../api/AuthService.js";
+import ErrorCodeHandler from "../ErrorCodeHandler.js";
 
 const theme = createMuiTheme();
 
@@ -78,16 +80,85 @@ export default function Settings() {
     setName(tempName);
     setLastName(tempLastName);
     setOpen(false);
+    if (tempName !== name) {
+      fetch("/api/user/first-name", {
+        method: "POST",
+        body: tempName,
+        headers: AuthService.getAuthHeader()
+      })
+        .then(respone => {
+          setName(tempName);
+        })
+        .catch(error => {
+          ErrorCodeHandler(error.status);
+        });
+    }
+    if (lastName !== tempLastName) {
+      fetch("/api/user/last-name", {
+        method: "POST",
+        body: tempLastName,
+        headers: AuthService.getAuthHeader()
+      })
+        .then(respone => {
+          setLastName(tempLastName);
+        })
+        .catch(error => {
+          ErrorCodeHandler(error.status);
+        });
+    }
   }
 
   function handlePassworChange() {
-    setPassword(temppass);
     setPassDialogOpen(false);
+    let passwords = {
+      oldPassword: password,
+      newPassword: temppass
+    };
+    fetch("/api/user/password", {
+      method: "POST",
+      body: JSON.stringify(passwords),
+      headers: new Headers({
+        Authorization: "Bearer " + AuthService.getToken(),
+        "Content-Type": "application/json"
+      })
+    })
+      .then(respone => {})
+      .catch(error => {
+        ErrorCodeHandler(error.status);
+      });
   }
 
   function handleGoalChange() {
     setPassword(temppass);
   }
+
+  useEffect(() => {
+    fetch("/api/user/first-name", {
+      method: "GET",
+      headers: AuthService.getAuthHeader()
+    })
+      .then(respone => respone.text())
+      .then(respone => {
+        setName(respone);
+        setTempName(respone);
+      })
+      .catch(error => {
+        console.log(error);
+        ErrorCodeHandler(error.status);
+      });
+    fetch("/api/user/last-name", {
+      method: "GET",
+      headers: AuthService.getAuthHeader()
+    })
+      .then(respone => respone.text())
+      .then(respone => {
+        setLastName(respone);
+        setTempLastName(respone);
+      })
+      .catch(error => {
+        ErrorCodeHandler(error.status);
+      });
+  }, []);
 
   return (
     <div>
@@ -120,21 +191,25 @@ export default function Settings() {
                         Enter new name and last name
                       </DialogTitle>
                       <DialogContent>
-                        <Grid container justify="space-around">
-                          <TextField
-                            id="First Name"
-                            label="First Name"
-                            variant="outlined"
-                            value={tempName}
-                            onChange={e => setTempName(e.target.value)}
-                          />
-                          <TextField
-                            id="Last Name"
-                            label="Last Name"
-                            variant="outlined"
-                            value={tempLastName}
-                            onChange={e => setTempLastName(e.target.value)}
-                          />
+                        <Grid container spacing={1} justify="space-around">
+                          <Grid item>
+                            <TextField
+                              id="First Name"
+                              label="First Name"
+                              variant="outlined"
+                              value={tempName}
+                              onChange={e => setTempName(e.target.value)}
+                            />
+                          </Grid>
+                          <Grid item>
+                            <TextField
+                              id="Last Name"
+                              label="Last Name"
+                              variant="outlined"
+                              value={tempLastName}
+                              onChange={e => setTempLastName(e.target.value)}
+                            />
+                          </Grid>
                         </Grid>
                       </DialogContent>
                       <DialogActions>
@@ -168,17 +243,28 @@ export default function Settings() {
                       aria-labelledby="max-width-dialog-title"
                     >
                       <DialogTitle id="max-width-dialog-title">
-                        Enter new password
+                        Enter old and new password
                       </DialogTitle>
                       <DialogContent>
-                        <Grid container justify="space-around">
-                          <TextField
-                            id="Password"
-                            label="Password"
-                            type="password"
-                            variant="outlined"
-                            onChange={e => setTempPass(e.target.value)}
-                          />
+                        <Grid container spacing={1} justify="space-around">
+                          <Grid item>
+                            <TextField
+                              id="password"
+                              label="Old password"
+                              type="password"
+                              variant="outlined"
+                              onChange={e => setPassword(e.target.value)}
+                            />
+                          </Grid>
+                          <Grid item>
+                            <TextField
+                              id="password"
+                              label="New password"
+                              type="password"
+                              variant="outlined"
+                              onChange={e => setTempPass(e.target.value)}
+                            />
+                          </Grid>
                         </Grid>
                       </DialogContent>
                       <DialogActions>

@@ -1,10 +1,15 @@
 package pl.edu.pw.bgtTracker.api;
 
 import lombok.*;
+
+import java.util.concurrent.ExecutionException;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
+
+import pl.edu.pw.bgtTracker.api.notifications.NotificationsService;
 import pl.edu.pw.bgtTracker.db.repos.UserRepository;
 
 @Data
@@ -20,6 +25,7 @@ class OldNewPassword {
 public class UserController {
     @Autowired private UserRepository repository;
     @Autowired private BCryptPasswordEncoder encoder;
+    @Autowired private NotificationsService notificationsService;
 
     @GetMapping("/first-name")
     public String getFirstName(Authentication auth) {
@@ -46,13 +52,21 @@ public class UserController {
     }
 
     @PostMapping("/password")
-    public boolean setPassword(Authentication auth, @RequestBody OldNewPassword oldNewPassword) {
+    public boolean setPassword(Authentication auth, @RequestBody OldNewPassword oldNewPassword) throws InterruptedException, ExecutionException{
         var user = repository.findByEmail(auth.getName());
         if (user.getPassword().equals(encoder.encode(oldNewPassword.getOldPassword()))) {
             user.setPassword(encoder.encode(oldNewPassword.getNewPassword()));
             repository.save(user);
+            try {
+                notificationsService.sendSuccess(user.getId(), "Password changed succesfuly", "Password Change");
+            }
+            catch(InterruptedException | ExecutionException e ) {
+                return false;
+            }
             return true;
         }
+        notificationsService.sendError(user.getId(), "Wrong old password", "Password Change");
         return false;
+        
     }
 }
