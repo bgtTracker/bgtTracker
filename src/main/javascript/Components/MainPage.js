@@ -11,7 +11,6 @@ import { makeStyles } from "@material-ui/core/styles";
 import clsx from "clsx";
 import {
   AppBar,
-  Badge,
   Container,
   CssBaseline,
   Divider,
@@ -22,7 +21,8 @@ import {
   ListItemIcon,
   ListItemText,
   Toolbar,
-  Typography
+  Typography,
+  Button
 } from "@material-ui/core";
 import {
   AccountBalanceWalletOutlined as AccountBalanceWalletOutlinedIcon,
@@ -58,6 +58,7 @@ import AuthService from "../api/AuthService";
 import Objectives from "./Objectives/Objectives.js";
 import ErrorRedirect from "./ErrorRedirect404.js";
 import ErrorCodeHandling from "./ErrorCodeHandler.js";
+import { useSnackbar } from "notistack";
 
 const drawerWidth = 240;
 
@@ -193,11 +194,30 @@ async function InitFireBase() {
 }
 
 async function SubscribeToUserTopic(user) {
-  // !!!!!!!!
-  // to do replace with actuac user id
-  // !!!!!!!!
-
   const messaging = firebase.messaging();
+
+  if (
+    localStorage.getItem("pushRegistered") === "true" &&
+    localStorage.getItem("pushNotificationsTopic") !== null &&
+    localStorage.getItem("pushToken") !== null
+  ) {
+    try {
+      clientJson({
+        method: "POST",
+        path: "/api/unsubscribe",
+        headers: AuthService.getAuthHeader(),
+        params: {
+          token: localStorage.getItem("pushToken"),
+          topic: localStorage.getItem("pushNotificationsTopic")
+        }
+      }).then(response => {
+        console.log("push unsubsciption");
+        console.log(response);
+      });
+    } catch (e) {
+      console.log("somthing went wrong", e);
+    }
+  }
 
   try {
     const currentToken = await messaging.getToken({
@@ -215,13 +235,14 @@ async function SubscribeToUserTopic(user) {
     }).then(response => {
       console.log("push subsciption");
       console.log(response);
+      localStorage.setItem("pushRegistered", true);
+      localStorage.setItem("pushNotificationsTopic", response.entity);
+      localStorage.setItem("pushToken", currentToken);
     });
   } catch (e) {
     console.log("somthing went wrong", e);
   }
 }
-
-const userId = 2;
 
 export default function MainPage() {
   const classes = useStyles();
@@ -230,20 +251,19 @@ export default function MainPage() {
   const { path, url } = useRouteMatch();
   const [fireBaseInit, setFireBaseInit] = React.useState(false);
   const [userSubscribed, setUserSubscribed] = React.useState(false);
+  const [listenerAdded, setListinerAdded] = React.useState(false);
   const [notifications, setNotfications] = React.useState();
   const [lodaing, setLodaing] = React.useState(false);
+  const { enqueueSnackbar, closeSnackbar } = useSnackbar();
 
   if (firebase.apps.length === 0) {
     InitFireBase();
   }
 
   if (!userSubscribed) {
-    SubscribeToUserTopic(userId); //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    SubscribeToUserTopic();
     setUserSubscribed(true);
   }
-  // !!!!!!!!
-  // to do replace with user id
-  // !!!!!!!!
 
   function removeNotication(notificationId) {
     clientJson({
@@ -260,50 +280,117 @@ export default function MainPage() {
       });
   }
 
-  let notificationSystem = React.createRef();
+  //let notificationSystem = React.createRef();
+
+  // const addNotification = data => {
+  //   const notification = notificationSystem.current;
+  //   let not = {
+  //     id: data.id,
+  //     message: data.msg,
+  //     level: data.level,
+  //     title: data.title,
+  //     action: {
+  //       label: "Got it!",
+  //       callback: function () {
+  //         removeNotication(data.id);
+  //       }
+  //     },
+  //     onRemove: () => {
+  //       reloadNotifications();
+  //     }
+  //   };
+  //   notification.addNotification(not);
+  // };
+
+  // const action = key => {
+  //   <Fragment>
+  //     <Button onClick>
+  //         'Got it'
+  //     </Button>
+  //     <Button onClick={() => { closeSnackbar(key); reloadNotifications(); }}>
+  //         'Dismiss'
+  //     </Button>
+  //   </Fragment>
+  // };
 
   const addNotification = data => {
-    const notification = notificationSystem.current;
-    let not = {
-      id: data.id,
-      message: data.msg,
-      level: data.level,
-      title: data.title,
-      action: {
-        label: "Got it!",
-        callback: function () {
-          removeNotication(data.id);
-        }
-      },
-      onRemove: () => {
-        reloadNotifications();
-      }
-    };
-    notification.addNotification(not);
-  };
-
-  navigator.serviceWorker.addEventListener("message", event => {
-    if (
-      event.data.firebaseMessaging.payload.data.action === "showNotification"
-    ) {
-      try {
-        addNotification(event.data.firebaseMessaging.payload.data);
-      } catch (e) {
-        //no idea why it works so i don't bother rn
-        //of course i'm sorry for this horrible thing but liblary has forced my hand
-      }
+    if (AuthService.getStorageBackend().getItem("logged-in") === "true") {
+      enqueueSnackbar(data.msg, {
+        anchorOrigin: {
+          vertical: "bottom",
+          horizontal: "center"
+        },
+        onExited: reloadNotifications,
+        variant: data.level,
+        // content: (
+        //   <Alert
+        //     severity={data.level}
+        //     variant="filled"
+        //     action={
+        //       <React.Fragment>
+        //       <Button size="small" color="inherit" onClick={() => {removeNotication(data.id); closeSnackbar(key);}}>
+        //           Got it
+        //       </Button>
+        //       <Button size="small" color="inherit" onClick={() => { closeSnackbar(key); reloadNotifications(); }}>
+        //           Dismis
+        //       </Button>
+        //     </React.Fragment>
+        //     }
+        //   >
+        //     <AlertTitle>{data.title}</AlertTitle>
+        //     {data.msg}
+        //   </Alert>
+        // ),
+        action: key => (
+          <React.Fragment>
+            <Button
+              size="small"
+              color="inherit"
+              onClick={() => {
+                removeNotication(data.id);
+                closeSnackbar(key);
+              }}
+            >
+              Got it
+            </Button>
+            <Button
+              size="small"
+              color="inherit"
+              onClick={() => {
+                closeSnackbar(key);
+                reloadNotifications();
+              }}
+            >
+              Dismiss
+            </Button>
+          </React.Fragment>
+        )
+      });
     }
-  });
-
-  const reloadNotifications = () => {
-    setNotfications(undefined);
-    setLodaing(!lodaing);
-    //yes it is not good
-    //yes i have no enefry and time to think of better
-    //it works so it stays for no
   };
 
-  React.useEffect(() => {
+  if (!listenerAdded) {
+    navigator.serviceWorker.addEventListener("message", event => {
+      if (
+        event.data.firebaseMessaging.payload.data.action === "showNotification"
+      ) {
+        try {
+          addNotification(event.data.firebaseMessaging.payload.data);
+        } catch (e) {
+          //no idea why it works so i don't bother rn
+          //of course i'm sorry for this horrible thing but liblary has forced my hand
+        }
+      }
+    });
+    setListinerAdded(true);
+  }
+
+  async function reloadNotifications() {
+    setNotfications(undefined);
+    await loadNotifications();
+  }
+
+  async function loadNotifications() {
     clientJson({
       method: "GET",
       path: "/api/getNotifications/",
@@ -315,11 +402,16 @@ export default function MainPage() {
         for (var n of nots) {
           n.open = true;
         }
+        console.log("setting nots");
         setNotfications(nots);
       })
       .catch(e => {
         ErrorCodeHandling(e.status.code);
       });
+  }
+
+  React.useEffect(() => {
+    loadNotifications();
   }, [lodaing]);
 
   const handleLogout = event => {
@@ -411,7 +503,7 @@ export default function MainPage() {
           </Switch>
         </Container>
       </main>
-      <NotificationSystem ref={notificationSystem} />
+      {/* <NotificationSystem ref={notificationSystem} /> */}
     </div>
   );
 }

@@ -61,6 +61,7 @@ export default class AuthService {
     if (response.ok) {
       let token = response.headers.get("Authorization").slice(7);
       AuthService.getStorageBackend().setItem("token", token);
+      AuthService.getStorageBackend().setItem("logged-in", true);
       return token;
     } else {
       throw new AuthenticationError("Authentication failed");
@@ -70,6 +71,8 @@ export default class AuthService {
   static logout() {
     localStorage.removeItem("token");
     sessionStorage.removeItem("token");
+    localStorage.removeItem("logged-in");
+    sessionStorage.removeItem("logged-in");
   }
 
   static isUserLoggedIn() {

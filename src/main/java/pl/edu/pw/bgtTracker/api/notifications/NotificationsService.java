@@ -38,11 +38,11 @@ public class NotificationsService {
     // public void sendTestMsg() throws InterruptedException, ExecutionException 
     // {
     //     BgtTrackerApplication.logger.info("Sending test msg");
-    //     sendWaring(1, "KOCHAM PW ja dupia" + seq, "warning");
+    //     sendWaring(1, "KOCHAM PW ja dupia", "warning");
     //     // sendNotifiaction("1", "KOCHAM PW ja dupia2", "info", "info");
     //     // sendNotifiaction("1", "KOCHAM PW ja dupia2", "success", "success");
     //     // sendNotifiaction("1", "KOCHAM PW ja dupia2", "error", "error");
-    //     seq++;
+    //     //seq++;
     // }
 
     /**

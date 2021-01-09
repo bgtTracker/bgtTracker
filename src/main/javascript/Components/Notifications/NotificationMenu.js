@@ -90,6 +90,7 @@ export default function NotificationMenu(props) {
                 <MenuItem>
                   <Alert
                     severity={element.level}
+                    variant="filled"
                     action={
                       <Button
                         color="inherit"

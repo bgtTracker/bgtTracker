@@ -14,6 +14,7 @@ import "firebase/messaging";
 import clientJson from "./clientJson.js";
 import AuthenticatedRoute from "./Components/AuthenticatedRoute";
 import AuthService from "./api/AuthService";
+import { SnackbarProvider } from "notistack";
 
 async function initPush() {
   if ("serviceWorker" in navigator) {
@@ -38,20 +39,22 @@ export default function App() {
   }, []);
 
   return (
-    <Router>
-      <Switch>
-        <Route exact path="/">
-          {(isAuth !== null &&
-            ((isAuth === true && <Redirect to="/app" />) || (
-              <Redirect to="/login" />
-            ))) ||
-            null}
-        </Route>
-        <Route exact path="/login" component={Login} />
-        <Route exact path="/register" component={Register} />
-        <AuthenticatedRoute path="/app" component={MainPage} />
-      </Switch>
-    </Router>
+    <SnackbarProvider maxSnack={4}>
+      <Router>
+        <Switch>
+          <Route exact path="/">
+            {(isAuth !== null &&
+              ((isAuth === true && <Redirect to="/app" />) || (
+                <Redirect to="/login" />
+              ))) ||
+              null}
+          </Route>
+          <Route exact path="/login" component={Login} />
+          <Route exact path="/register" component={Register} />
+          <AuthenticatedRoute path="/app" component={MainPage} />
+        </Switch>
+      </Router>
+    </SnackbarProvider>
   );
 }
 

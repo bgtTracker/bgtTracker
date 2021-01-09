@@ -31,10 +31,18 @@ public class NotificationsController {
     }
 
     @PostMapping("/api/pushsubscribe")
-    public void register(Authentication auth, @RequestParam(value = "token") String token) {
+    public Long register(Authentication auth, @RequestParam(value = "token") String token) {
         String topic = Long.toString(this.getUserId(auth));
         BgtTrackerApplication.logger.info("Register topic: " + topic);
         this.fcmClient.subscribe(topic, token);
+        return this.getUserId(auth);
+    }
+
+    @PostMapping("/api/unsubscribe")
+    public void unsubscribe(Authentication auth, @RequestParam(value = "token") String token, @RequestParam(value="topic") String topic)
+    {
+        AppUser user = userRepository.findByEmail(auth.getName());
+        this.fcmClient.unsubscribe(topic, token);
         return;
     }
 

@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 import com.google.auth.oauth2.GoogleCredentials;
 import com.google.firebase.FirebaseApp;
+import com.google.firebase.FirebaseException;
 import com.google.firebase.FirebaseOptions;
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.firebase.messaging.Message;
@@ -75,6 +76,23 @@ public class FcmClient {
             System.out
                     .println(response.getSuccessCount() + " tokens were subscribed successfully");
         } catch (InterruptedException | ExecutionException e) {
+            BgtTrackerApplication.logger.error("subscribe", e);
+        }
+    }
+
+    /**
+     * unsubscribes from topic
+     * @param topic
+     * @param clientToken
+     */
+    public void unsubscribe(String topic, String clientToken)
+    {
+        try {
+            TopicManagementResponse response = FirebaseMessaging.getInstance()
+                    .unsubscribeFromTopic(Collections.singletonList(clientToken), topic);
+            System.out
+                    .println(response.getSuccessCount() + " tokens were usubscribed successfully");
+        } catch (FirebaseException e) {
             BgtTrackerApplication.logger.error("subscribe", e);
         }
     }
