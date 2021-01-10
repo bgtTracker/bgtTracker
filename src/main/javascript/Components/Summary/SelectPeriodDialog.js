@@ -7,10 +7,7 @@ import DialogContent from "@material-ui/core/DialogContent";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import Grid from "@material-ui/core/Grid";
 import DateFnsUtils from "@date-io/date-fns";
-import {
-  MuiPickersUtilsProvider,
-  KeyboardDatePicker
-} from "@material-ui/pickers";
+import { MuiPickersUtilsProvider, KeyboardDatePicker } from "@material-ui/pickers";
 import PropTypes from "prop-types";
 
 const theme = createMuiTheme();
@@ -45,9 +42,7 @@ export default function SelectPeriodDialog(props) {
   const maxWidth = "xm";
   const [open, setOpen] = useState(true);
   const [toDate, setToDate] = useState(new Date());
-  const [fromDate, setFromDate] = useState(
-    new Date(toDate.getFullYear(), toDate.getMonth(), 1)
-  );
+  const [fromDate, setFromDate] = useState(new Date(toDate.getFullYear(), toDate.getMonth(), 1));
   const handleFromDataChange = date => {
     setFromDate(date);
   };
@@ -64,12 +59,7 @@ export default function SelectPeriodDialog(props) {
 
   return (
     <React.Fragment>
-      <Dialog
-        maxWidth={maxWidth}
-        open={open}
-        onClose={handleClose}
-        aria-labelledby="max-width-dialog-title"
-      >
+      <Dialog maxWidth={maxWidth} open={open} onClose={handleClose} aria-labelledby="max-width-dialog-title">
         <DialogTitle id="max-width-dialog-title">Select Period</DialogTitle>
         <DialogContent>
           <MuiPickersUtilsProvider utils={DateFnsUtils}>

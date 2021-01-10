@@ -1,5 +1,13 @@
+const path = require('path');
+
 module.exports = {
-    devtool: 'source-map',
+    entry: './src/main/javascript/app.js',
+    output: {
+        path: path.resolve(__dirname, 'src/main/resources/static/built/'),
+        filename: 'main.js'
+    },
+    mode: 'development',
+    devtool: 'eval-source-map',
     cache: true,
     module: {
         rules: [

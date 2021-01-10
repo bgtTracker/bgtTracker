@@ -9,14 +9,7 @@ export default class Spent extends Component {
 
     this.state = {
       colors: ["primary", "secondary", "success", "danger", "warning", "info"],
-      categories: [
-        "Food",
-        "Home",
-        "Car",
-        "Commute",
-        "Luxuries",
-        "Left to Spent"
-      ],
+      categories: ["Food", "Home", "Car", "Commute", "Luxuries", "Left to Spent"],
       data: [1000, 400, 500, 150, 400, 3000],
       values: []
     };
@@ -30,11 +23,7 @@ export default class Spent extends Component {
   render() {
     return (
       <Progress multi>
-        <SpentBarGetter
-          colors={this.state.colors}
-          values={this.state.values}
-          categories={this.state.categories}
-        />
+        <SpentBarGetter colors={this.state.colors} values={this.state.values} categories={this.state.categories} />
       </Progress>
     );
   }
@@ -44,12 +33,7 @@ class SpentBarGetter extends Component {
   getProgresBars() {
     let cIndex = 0;
     var ret = (
-      <Progress
-        bar
-        animated
-        color={this.props.colors[cIndex]}
-        value={this.props.values[0]}
-      >
+      <Progress bar animated color={this.props.colors[cIndex]} value={this.props.values[0]}>
         {" "}
         {this.props.categories[0]}{" "}
       </Progress>
@@ -57,12 +41,7 @@ class SpentBarGetter extends Component {
     cIndex++;
     for (let i = 1; i < this.props.values.length; i++) {
       let newTag = (
-        <Progress
-          bar
-          animated
-          color={this.props.colors[cIndex]}
-          value={this.props.values[i]}
-        >
+        <Progress bar animated color={this.props.colors[cIndex]} value={this.props.values[i]}>
           {" "}
           {this.props.categories[i]}
         </Progress>

@@ -29,13 +29,7 @@ export default function Row(props) {
             onClick={event => props.handleCheckBoxClick(event, row.id)}
           />
         </TableCell>
-        <TableCell
-          component="th"
-          id={labelId}
-          scope="row"
-          padding="none"
-          onClick={event => setOpen(!open)}
-        >
+        <TableCell component="th" id={labelId} scope="row" padding="none" onClick={event => setOpen(!open)}>
           {row.date}
         </TableCell>
         <TableCell align="right" onClick={event => setOpen(!open)}>

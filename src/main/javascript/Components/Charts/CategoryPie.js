@@ -65,12 +65,7 @@ export default class CategoryPie extends Component {
   render() {
     return (
       <div className="ApexChart">
-        <ApexChart
-          height="350"
-          series={this.state.series}
-          options={this.state.options}
-          type="donut"
-        />
+        <ApexChart height="350" series={this.state.series} options={this.state.options} type="donut" />
       </div>
     );
   }

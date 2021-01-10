@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import ApexCharts from "react-apexcharts";
 
-export default class SpentCirce extends Component {
+export default class SpentCircle extends Component {
   constructor(probs) {
     super(probs);
     this.state = {
@@ -90,12 +90,7 @@ export default class SpentCirce extends Component {
   render() {
     return (
       <div>
-        <ApexCharts
-          options={this.state.options}
-          series={this.state.series}
-          type="radialBar"
-          height={350}
-        />
+        <ApexCharts options={this.state.options} series={this.state.series} type="radialBar" height={350} />
       </div>
     );
   }

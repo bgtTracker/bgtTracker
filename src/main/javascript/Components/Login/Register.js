@@ -1,16 +1,7 @@
 import React from "react";
 import { Link as RouterLink, useHistory } from "react-router-dom";
 import { makeStyles } from "@material-ui/core/styles";
-import {
-  Avatar,
-  Button,
-  Container,
-  CssBaseline,
-  Grid,
-  Link,
-  TextField,
-  Typography
-} from "@material-ui/core";
+import { Avatar, Button, Container, CssBaseline, Grid, Link, TextField, Typography } from "@material-ui/core";
 import { PersonAddOutlined } from "@material-ui/icons";
 import RegexTextField from "../RegexTextField";
 import AuthService, { User } from "../../api/AuthService";
@@ -125,13 +116,7 @@ export default function Register() {
               />
             </Grid>
           </Grid>
-          <Button
-            type="submit"
-            fullWidth
-            variant="contained"
-            color="primary"
-            className={classes.submit}
-          >
+          <Button type="submit" fullWidth variant="contained" color="primary" className={classes.submit}>
             Sign Up
           </Button>
           <Grid container justify="flex-end">

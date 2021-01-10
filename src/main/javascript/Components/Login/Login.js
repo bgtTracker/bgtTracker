@@ -48,10 +48,7 @@ export default function Login() {
 
     AuthService.permanentStorage(document.getElementById("remember").checked);
 
-    let creds = new UserCredentials(
-      document.getElementById("email").value,
-      document.getElementById("password").value
-    );
+    let creds = new UserCredentials(document.getElementById("email").value, document.getElementById("password").value);
 
     try {
       setError(false);
@@ -100,17 +97,8 @@ export default function Login() {
             error={isError}
             helperText={isError ? "Invalid email or password" : undefined}
           />
-          <FormControlLabel
-            control={<Checkbox name="remember" id="remember" color="primary" />}
-            label="Remember me"
-          />
-          <Button
-            type="submit"
-            fullWidth
-            variant="contained"
-            color="primary"
-            className={classes.submit}
-          >
+          <FormControlLabel control={<Checkbox name="remember" id="remember" color="primary" />} label="Remember me" />
+          <Button type="submit" fullWidth variant="contained" color="primary" className={classes.submit}>
             Sign In
           </Button>
         </form>

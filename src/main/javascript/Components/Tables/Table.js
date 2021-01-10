@@ -1,11 +1,5 @@
 import React from "react";
-import {
-  BootstrapTable,
-  TableHeaderColumn,
-  InsertButton,
-  DeleteButton,
-  BSTable
-} from "react-bootstrap-table";
+import { BootstrapTable, TableHeaderColumn, InsertButton, DeleteButton, BSTable } from "react-bootstrap-table";
 import { Button } from "reactstrap";
 import ModalWithForm from "./ModalWithForm";
 import { Container, Row, Col } from "reactstrap";
@@ -283,13 +277,7 @@ export default class CustomPaginationTable extends React.Component {
       <div>
         <FormGroup>
           <Label>Note</Label>
-          <Input
-            type="textarea"
-            name="note"
-            id="note"
-            value={row.note}
-            disabled
-          />
+          <Input type="textarea" name="note" id="note" value={row.note} disabled />
         </FormGroup>
       </div>
     );
@@ -304,49 +292,25 @@ export default class CustomPaginationTable extends React.Component {
             <Col xs="3">
               <FormGroup>
                 <Label>Last payment:</Label>
-                <Input
-                  type="text"
-                  name="date"
-                  id="date"
-                  value={row.paymentDay}
-                  disabled
-                />
+                <Input type="text" name="date" id="date" value={row.paymentDay} disabled />
               </FormGroup>
             </Col>
             <Col xs="3">
               <FormGroup>
                 <Label>State</Label>
-                <Input
-                  type="text"
-                  name="state"
-                  id="state"
-                  value={row.isPaid == true ? "PAID" : "NOT PAID"}
-                  disabled
-                />
+                <Input type="text" name="state" id="state" value={row.isPaid == true ? "PAID" : "NOT PAID"} disabled />
               </FormGroup>
             </Col>
             <Col xs="6">
               <FormGroup>
                 <Label>Bank account</Label>
-                <Input
-                  type="text"
-                  name="account"
-                  id="account"
-                  value={row.bankAccount}
-                  disabled
-                />
+                <Input type="text" name="account" id="account" value={row.bankAccount} disabled />
               </FormGroup>
             </Col>
           </Row>
           <FormGroup>
             <Label>Note</Label>
-            <Input
-              type="textarea"
-              name="note"
-              id="note"
-              value={row.note}
-              disabled
-            />
+            <Input type="textarea" name="note" id="note" value={row.note} disabled />
           </FormGroup>
         </div>
       </div>
@@ -464,28 +428,15 @@ export default class CustomPaginationTable extends React.Component {
 
     const tableBody = rows.map(foo =>
       foo.dataField === "color" ? (
-        <TableHeaderColumn
-          dataField={foo.dataField}
-          hidden={foo.hidden}
-          dataFormat={colorFormat}
-        >
+        <TableHeaderColumn dataField={foo.dataField} hidden={foo.hidden} dataFormat={colorFormat}>
           {foo.label}
         </TableHeaderColumn>
       ) : foo.dataField === "date" ? (
-        <TableHeaderColumn
-          dataField={foo.dataField}
-          hidden={foo.hidden}
-          dataSort={true}
-          sortFunc={sortData}
-        >
+        <TableHeaderColumn dataField={foo.dataField} hidden={foo.hidden} dataSort={true} sortFunc={sortData}>
           {foo.label}
         </TableHeaderColumn>
       ) : (
-        <TableHeaderColumn
-          dataField={foo.dataField}
-          hidden={foo.hidden}
-          dataSort={true}
-        >
+        <TableHeaderColumn dataField={foo.dataField} hidden={foo.hidden} dataSort={true}>
           {foo.label}
         </TableHeaderColumn>
       )
@@ -542,11 +493,7 @@ export default class CustomPaginationTable extends React.Component {
           searchPlaceholder="What are u looking for.."
           selectRow={selectRow}
           expandableRow={this.isExpandableRow}
-          expandComponent={
-            this.props.type === "bill"
-              ? this.expandComponentBill
-              : this.expandComponent
-          }
+          expandComponent={this.props.type === "bill" ? this.expandComponentBill : this.expandComponent}
           exportCSV
           csvFileName="CSV_DATA.csv"
         >

@@ -106,8 +106,6 @@ export default class AuthService {
   }
 
   static getStorageBackend() {
-    return localStorage.getItem("remember-me") === "true"
-      ? localStorage
-      : sessionStorage;
+    return localStorage.getItem("remember-me") === "true" ? localStorage : sessionStorage;
   }
 }

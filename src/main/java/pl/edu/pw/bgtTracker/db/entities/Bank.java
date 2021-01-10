@@ -1,5 +1,6 @@
 package pl.edu.pw.bgtTracker.db.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -15,5 +16,6 @@ public class Bank {
     private String name;
 
     @OneToMany(mappedBy = "bank")
+    @JsonIgnore
     private List<BankAccount> accounts = new ArrayList<>();
 }

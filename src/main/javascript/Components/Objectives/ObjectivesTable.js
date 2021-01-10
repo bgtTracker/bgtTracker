@@ -65,15 +65,7 @@ let headCells = [
 ];
 
 function EnhancedTableHead(props) {
-  const {
-    classes,
-    onSelectAllClick,
-    order,
-    orderBy,
-    numSelected,
-    rowCount,
-    onRequestSort
-  } = props;
+  const { classes, onSelectAllClick, order, orderBy, numSelected, rowCount, onRequestSort } = props;
   const createSortHandler = property => event => {
     onRequestSort(event, property);
   };
@@ -174,21 +166,11 @@ const EnhancedTableToolbar = props => {
       })}
     >
       {numSelected > 0 ? (
-        <Typography
-          className={classes.title}
-          color="inherit"
-          variant="subtitle1"
-          component="div"
-        >
+        <Typography className={classes.title} color="inherit" variant="subtitle1" component="div">
           {numSelected} selected
         </Typography>
       ) : (
-        <Typography
-          className={classes.title}
-          variant="h6"
-          id="tableTitle"
-          component="div"
-        >
+        <Typography className={classes.title} variant="h6" id="tableTitle" component="div">
           Objectives
         </Typography>
       )}
@@ -222,12 +204,7 @@ const EnhancedTableToolbar = props => {
               <AddCircleOutlineOutlinedIcon />
             </IconButton>
           </Tooltip>
-          <ObjectiveDialog
-            open={openDialog}
-            row={row}
-            handleClose={closeDialog}
-            handleSave={addObjective}
-          />
+          <ObjectiveDialog open={openDialog} row={row} handleClose={closeDialog} handleSave={addObjective} />
         </div>
       )}
     </Toolbar>
@@ -311,10 +288,7 @@ export default function ObjectivesTable(props) {
     } else if (selectedIndex === selected.length - 1) {
       newSelected = newSelected.concat(selected.slice(0, -1));
     } else if (selectedIndex > 0) {
-      newSelected = newSelected.concat(
-        selected.slice(0, selectedIndex),
-        selected.slice(selectedIndex + 1)
-      );
+      newSelected = newSelected.concat(selected.slice(0, selectedIndex), selected.slice(selectedIndex + 1));
     }
     setSelected(newSelected);
   };
@@ -330,8 +304,7 @@ export default function ObjectivesTable(props) {
 
   const isSelected = name => selected.indexOf(name) !== -1;
 
-  const emptyRows =
-    rowsPerPage - Math.min(rowsPerPage, rows.length - page * rowsPerPage);
+  const emptyRows = rowsPerPage - Math.min(rowsPerPage, rows.length - page * rowsPerPage);
 
   const editObjective = toSave => {
     props.editObjective(toSave);
@@ -358,12 +331,7 @@ export default function ObjectivesTable(props) {
           deleteObjectives={deleteMultipleObjectives}
         />
         <TableContainer>
-          <Table
-            className={classes.table}
-            aria-labelledby="tableTitle"
-            size={"medium"}
-            aria-label="historyTable"
-          >
+          <Table className={classes.table} aria-labelledby="tableTitle" size={"medium"} aria-label="historyTable">
             <EnhancedTableHead
               classes={classes}
               numSelected={selected.length}

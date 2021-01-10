@@ -8,7 +8,7 @@ import BarChart from "./BarChart.js";
 import CAP from "./CategoryAmount/CategoryAmountPrinter.js";
 import CategoryPie from "./CategoryPie.js";
 import { useStyles } from "../Theme.js";
-import BalanceChart from "./BlanceChart.js";
+import BalanceChart from "./BalanceChart.js";
 import LPCH from "./LinePlusColumnChart.js";
 import SwipeableViews from "react-swipeable-views";
 import AppBar from "@material-ui/core/AppBar";
@@ -56,10 +56,7 @@ function a11yProps(index) {
 function Charts(props) {
   let classes = useStyles();
   let fixedHeightPaperChart = clsx(classes.paper, classes.fixedHeightChart);
-  let CategoryAmountFixedHeight = clsx(
-    classes.paper,
-    classes.fixedHeightCategory
-  );
+  let CategoryAmountFixedHeight = clsx(classes.paper, classes.fixedHeightCategory);
 
   const [valueCategories, setValueCategories] = React.useState(0);
   const [valueChart, setChart] = React.useState(0);
@@ -95,13 +92,7 @@ function Charts(props) {
                             <Spent/>
                           </Paper>
                         </Grid>  */}
-          <Grid
-            container
-            spacing={2}
-            direction="row"
-            justify="center"
-            alignItems="center"
-          >
+          <Grid container spacing={2} direction="row" justify="center" alignItems="center">
             <Grid item xs={6}>
               <Paper className={fixedHeightPaperChart}>
                 <AppBar position="static" color="default">
@@ -122,22 +113,14 @@ function Charts(props) {
                   index={valueCategories}
                   onChangeIndex={handleChangeIndexCategories}
                 >
-                  <TabPanel
-                    value={valueCategories}
-                    index={0}
-                    dir={theme.direction}
-                  >
+                  <TabPanel value={valueCategories} index={0} dir={theme.direction}>
                     <CategoryPie
                       labels={props.categoryData.labels}
                       data={props.categoryData.data}
                       title={"Spendings per category"}
                     />
                   </TabPanel>
-                  <TabPanel
-                    value={valueCategories}
-                    index={1}
-                    dir={theme.direction}
-                  >
+                  <TabPanel value={valueCategories} index={1} dir={theme.direction}>
                     <CategoryPie
                       labels={props.IncomesCategoryData.labels}
                       data={props.IncomesCategoryData.data}
@@ -149,11 +132,7 @@ function Charts(props) {
             </Grid>
             <Grid item xs={6}>
               <Paper className={fixedHeightPaperChart}>
-                <BalanceChart
-                  labels={props.balanceData.labels}
-                  data={props.balanceData.data}
-                  name={"Balance: "}
-                />
+                <BalanceChart labels={props.balanceData.labels} data={props.balanceData.data} name={"Balance: "} />
               </Paper>
             </Grid>
             <Grid item xs={12}>

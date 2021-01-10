@@ -20,12 +20,5 @@ export default function RegexTextField({ regex, invalidText, ...props }) {
     }
   };
 
-  return (
-    <TextField
-      {...props}
-      error={isError}
-      helperText={helperText}
-      onChange={onChange.bind(this)}
-    />
-  );
+  return <TextField {...props} error={isError} helperText={helperText} onChange={onChange.bind(this)} />;
 }

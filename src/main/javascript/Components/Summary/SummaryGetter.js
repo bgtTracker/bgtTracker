@@ -28,17 +28,11 @@ export default function SummaryGetter(props) {
 
   switch (props.period) {
     case "thisMonth":
-      toDate = new Date(now.getFullYear(), now.getMonth(), now.getDate())
-        .getTime()
-        .toString();
-      fromDate = new Date(now.getFullYear(), now.getMonth(), 1)
-        .getTime()
-        .toString();
+      toDate = new Date(now.getFullYear(), now.getMonth(), now.getDate()).getTime().toString();
+      fromDate = new Date(now.getFullYear(), now.getMonth(), 1).getTime().toString();
       break;
     case "thisYear":
-      toDate = new Date(now.getFullYear(), now.getMonth(), now.getDate())
-        .getTime()
-        .toString();
+      toDate = new Date(now.getFullYear(), now.getMonth(), now.getDate()).getTime().toString();
       fromDate = new Date(now.getFullYear(), 0, 1).getTime().toString();
       break;
     case "lastYear":
@@ -94,10 +88,7 @@ export default function SummaryGetter(props) {
     let expansesIndex = 0;
     let incomesIndex = 0;
     for (let i = 0; i < resposne.entity.expenses.data.length; i++) {
-      if (
-        resposne.entity.expenses.data[i] != 0 ||
-        resposne.entity.incomes.data[i] != 0
-      ) {
+      if (resposne.entity.expenses.data[i] != 0 || resposne.entity.incomes.data[i] != 0) {
         let details = [];
         if (resposne.entity.expenses.data[i] != 0) {
           let detail = createDetails(
@@ -153,11 +144,7 @@ export default function SummaryGetter(props) {
           )}
         </Grid>
         <Grid item xs={12}>
-          {rows === undefined ? (
-            <h1>Loading...</h1>
-          ) : (
-            <HistoryTable details={true} rows={rows} />
-          )}
+          {rows === undefined ? <h1>Loading...</h1> : <HistoryTable details={true} rows={rows} />}
         </Grid>
       </Grid>
     </div>

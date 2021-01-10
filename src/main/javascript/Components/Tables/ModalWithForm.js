@@ -1,12 +1,5 @@
 import React, { useState } from "react";
-import {
-  Button,
-  Modal,
-  ModalHeader,
-  ModalBody,
-  ModalFooter,
-  Input
-} from "reactstrap";
+import { Button, Modal, ModalHeader, ModalBody, ModalFooter, Input } from "reactstrap";
 import { Container, Row, Col } from "reactstrap";
 import { Form, FormGroup, Label, FormText } from "reactstrap";
 import { Badge } from "reactstrap";
@@ -21,9 +14,7 @@ export default class ModalWithForm extends React.Component {
       nowDate =
         today.getFullYear() +
         "-" +
-        (today.getMonth() + 1 < 10
-          ? "0" + (today.getMonth() + 1)
-          : today.getMonth() + 1) +
+        (today.getMonth() + 1 < 10 ? "0" + (today.getMonth() + 1) : today.getMonth() + 1) +
         "-" +
         (today.getDate() < 10 ? "0" + today.getDate() : today.getDate());
 
@@ -140,18 +131,10 @@ export default class ModalWithForm extends React.Component {
       }
 
       // for income 1.name 2.amount 3.category 4.date
-      if (
-        this.state.name !== "" &&
-        this.state.amount !== "" &&
-        this.state.category !== -1 &&
-        this.state.date !== ""
-      ) {
+      if (this.state.name !== "" && this.state.amount !== "" && this.state.category !== -1 && this.state.date !== "") {
         if (this.state.type === "bill") {
           console.log("bank Account type", typeof this.state.bankAccount);
-          if (
-            this.state.bankAccount.length > 0 &&
-            this.state.bankAccount.length < 26
-          ) {
+          if (this.state.bankAccount.length > 0 && this.state.bankAccount.length < 26) {
             alert("Invalid bank account number! Check again");
             return false;
           }
@@ -248,9 +231,7 @@ export default class ModalWithForm extends React.Component {
     if (this.state.categories !== "") {
       console.log("JEST");
       var categoryDefult = <option value={-1}></option>;
-      categorySelect = selectOpt2.map(cat => (
-        <option value={cat.id}> {cat.name} </option>
-      ));
+      categorySelect = selectOpt2.map(cat => <option value={cat.id}> {cat.name} </option>);
       console.log("please", categorySelect);
     } else {
       console.log("NIE JEST");
@@ -332,9 +313,7 @@ export default class ModalWithForm extends React.Component {
         <Row>
           <Col>
             <FormGroup>
-              <Label>
-                {this.state.type === "bill" ? "Payment to" : "Date"}
-              </Label>
+              <Label>{this.state.type === "bill" ? "Payment to" : "Date"}</Label>
               <Input
                 type="date"
                 name="date"
@@ -364,13 +343,7 @@ export default class ModalWithForm extends React.Component {
         </Row>
         <FormGroup>
           <Label>Note</Label>
-          <Input
-            type="textarea"
-            name="note"
-            id="note"
-            onChange={this.changeNote}
-            value={this.state.note}
-          />
+          <Input type="textarea" name="note" id="note" onChange={this.changeNote} value={this.state.note} />
         </FormGroup>
       </div>
     );
@@ -406,12 +379,7 @@ export default class ModalWithForm extends React.Component {
         </Row>
         <FormGroup>
           <Label>Note</Label>
-          <Input
-            type="textarea"
-            name="note"
-            id="note"
-            onChange={this.changeNote}
-          />
+          <Input type="textarea" name="note" id="note" onChange={this.changeNote} />
         </FormGroup>
       </div>
     );
@@ -450,9 +418,7 @@ export default class ModalWithForm extends React.Component {
                 : "category")}
           </ModalHeader>
           <ModalBody>
-            <Form onSubmit={this.handleSubmit}>
-              {this.state.type === "category" ? catBody : formBody}
-            </Form>
+            <Form onSubmit={this.handleSubmit}>{this.state.type === "category" ? catBody : formBody}</Form>
           </ModalBody>
           <ModalFooter>
             <Button type="submit" color="primary" onClick={this.handleSubmit}>

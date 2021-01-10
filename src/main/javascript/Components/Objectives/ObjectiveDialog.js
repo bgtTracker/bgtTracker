@@ -10,10 +10,7 @@ import { createMuiTheme, makeStyles } from "@material-ui/core/styles";
 import FormControl from "@material-ui/core/FormControl";
 import Select from "@material-ui/core/Select";
 import DateFnsUtils from "@date-io/date-fns";
-import {
-  MuiPickersUtilsProvider,
-  KeyboardDatePicker
-} from "@material-ui/pickers";
+import { MuiPickersUtilsProvider, KeyboardDatePicker } from "@material-ui/pickers";
 import InputLabel from "@material-ui/core/InputLabel";
 import Input from "@material-ui/core/Input";
 import MenuItem from "@material-ui/core/MenuItem";
@@ -166,17 +163,11 @@ export default function ObjectiveDialog(props) {
             onClose={handleClose}
             aria-labelledby="max-width-dialog-title"
           >
-            <DialogTitle id="max-width-dialog-title">
-              Error with categories
-            </DialogTitle>
+            <DialogTitle id="max-width-dialog-title">Error with categories</DialogTitle>
             <DialogContent>
               <Grid container justify="space-between">
                 <Grid item xs={12}>
-                  <h3>
-                    {" "}
-                    Add category before adding objective, you can do that in
-                    expenses page
-                  </h3>
+                  <h3> Add category before adding objective, you can do that in expenses page</h3>
                 </Grid>
                 <Grid item xs={6}>
                   <Button onClick={redirectToExpensePage} color="primary">
@@ -270,13 +261,8 @@ export default function ObjectiveDialog(props) {
                     </form>
                   </Grid>
                   <Grid item xs={6}>
-                    <FormControl
-                      variant="outlined"
-                      className={classes.formControl}
-                    >
-                      <InputLabel id="demo-category-outlined-label">
-                        Category
-                      </InputLabel>
+                    <FormControl variant="outlined" className={classes.formControl}>
+                      <InputLabel id="demo-category-outlined-label">Category</InputLabel>
                       <Select
                         labelId="demo-category-outlined-label"
                         id="demo-category-outlined"

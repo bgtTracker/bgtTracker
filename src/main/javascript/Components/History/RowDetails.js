@@ -35,13 +35,7 @@ export default function Row(props) {
             onClick={event => props.handleCheckBoxClick(event, row.id)}
           />
         </TableCell>
-        <TableCell
-          component="th"
-          id={labelId}
-          scope="row"
-          padding="none"
-          onClick={event => setOpen(!open)}
-        >
+        <TableCell component="th" id={labelId} scope="row" padding="none" onClick={event => setOpen(!open)}>
           {row.date.toDateString()}
         </TableCell>
         <TableCell align="right" onClick={event => setOpen(!open)}>
@@ -56,11 +50,7 @@ export default function Row(props) {
       </TableRow>
 
       <TableRow>
-        <TableCell
-          style={{ paddingBottom: 0, paddingTop: 0 }}
-          colSpan={6}
-          onClick={event => setOpen(!open)}
-        >
+        <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6} onClick={event => setOpen(!open)}>
           <Collapse in={open} timeout="auto" unmountOnExit>
             <Box margin={1}>
               <Typography variant="h6" gutterBottom component="div">

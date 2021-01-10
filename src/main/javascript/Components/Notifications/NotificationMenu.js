@@ -51,11 +51,7 @@ export default function NotificationMenu(props) {
 
   return (
     <div>
-      <IconButton
-        aria-controls="fade-menu"
-        aria-haspopup="true"
-        onClick={handleClick}
-      >
+      <IconButton color="inherit" aria-controls="fade-menu" aria-haspopup="true" onClick={handleClick}>
         <Badge badgeContent={props.notifications.length} color="secondary">
           <NotificationsOutlined />
         </Badge>
@@ -92,11 +88,7 @@ export default function NotificationMenu(props) {
                     severity={element.level}
                     variant="filled"
                     action={
-                      <Button
-                        color="inherit"
-                        size="small"
-                        onClick={() => handleDissmisal(element)}
-                      >
+                      <Button color="inherit" size="small" onClick={() => handleDissmisal(element)}>
                         Got it!
                       </Button>
                     }
