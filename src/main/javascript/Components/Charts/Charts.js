@@ -76,7 +76,9 @@ function Charts(props) {
   const handleChangeIndexChart = index => {
     setChart(index);
   };
-
+  // console.log("balance");
+  // console.log(props.balanceData.labels);
+  // console.log(props.balanceData.data);
   // render() {
   return (
     <div className="Charts">

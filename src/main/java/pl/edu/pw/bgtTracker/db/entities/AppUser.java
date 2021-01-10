@@ -57,6 +57,9 @@ public class AppUser {
     @JsonIgnore
     private List<IncomeCategory> incomeCategories = new ArrayList<>();
 
+    // @OneToOne(mappedBy = "user")
+    // private Limit limit;
+
     public String toString() {
         return id + " " + firstName + " " + lastName;
     }

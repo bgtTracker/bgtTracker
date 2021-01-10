@@ -34,7 +34,7 @@ import {
 } from "@material-ui/icons";
 
 import ChangeTitle from "./ChangeTitle";
-import Dashboard from "./Dashboard";
+import Dashboard from "./Dashborad/Dashboard.js";
 import Summary from "./Summary/Summary";
 import History from "./History/History";
 import Settings from "./Settings/Settings.js";

@@ -45,7 +45,7 @@ public class Income {
 
         json.put("date", strDate);
         json.put("note", note);
-        json.put("dataStamp", date);
+        json.put("dataStamp", date.getTime());
 
         return json;
     }

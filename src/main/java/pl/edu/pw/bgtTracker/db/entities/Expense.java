@@ -48,7 +48,7 @@ public class Expense {
         String strDate = dateFromat.format(date);
         json.put("date", strDate);
         json.put("note", note);
-        json.put("dateStamp", date);
+        json.put("dateStamp", date.getTime());
 
         return json;
     }

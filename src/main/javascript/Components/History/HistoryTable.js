@@ -278,8 +278,12 @@ export default function HistoryTable(props) {
   if (props.rows != undefined) rows = props.rows;
 
   let Row;
-  if (props.details) Row = RowDetails;
-  else Row = RowNoDetails;
+
+  if (props.RowObject) Row = props.RowObject;
+  else {
+    if (props.details) Row = RowDetails;
+    else Row = RowNoDetails;
+  }
 
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === "asc";
