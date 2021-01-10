@@ -9,7 +9,7 @@ export default function ErrorCodeHandling(code) {
     case code < 400:
       break;
     case 403:
-      redirect(403);
+      redirect("login");
       break;
     case 404:
       redirect(404);

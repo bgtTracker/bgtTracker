@@ -1,11 +1,5 @@
 import React from "react";
-import {
-  BootstrapTable,
-  TableHeaderColumn,
-  InsertButton,
-  DeleteButton,
-  BSTable
-} from "react-bootstrap-table";
+import { BootstrapTable, TableHeaderColumn, InsertButton, DeleteButton, BSTable } from "react-bootstrap-table";
 import { Button } from "reactstrap";
 import ModalWithForm from "./ModalWithForm";
 import { Container, Row, Col } from "reactstrap";
@@ -63,12 +57,7 @@ export default class CustomPaginationTable extends React.Component {
           id: 100,
           name: newData.name,
           category: newData.category,
-          date:
-            newData.date.substring(8, 10) +
-            "." +
-            newData.date.substring(5, 7) +
-            "." +
-            newData.date.substring(0, 4),
+          date: newData.date.substring(8, 10) + "." + newData.date.substring(5, 7) + "." + newData.date.substring(0, 4),
           amount: newData.amount,
           color: newData.color,
           expand: true
@@ -218,11 +207,7 @@ export default class CustomPaginationTable extends React.Component {
 
     const tableBody = rows.map(foo =>
       foo.dataField === "color" ? (
-        <TableHeaderColumn
-          dataField={foo.dataField}
-          hidden={foo.hidden}
-          dataFormat={colorFormat}
-        >
+        <TableHeaderColumn dataField={foo.dataField} hidden={foo.hidden} dataFormat={colorFormat}>
           {foo.label}
         </TableHeaderColumn>
       ) : (

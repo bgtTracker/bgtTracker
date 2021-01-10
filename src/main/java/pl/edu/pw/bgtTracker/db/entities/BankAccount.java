@@ -1,5 +1,6 @@
 package pl.edu.pw.bgtTracker.db.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -16,9 +17,11 @@ public class BankAccount {
 
     @ManyToOne
     @JoinColumn(name = "bank_id", referencedColumnName = "id")
+    @JsonIgnore
     private Bank bank;
 
     @ManyToOne
     @JoinColumn(name = "user_id", referencedColumnName = "id")
+    @JsonIgnore
     private AppUser user;
 }

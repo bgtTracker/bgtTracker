@@ -1,5 +1,6 @@
 package pl.edu.pw.bgtTracker.db.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import net.minidev.json.JSONObject;
@@ -16,16 +17,20 @@ public class ExpenseCategory {
     private String name;
 
     @OneToMany(mappedBy = "category")
+    @JsonIgnore
     private List<Expense> expenses = new ArrayList<>();
 
     @OneToMany(mappedBy = "category")
+    @JsonIgnore
     private List<Bill> bills = new ArrayList<>();
 
     @OneToMany(mappedBy = "category")
+    @JsonIgnore
     private List<Objective> objectives = new ArrayList<>();
 
     @ManyToOne(optional = false)
     @JoinColumn(name = "user_id", referencedColumnName = "id")
+    @JsonIgnore
     private AppUser user;
 
     public JSONObject toJSON() {

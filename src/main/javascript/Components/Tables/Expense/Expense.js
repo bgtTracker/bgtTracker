@@ -25,10 +25,7 @@ function addCategories(quantity) {
   for (let i = 1; i < quantity; i++) {
     const id = startId + i;
     let randomC = Math.floor(Math.random() * 16777215).toString(16);
-    var randomColor =
-      randomC.length === 6
-        ? randomC
-        : Math.floor(Math.random() * 16777215).toString(16);
+    var randomColor = randomC.length === 6 ? randomC : Math.floor(Math.random() * 16777215).toString(16);
     console.log(randomColor);
     categorie.push({
       id: id,
@@ -47,18 +44,10 @@ export default function Expense() {
       <Container className="themed-container" fluid={true}>
         <Row>
           <Col xs="8">
-            <CustomPaginationTable
-              type="expense"
-              data={expense}
-              category={categorie}
-            />
+            <CustomPaginationTable type="expense" data={expense} category={categorie} />
           </Col>
           <Col xs="4">
-            <CustomPaginationTable
-              type="category"
-              data={categorie}
-              category={categorie}
-            />
+            <CustomPaginationTable type="category" data={categorie} category={categorie} />
           </Col>
         </Row>
       </Container>

@@ -72,12 +72,7 @@ class LinePlusColumnChart extends Component {
   render() {
     return (
       <div className="ApexChart">
-        <ApexChart
-          height="350"
-          series={this.state.series}
-          options={this.state.options}
-          type="line"
-        />
+        <ApexChart height="350" series={this.state.series} options={this.state.options} type="line" />
       </div>
     );
   }

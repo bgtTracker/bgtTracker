@@ -1,5 +1,7 @@
 package pl.edu.pw.bgtTracker.db.entities;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import net.minidev.json.JSONObject;
@@ -15,15 +17,18 @@ public class Objective {
     private String name;
     private String description;
     private long amount;
+    @JsonFormat(pattern = "yyyy-MM-dd")
     private Date date;
     private long priority;
 
     @ManyToOne
     @JoinColumn(name = "user_id", referencedColumnName = "id")
+    @JsonIgnore
     private AppUser user;
 
     @ManyToOne
     @JoinColumn(name = "category_id", referencedColumnName = "id")
+    @JsonIgnore
     private ExpenseCategory category;
 
     public JSONObject toJSON() {

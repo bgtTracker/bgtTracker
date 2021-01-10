@@ -1,12 +1,5 @@
 import React, { useState } from "react";
-import {
-  Button,
-  Modal,
-  ModalHeader,
-  ModalBody,
-  ModalFooter,
-  Input
-} from "reactstrap";
+import { Button, Modal, ModalHeader, ModalBody, ModalFooter, Input } from "reactstrap";
 import { Container, Row, Col } from "reactstrap";
 import { Form, FormGroup, Label, FormText } from "reactstrap";
 import { Badge } from "reactstrap";
@@ -161,12 +154,7 @@ export default class ModalWithForm extends React.Component {
         </Row>
         <FormGroup>
           <Label>Note</Label>
-          <Input
-            type="textarea"
-            name="note"
-            id="note"
-            onChange={this.changeNote}
-          />
+          <Input type="textarea" name="note" id="note" onChange={this.changeNote} />
         </FormGroup>
       </div>
     );
@@ -202,12 +190,7 @@ export default class ModalWithForm extends React.Component {
         </Row>
         <FormGroup>
           <Label>Note</Label>
-          <Input
-            type="textarea"
-            name="note"
-            id="note"
-            onChange={this.changeNote}
-          />
+          <Input type="textarea" name="note" id="note" onChange={this.changeNote} />
         </FormGroup>
       </div>
     );
@@ -243,9 +226,7 @@ export default class ModalWithForm extends React.Component {
               : "New category"}
           </ModalHeader>
           <ModalBody>
-            <Form onSubmit={this.handleSubmit}>
-              {this.state.type === "category" ? catBody : formBody}
-            </Form>
+            <Form onSubmit={this.handleSubmit}>{this.state.type === "category" ? catBody : formBody}</Form>
           </ModalBody>
           <ModalFooter>
             <Button type="submit" color="primary" onClick={this.handleSubmit}>

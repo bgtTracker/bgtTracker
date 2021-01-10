@@ -87,12 +87,7 @@ class BarChart extends Component {
   render() {
     return (
       <div className="ApexChart">
-        <ApexChart
-          height="350"
-          series={this.state.series}
-          options={this.state.options}
-          type="bar"
-        />
+        <ApexChart height="350" series={this.state.series} options={this.state.options} type="bar" />
       </div>
     );
   }

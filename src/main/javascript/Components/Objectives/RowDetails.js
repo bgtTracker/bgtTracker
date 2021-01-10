@@ -29,9 +29,7 @@ function LinearProgressWithLabel(props) {
         <LinearProgress variant="determinate" {...props} />
       </Box>
       <Box minWidth={35}>
-        <Typography variant="body2" color="textSecondary">{`${Math.round(
-          props.value
-        )}%`}</Typography>
+        <Typography variant="body2" color="textSecondary">{`${Math.round(props.value)}%`}</Typography>
       </Box>
     </Box>
   );
@@ -59,11 +57,7 @@ function CircularProgressWithLabel(props) {
         alignItems="center"
         justifyContent="center"
       >
-        <Typography
-          variant="caption"
-          component="div"
-          color="textSecondary"
-        >{`${Math.round(props.value)}%`}</Typography>
+        <Typography variant="caption" component="div" color="textSecondary">{`${Math.round(props.value)}%`}</Typography>
       </Box>
     </Box>
   );
@@ -127,13 +121,7 @@ export default function Row(props) {
             onClick={event => props.handleCheckBoxClick(event, row.id)}
           />
         </TableCell>
-        <TableCell
-          component="th"
-          id={labelId}
-          scope="row"
-          padding="none"
-          onClick={handleClose}
-        >
+        <TableCell component="th" id={labelId} scope="row" padding="none" onClick={handleClose}>
           {row.name}
         </TableCell>
         <TableCell align="right" onClick={handleClose}>
@@ -154,30 +142,14 @@ export default function Row(props) {
       </TableRow>
 
       <TableRow>
-        <TableCell
-          style={{ paddingBottom: 0, paddingTop: 0 }}
-          colSpan={7}
-          onClick={handleClose}
-        >
+        <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={7} onClick={handleClose}>
           <Collapse in={open} timeout="auto" unmountOnExit>
             <Box margin={1}>
-              <Typography
-                variant="h6"
-                gutterBottom
-                component="div"
-                align="center"
-              >
+              <Typography variant="h6" gutterBottom component="div" align="center">
                 Description: {row.description}
               </Typography>
-              <LinearProgressWithLabel
-                value={(row.amount / props.money) * 100}
-              />
-              <Grid
-                container
-                direction={"row"}
-                justify="space-evenly"
-                alignItems="center"
-              >
+              <LinearProgressWithLabel value={(row.amount / props.money) * 100} />
+              <Grid container direction={"row"} justify="space-evenly" alignItems="center">
                 <Grid item>
                   <Button onClick={handleOpenEdit}>Edit</Button>
                   <ObjectiveDialog

@@ -12,7 +12,7 @@ import InboxIcon from "@material-ui/icons/MoveToInbox";
 import SummaryGetter from "./SummaryGetter.js";
 import SelectPeriodDialog from "./SelectPeriodDialog.js";
 import Grid from "@material-ui/core/Grid";
-import SpentCirce from "../Charts/SpentCirce.js";
+import SpentCircle from "../Charts/SpentCircle.js";
 import Paper from "@material-ui/core/Paper";
 import clientJson from "../../clientJson.js";
 import History from "../History/HistoryTableDetails.js";
@@ -74,10 +74,7 @@ export default function Summary() {
   const [customPeriodDialogOpened, setcustomPeriodDialogOpen] = useState(false);
 
   const toggleDrawer = open => event => {
-    if (
-      event.type === "keydown" &&
-      (event.key === "Tab" || event.key === "Shift")
-    ) {
+    if (event.type === "keydown" && (event.key === "Tab" || event.key === "Shift")) {
       return;
     }
     setDrawerOpened(open);
@@ -106,9 +103,7 @@ export default function Summary() {
 
   let nowDate = new Date();
   let toDateForQuerry = nowDate.getTime().toString();
-  let fromDateForQuerry = new Date(nowDate.getFullYear(), nowDate.getMonth(), 1)
-    .getTime()
-    .toString();
+  let fromDateForQuerry = new Date(nowDate.getFullYear(), nowDate.getMonth(), 1).getTime().toString();
 
   useEffect(() => {
     clientJson({
@@ -138,11 +133,7 @@ export default function Summary() {
     >
       <List>
         {nicelyWirtenPeriods.map((text, index) => (
-          <ListItem
-            button
-            key={text}
-            onClick={handlePeriodChange(periods[index])}
-          >
+          <ListItem button key={text} onClick={handlePeriodChange(periods[index])}>
             <ListItemIcon>
               <InboxIcon />
             </ListItemIcon>
@@ -153,11 +144,7 @@ export default function Summary() {
       <Divider />
       <List>
         {["Custom Period"].map((text, index) => (
-          <ListItem
-            button
-            key={text}
-            onClick={handleCustomPeriodChange(periods[3])}
-          >
+          <ListItem button key={text} onClick={handleCustomPeriodChange(periods[3])}>
             <ListItemIcon>
               <InboxIcon />
             </ListItemIcon>
@@ -177,16 +164,10 @@ export default function Summary() {
             {SpentCirceData === undefined ? (
               <h1>Loading...</h1>
             ) : (
-              <SpentCirce
-                labels={SpentCirceData.labels}
-                data={SpentCirceData.data}
-              />
+              <SpentCircle labels={SpentCirceData.labels} data={SpentCirceData.data} />
             )}
             {customPeriodDialogOpened === true ? (
-              <SelectPeriodDialog
-                changeCustomPeriodSelected={openCustiomPeriodChange}
-                saveData={saveDates}
-              />
+              <SelectPeriodDialog changeCustomPeriodSelected={openCustiomPeriodChange} saveData={saveDates} />
             ) : (
               <div />
             )}
@@ -208,11 +189,7 @@ export default function Summary() {
                     <Button onClick={toggleDrawer(true)}>Select Period</Button>
                   </div>
                 </div>
-                <Drawer
-                  anchor={"bottom"}
-                  open={drawerOpened}
-                  onClose={toggleDrawer(false)}
-                >
+                <Drawer anchor={"bottom"} open={drawerOpened} onClose={toggleDrawer(false)}>
                   {list()}
                 </Drawer>
               </React.Fragment>
@@ -221,27 +198,11 @@ export default function Summary() {
         </Grid>
         <Grid item xs={12}>
           {/* // this is just horrible but i coudn't get to rerender componet at the moment and didn't have time to solve */}
-          {period.thisMonth === true ? (
-            <SummaryGetter period={"thisMonth"} />
-          ) : (
-            <div />
-          )}
-          {period.thisYear === true ? (
-            <SummaryGetter period={"thisYear"} />
-          ) : (
-            <div />
-          )}
-          {period.lastYear === true ? (
-            <SummaryGetter period={"lastYear"} />
-          ) : (
-            <div />
-          )}
+          {period.thisMonth === true ? <SummaryGetter period={"thisMonth"} /> : <div />}
+          {period.thisYear === true ? <SummaryGetter period={"thisYear"} /> : <div />}
+          {period.lastYear === true ? <SummaryGetter period={"lastYear"} /> : <div />}
           {period.customPeriod === true ? (
-            <SummaryGetter
-              period={"customPeriod"}
-              to={toDate}
-              from={fromDate}
-            />
+            <SummaryGetter period={"customPeriod"} to={toDate} from={fromDate} />
           ) : (
             <div />
           )}

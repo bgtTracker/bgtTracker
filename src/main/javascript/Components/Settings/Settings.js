@@ -96,13 +96,7 @@ export default function Settings() {
           <Paper>
             <Grid container spacing={4}>
               <Grid item xs={12}>
-                <Grid
-                  container
-                  spacing={4}
-                  direction="row"
-                  alignItems="center"
-                  justify="center"
-                >
+                <Grid container spacing={4} direction="row" alignItems="center" justify="center">
                   <Grid item xs={4}>
                     <p>
                       First name: {name} Last name: {lastName}
@@ -116,9 +110,7 @@ export default function Settings() {
                       onClose={handleClose}
                       aria-labelledby="max-width-dialog-title"
                     >
-                      <DialogTitle id="max-width-dialog-title">
-                        Enter new name and last name
-                      </DialogTitle>
+                      <DialogTitle id="max-width-dialog-title">Enter new name and last name</DialogTitle>
                       <DialogContent>
                         <Grid container justify="space-around">
                           <TextField
@@ -150,26 +142,16 @@ export default function Settings() {
               <Divider flexItem variant="middle" />
 
               <Grid item xs={12}>
-                <Grid
-                  container
-                  spacing={4}
-                  direction="row"
-                  alignItems="center"
-                  justify="center"
-                >
+                <Grid container spacing={4} direction="row" alignItems="center" justify="center">
                   <Grid item>
-                    <Button onClick={() => setPassDialogOpen(true)}>
-                      Change password
-                    </Button>
+                    <Button onClick={() => setPassDialogOpen(true)}>Change password</Button>
                     <Dialog
                       maxWidth={maxWidth}
                       open={passDialogOpen}
                       onClose={() => setPassDialogOpen(false)}
                       aria-labelledby="max-width-dialog-title"
                     >
-                      <DialogTitle id="max-width-dialog-title">
-                        Enter new password
-                      </DialogTitle>
+                      <DialogTitle id="max-width-dialog-title">Enter new password</DialogTitle>
                       <DialogContent>
                         <Grid container justify="space-around">
                           <TextField
@@ -193,13 +175,7 @@ export default function Settings() {
 
               <Divider flexItem variant="middle" />
               <Grid item xs={12}>
-                <Grid
-                  container
-                  spacing={4}
-                  direction="row"
-                  alignItems="center"
-                  justify="center"
-                >
+                <Grid container spacing={4} direction="row" alignItems="center" justify="center">
                   <Grid item xs={4}>
                     <TextField
                       id="goal"

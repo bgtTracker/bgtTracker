@@ -1,12 +1,5 @@
 import React from "react";
-import {
-  NavLink,
-  Redirect,
-  Route,
-  Switch,
-  useHistory,
-  useRouteMatch
-} from "react-router-dom";
+import { NavLink, Redirect, Route, Switch, useHistory, useRouteMatch } from "react-router-dom";
 import { makeStyles } from "@material-ui/core/styles";
 import clsx from "clsx";
 import {
@@ -201,8 +194,7 @@ async function SubscribeToUserTopic(user) {
 
   try {
     const currentToken = await messaging.getToken({
-      vapidKey:
-        "BAxFZLrrh8nZ_BmuUYpkYjL3s6plsYNWZjou86Fys3w1zfZThBjmR3Kv12D5nP8B2Wv8VKS_SGY0NF9rOkSXt4M"
+      vapidKey: "BAxFZLrrh8nZ_BmuUYpkYjL3s6plsYNWZjou86Fys3w1zfZThBjmR3Kv12D5nP8B2Wv8VKS_SGY0NF9rOkSXt4M"
     });
     // console.log("Token: " + currentToken);
     clientJson({
@@ -283,9 +275,7 @@ export default function MainPage() {
   };
 
   navigator.serviceWorker.addEventListener("message", event => {
-    if (
-      event.data.firebaseMessaging.payload.data.action === "showNotification"
-    ) {
+    if (event.data.firebaseMessaging.payload.data.action === "showNotification") {
       try {
         addNotification(event.data.firebaseMessaging.payload.data);
       } catch (e) {
@@ -331,37 +321,21 @@ export default function MainPage() {
     <div className={classes.root}>
       <ChangeTitle title="bgtTracker" />
       <CssBaseline />
-      <AppBar
-        position="absolute"
-        className={clsx(classes.appBar, drawerOpen && classes.appBarShift)}
-      >
+      <AppBar position="absolute" className={clsx(classes.appBar, drawerOpen && classes.appBarShift)}>
         <Toolbar className={classes.toolbar}>
           <IconButton
             edge="start"
             color="inherit"
             onClick={() => setDrawerOpen(true)}
-            className={clsx(
-              classes.menuButton,
-              drawerOpen && classes.menuButtonHidden
-            )}
+            className={clsx(classes.menuButton, drawerOpen && classes.menuButtonHidden)}
           >
             <MenuIcon />
           </IconButton>
-          <Typography
-            variant="h6"
-            color="inherit"
-            noWrap
-            className={classes.title}
-          >
+          <Typography variant="h6" color="inherit" noWrap className={classes.title}>
             bgtTracker
           </Typography>
           {notifications === undefined ? (
-            <Skeleton
-              animation="wave"
-              variant="circle"
-              width={40}
-              height={40}
-            />
+            <Skeleton animation="wave" variant="circle" width={40} height={40} />
           ) : (
             <NotificationMenu
               removeNotication={removeNotication}
@@ -377,10 +351,7 @@ export default function MainPage() {
       <Drawer
         variant="permanent"
         classes={{
-          paper: clsx(
-            classes.drawerPaper,
-            !drawerOpen && classes.drawerPaperClose
-          )
+          paper: clsx(classes.drawerPaper, !drawerOpen && classes.drawerPaperClose)
         }}
         open={drawerOpen}
       >

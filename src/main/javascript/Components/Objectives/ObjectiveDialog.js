@@ -10,10 +10,7 @@ import { createMuiTheme, makeStyles } from "@material-ui/core/styles";
 import FormControl from "@material-ui/core/FormControl";
 import Select from "@material-ui/core/Select";
 import DateFnsUtils from "@date-io/date-fns";
-import {
-  MuiPickersUtilsProvider,
-  KeyboardDatePicker
-} from "@material-ui/pickers";
+import { MuiPickersUtilsProvider, KeyboardDatePicker } from "@material-ui/pickers";
 import InputLabel from "@material-ui/core/InputLabel";
 import Input from "@material-ui/core/Input";
 import MenuItem from "@material-ui/core/MenuItem";
@@ -109,9 +106,7 @@ export default function ObjectiveDialog(props) {
         onClose={handleClose}
         aria-labelledby="max-width-dialog-title"
       >
-        <DialogTitle id="max-width-dialog-title">
-          Enter new name and last name
-        </DialogTitle>
+        <DialogTitle id="max-width-dialog-title">Enter new name and last name</DialogTitle>
         <DialogContent>
           <Grid container direction="column" justify="space-around">
             <Grid
@@ -177,9 +172,7 @@ export default function ObjectiveDialog(props) {
               </Grid>
               <Grid item xs={6}>
                 <FormControl variant="outlined" className={classes.formControl}>
-                  <InputLabel id="demo-category-outlined-label">
-                    Category
-                  </InputLabel>
+                  <InputLabel id="demo-category-outlined-label">Category</InputLabel>
                   <Select
                     labelId="demo-category-outlined-label"
                     id="demo-category-outlined"

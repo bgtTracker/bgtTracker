@@ -1,5 +1,6 @@
 package pl.edu.pw.bgtTracker.db.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import net.minidev.json.JSONObject;
 import lombok.NoArgsConstructor;
@@ -18,6 +19,7 @@ public class Alert {
 
     @ManyToOne(optional = false)
     @JoinColumn(name = "user_id", referencedColumnName = "id")
+    @JsonIgnore
     private AppUser user;
 
     public JSONObject toJSON() {
