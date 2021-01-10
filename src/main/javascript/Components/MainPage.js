@@ -280,39 +280,6 @@ export default function MainPage() {
       });
   }
 
-  //let notificationSystem = React.createRef();
-
-  // const addNotification = data => {
-  //   const notification = notificationSystem.current;
-  //   let not = {
-  //     id: data.id,
-  //     message: data.msg,
-  //     level: data.level,
-  //     title: data.title,
-  //     action: {
-  //       label: "Got it!",
-  //       callback: function () {
-  //         removeNotication(data.id);
-  //       }
-  //     },
-  //     onRemove: () => {
-  //       reloadNotifications();
-  //     }
-  //   };
-  //   notification.addNotification(not);
-  // };
-
-  // const action = key => {
-  //   <Fragment>
-  //     <Button onClick>
-  //         'Got it'
-  //     </Button>
-  //     <Button onClick={() => { closeSnackbar(key); reloadNotifications(); }}>
-  //         'Dismiss'
-  //     </Button>
-  //   </Fragment>
-  // };
-
   const addNotification = data => {
     if (AuthService.getStorageBackend().getItem("logged-in") === "true") {
       enqueueSnackbar(data.msg, {
@@ -322,6 +289,7 @@ export default function MainPage() {
         },
         onExited: reloadNotifications,
         variant: data.level,
+        preventDuplicate: true,
         // content: (
         //   <Alert
         //     severity={data.level}
