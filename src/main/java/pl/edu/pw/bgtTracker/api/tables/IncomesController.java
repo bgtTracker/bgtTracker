@@ -51,16 +51,16 @@ public class IncomesController {
         //return newId2;
     }
 
-    @PostMapping("/api/editIncome")
-    public void updateIncomeData(Authentication auth, @RequestParam(value = "id") String id, @RequestParam(value="name") String name, @RequestParam(value = "category_id") String category, @RequestParam(value="amount") String amount)
+    @PostMapping("/api/updateIncome")
+    public void updateIncomeData(Authentication auth, @RequestParam(value = "id") String id, @RequestParam(value="name") String name, @RequestParam(value = "category_id") String category, @RequestParam(value="amount") String amount, @RequestParam(value = "date") String date, @RequestParam(value = "note") String note)
     {
-        /* Odanajduje i zmienia zawartosc w bazie danych*/
         long incomeId = Long.parseLong(id);
+        long usrId = this.getUserId(auth);
         String newName = name;
         long newAmount = Long.parseLong(amount);
         long newCatId =  Long.parseLong(category);
-        incomesService.editIncome(incomeId, newName, newCatId, newAmount);
-        //incomesService.editIncome(usrId, newName, newAmount, categoryId, note, dateStamp);
+
+        incomesService.updateIncome(incomeId, usrId, newName, newAmount, newCatId, date, note);
 
     }
 

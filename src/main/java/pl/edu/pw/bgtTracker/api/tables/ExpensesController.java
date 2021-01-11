@@ -44,15 +44,16 @@ public class ExpensesController {
         return newId;
     }
 
-    @PostMapping("/api/editExpense")
-    public void updateExpenseData(Authentication auth, @RequestParam(value = "id") String id, @RequestParam(value="name") String name, @RequestParam(value = "category_id") String category, @RequestParam(value="amount") String amount)
+    @PostMapping("/api/updateExpense")
+    public void updateExpenseData(Authentication auth, @RequestParam(value = "id") String id, @RequestParam(value="name") String name, @RequestParam(value = "category_id") String category, @RequestParam(value="amount") String amount, @RequestParam String date ,@RequestParam String note)
     {
-        /* Odanajduje i zmienia zawartosc w bazie danych*/
+
         long expenseId = Long.parseLong(id);
+        long usrId = this.getUserId(auth);
         String newName = name;
         long newAmount = Long.parseLong(amount);
         long newCatId =  Long.parseLong(category);
-        expensesService.editExpense(expenseId, newName, newCatId, newAmount);
+        expensesService.updateExpense(expenseId, usrId, newName,newAmount, newCatId, date, note);
 
     }
 

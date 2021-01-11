@@ -39,12 +39,12 @@ public class IncomeCategoriesController {
         return newId2;
     }
 
-    @PostMapping("/api/editIncomeCategory")
-    public void updateIncomeCategoryData(@RequestParam(value = "id") String id, @RequestParam(value="name") String name)
+    @PostMapping("/api/updateIncomeCategory")
+    public void updateIncomeCategoryData(@RequestParam(value = "id") String id, @RequestParam(value="name") String name, @RequestParam(value = "color") String color, @RequestParam(value = "note") String note)
     {
         long cat_id = Long.parseLong(id);
         String newName = name;
-        incomeCategoriesService.editIncomeCategory(cat_id, name);
+        incomeCategoriesService.updateIncomeCategory(cat_id, name, color, note);
     }
 
     @PostMapping("/api/deleteIncomeCategory")

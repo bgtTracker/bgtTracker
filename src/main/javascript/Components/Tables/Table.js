@@ -18,9 +18,13 @@ import clientJson from "../../clientJson";
 import AuthService from "../../api/AuthService";
 
 function colorFormat(cell, row) {
-  return <Badge style={{ backgroundColor: cell, color: cell }}>{cell}</Badge>;
+  return <Badge style={{ backgroundColor: cell, color: cell }}>category color {cell}</Badge>;
 }
+function amountFormat(cell, row) {
 
+  var t = (parseFloat(cell)/100).toFixed(2)
+  return t;
+}
 function sortData(c, d, order) {
   var a = c.date;
   var b = d.date;
@@ -77,15 +81,18 @@ export default class CustomPaginationTable extends React.Component {
       data: [],
       cellEditMode: "none",
       selected: -1,
-      test: []
+      selectedContent: []
     };
     this.refs = React.createRef();
 
     this.handleEditButtonClick = this.handleEditButtonClick.bind(this);
     this.insertData = this.insertData.bind(this);
+    this.updateData = this.updateData.bind(this);
     this.handleDeleteButtonClick = this.handleDeleteButtonClick.bind(this);
     this.handleRowSelect = this.handleRowSelect.bind(this);
     this.isD2 = this.isD2.bind(this);
+    this.handlePayBillButton = this.handlePayBillButton.bind(this);
+    //this.handleEditButtonClick = this.handleEditButtonClick.bind(this)
     //this.testClick = this.testClick.bind(this)
   }
   componentDidMount() {
@@ -150,7 +157,7 @@ export default class CustomPaginationTable extends React.Component {
     }
   }
 
-  handleEditButtonClick() {
+  /*handleEditButtonClick() {
     this.setState(prevState => {
       console.log(prevState);
       let ret;
@@ -166,8 +173,137 @@ export default class CustomPaginationTable extends React.Component {
       }
       return ret;
     });
-  }
+  }*/
+  handlePayBillButton(){
+    console.log("this.state.selected",this.state.selected)
+    console.log("this.state.selectedContenet", this.state.selectedContent.isPaid)
+    let selectedId = this.state.selected;
+    if (selectedId === -1) {
+      alert("You have to choose bill to pay!");
+      return;
+    }
+    if (this.state.selectedContent.isPaid === true){
+      alert("This bill is already paid!");
+      return;
+    }
+    var today = new Date();
+    var dd = String(today.getDate()).padStart(2, '0');
+    var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
+    var yyyy = today.getFullYear();
 
+    today = yyyy + '-' + mm + '-' + dd;
+    console.log("today",today)
+    this.setState(()=>{
+      clientJson({
+        method: "POST",
+        path: "/api/payBill/",
+        headers: AuthService.getAuthHeader(),
+        params:{
+          id: this.state.selectedContent.id,
+          date: today
+        }
+      }).then(()=>{
+        alert("Bill paid :)")
+        this.fetchData()})
+    })
+  }
+  updateData(id, newData) {
+    if(this.props.type === "income"){
+      this.setState(prevState => {
+        clientJson({
+          method: "POST",
+          path: "/api/updateIncome/",
+          headers: AuthService.getAuthHeader(),
+          params:{
+            id: id,
+            name: newData.name,
+            category_id: newData.category,
+            amount: newData.amount,
+            date: newData.date,
+            note: newData.note
+          }
+        })
+            .then(response => {
+
+            }).then( response => {
+              this.fetchData()
+        })
+
+      })
+    } else if(this.props.type === "expense"){
+      this.setState(prevState => {
+        clientJson({
+          method: "POST",
+          path: "/api/updateExpense/",
+          headers: AuthService.getAuthHeader(),
+          params: {
+            id: id,
+            name: newData.name,
+            category_id: newData.category,
+            amount: newData.amount,
+            date: newData.date,
+            note: newData.note
+          }
+        }).then(response => {
+          this.fetchData();
+        })
+      })
+    } else if(this.props.type === "bill") {
+      this.setState(prevState => {
+        clientJson({
+          method: "POST",
+          path: "/api/updateBill/",
+          headers: AuthService.getAuthHeader(),
+          params: {
+            id:id,
+            name: newData.name,
+            category_id: newData.category,
+            amount: newData.amount,
+            dueDate: newData.date,
+            note: newData.note,
+            bankNumber: newData.bankAccount
+          }
+        }).then(response => {
+          this.fetchData()
+        })
+      })
+    } else if(this.props.type === "category"){
+      if (this.props.subType === "income"){
+        this.setState(()=>{
+          clientJson({
+            method: "POST",
+            path: "/api/updateIncomeCategory/",
+            headers: AuthService.getAuthHeader(),
+            params: {
+              id: id,
+              name: newData.name,
+              color: newData.color,
+              note: newData.note
+            }
+          }).then(response => {
+            this.fetchData()
+          })
+        })
+      } else if(this.props.subType === "expense"){
+        this.setState(() => {
+          clientJson({
+            method: "POST",
+            path: "/api/updateExpenseCategory/",
+            headers: AuthService.getAuthHeader(),
+            params: {
+              id: id,
+              name: newData.name,
+              color: newData.color,
+              note: newData.note
+            }
+          }).then(response => {
+            this.fetchData()
+          })
+        })
+      } else {console.log("ERROR")}
+
+    } else {console.log("ERROR")}
+  }
   insertData(newData) {
     if (this.props.type === "income") {
       this.setState(prevState => {
@@ -352,7 +488,14 @@ export default class CustomPaginationTable extends React.Component {
       </div>
     );
   }
+  handleEditButtonClick() {
+    let selectedId = this.state.selected;
+    if (selectedId === -1) {
+      alert("You have to choose row to edit!");
+      return;
+    }
 
+  }
   handleDeleteButtonClick() {
     let selectedId = this.state.selected; // id to delete
     if (selectedId === -1) {
@@ -373,7 +516,9 @@ export default class CustomPaginationTable extends React.Component {
   }
   handleRowSelect(row) {
     this.setState(prevState => {
-      return { selected: row.id };
+      return { selected: row.id,
+               selectedContent: row
+      };
     });
   }
   handletest() {
@@ -480,7 +625,14 @@ export default class CustomPaginationTable extends React.Component {
         >
           {foo.label}
         </TableHeaderColumn>
-      ) : (
+      ) : foo.dataField === "amount" ?(
+          <TableHeaderColumn
+          dataField={foo.dataField}
+          hidden={foo.hidden}
+          dataFormat={amountFormat}
+          >{foo.label}</TableHeaderColumn>
+          ):
+          (
         <TableHeaderColumn
           dataField={foo.dataField}
           hidden={foo.hidden}
@@ -566,10 +718,11 @@ export default class CustomPaginationTable extends React.Component {
             handleNew={this.insertData}
           />
           &nbsp;
-          {/*<ModalWithForm buttonLabel={"Edit"} type={modalType} mode={"edit"} color={"warning"} row={this.state.selected} category={category} handleNew={this.insertData}/>&nbsp;*/}
+          <ModalWithForm buttonLabel={"Edit"} type={modalType} mode={"edit"} color={"warning"} row={this.state.selected} rowContent={this.state.selectedContent} category={[]} handleNew={this.updateData}/>&nbsp;
           <Button color="danger" onClick={this.handleDeleteButtonClick}>
             Delete
           </Button>
+          {this.props.type === 'bill' && <div style={{position: "absolute", right: 15}}><Button color="primary" onClick={this.handlePayBillButton}>Pay bill</Button></div>}
           {console.log(typeof this.state.data[0])}
         </Row>
       </div>

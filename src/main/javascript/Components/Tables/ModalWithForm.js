@@ -29,13 +29,13 @@ export default class ModalWithForm extends React.Component {
 
     this.state = {
       type: this.props.type,
-      //basic
+
       name: "",
       amount: "",
       category: "",
       category_id: -1,
       color: "#000000",
-      //date: nowDate,
+
       date: "",
       note: "",
       bankAccount: "",
@@ -64,14 +64,27 @@ export default class ModalWithForm extends React.Component {
 
   toggle() {
     this.componentDidMount();
-    this.resetState();
-    if (this.state.categories.length !== 0) {
-      this.setState({ category: this.state.categories[0].id });
+
+
+    //console.log("this.props.mode", this.props.mode)
+    //console.log("rowSelected", this.props.row)
+    if(this.props.mode === "insert")
+    {
+        this.resetState();
+        if (this.state.categories.length !== 0) {
+          this.setState({ category: this.state.categories[0].id });
+        }
     }
-    console.log("this.state.categories.length", this.state.categories.length);
+    if(this.props.row !== -1 && this.props.mode === "edit")
+    {
+      this.stateToEdit()
+
+    }
+
 
     this.setState(prevState => {
       if (this.props.mode === "edit" && this.props.row === -1) {
+        alert("You have to choose row to edit!")
         return { modal: this.state.modal };
       } else {
         return { modal: !this.state.modal };
@@ -93,6 +106,8 @@ export default class ModalWithForm extends React.Component {
       bankAccount: "",
       test: false,
 
+      id: 0,
+
       categoryName: "1",
 
       buttonLabel: "New row",
@@ -100,6 +115,32 @@ export default class ModalWithForm extends React.Component {
       modal: false
     });
   }
+  stateToEdit() {
+    this.setState({
+      name: this.props.rowContent.name,
+      note: this.props.rowContent.note,
+
+    })
+    if(this.state.type === "bill"){
+      this.setState({bankAccount: this.props.rowContent.bankAccount})
+    }
+    if(this.state.type !== "category"){
+      this.setState({
+        date: this.props.rowContent.date.slice(6,10) + '-' + this.props.rowContent.date.slice(3,5) + '-' + this.props.rowContent.date.slice(0,2),
+        amount: (parseFloat(this.props.rowContent.amount)/100).toFixed(2),
+        category: this.props.rowContent.category,
+        category_id: this.props.rowContent.category_id
+      })
+    }
+    if(this.state.type === "category"){
+      //console.log("normalnie ziomo", typeof this.props.rowContent.note)
+      this.setState({
+        color: this.props.rowContent.color,
+        note: this.props.rowContent.note})
+      //console.log("normalnie ziomo2", this.state.note)
+    }
+  }
+
 
   changeName(event) {
     this.setState({ name: event.target.value });
@@ -133,12 +174,11 @@ export default class ModalWithForm extends React.Component {
   checkData() {
     var errorAlert = "";
     if (this.state.type !== "category") {
-      //console.log("this.state.category",typeof this.state.category)
+
       if (this.state.category == -1) {
         alert("You have to choose category");
         return false;
       }
-
       // for income 1.name 2.amount 3.category 4.date
       if (
         this.state.name !== "" &&
@@ -162,11 +202,6 @@ export default class ModalWithForm extends React.Component {
         return false;
       }
 
-      // if(this.state.name !== "" &&  this.state.category !== "" && this.state.amount !== 0)
-      //     return true;
-      // else {
-      //     return false;
-      // }
     } else {
       if (this.state.name !== "") return true;
       else {
@@ -178,17 +213,33 @@ export default class ModalWithForm extends React.Component {
 
   handleSubmit() {
     console.log(this.state.category);
+    console.log("this.state", this.state)
     if (this.checkData()) {
       if (this.state.type !== "category") {
         var t = this.state.categories.filter(i => {
           return i.id == this.state.category;
         });
+        this.setState({amount: parseInt(parseFloat(this.state.amount)*100).toString()})
         this.setState({ categoryName: t[0].name }, () => {
-          this.props.handleNew(this.state);
+          if(this.props.mode === "insert")
+          {
+            this.props.handleNew(this.state);
+          }
+          if(this.props.mode === "edit"){
+            this.props.handleNew(this.props.row, this.state)
+          }
+          {console.log("NIE EDYCJI")}
+
           this.toggle();
         });
       } else if (this.state.type === "category") {
-        this.props.handleNew(this.state);
+        if(this.props.mode === "insert")
+        {
+          this.props.handleNew(this.state);
+        }
+        if(this.props.mode === "edit"){
+          this.props.handleNew(this.props.row, this.state)
+        }
         this.toggle();
       } else {
         this.toggle();
@@ -227,15 +278,15 @@ export default class ModalWithForm extends React.Component {
         }).then(response => {
           //console.log("tak to to", response.entity.category)
           this.setState({ categories: response.entity.category });
-          console.log("fetfet", this.state.categories);
+          //console.log("fetfet", this.state.categories);
         });
       });
     }
-    console.log("fet", this.state.categories);
+    //console.log("fet", this.state.categories);
   }
 
   render() {
-    console.log("fetreder", this.state.categories);
+    //console.log("fetreder", this.state.categories);
     const buttonColor = this.props.color;
     const modalMode = this.props.mode;
 
@@ -244,16 +295,16 @@ export default class ModalWithForm extends React.Component {
 
     this.state.buttonLabel = this.props.buttonLabel;
     var categorySelect;
-    console.log("co jest grane");
+    //console.log("co jest grane");
     if (this.state.categories !== "") {
-      console.log("JEST");
+      //console.log("JEST");
       var categoryDefult = <option value={-1}></option>;
       categorySelect = selectOpt2.map(cat => (
         <option value={cat.id}> {cat.name} </option>
       ));
-      console.log("please", categorySelect);
+      //console.log("please", categorySelect);
     } else {
-      console.log("NIE JEST");
+      //console.log("NIE JEST");
       categorySelect = <option value={0}> {"Niema"} </option>;
     }
 
@@ -296,6 +347,7 @@ export default class ModalWithForm extends React.Component {
                   value={this.state.amount}
                   step="0.01"
                   maxLength={7}
+                  //pattern={"^\\d*(\\.\\d{0,2})?$"}
                 />
               </FormGroup>
             </Col>
