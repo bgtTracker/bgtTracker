@@ -16,6 +16,8 @@ import java.util.Map;
 import java.util.TimeZone;
 import java.util.concurrent.ThreadLocalRandom;
 
+import javax.sound.midi.SysexMessage;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.Authentication;
@@ -66,6 +68,8 @@ public class SummariesController {
         int goal = 30000;
         Date fromDate = new Date(from);
         Date toDate = new Date(to);
+        System.out.println(fromDate.toString());
+        System.out.println(toDate.toString());
 
         LocalDate fromLocal = LocalDate.from(fromDate.toInstant().atZone(ZoneId.of("GMT+1")));
         LocalDate toLocal = LocalDate.from(toDate.toInstant().atZone(ZoneId.of("GMT+1")));      
@@ -96,19 +100,20 @@ public class SummariesController {
 
         for(var e : allexpenses)
         {
-            if(e.getDate().getTime()>from && e.getDate().getTime() < to)
+            if(e.getDate().getTime()>=from && e.getDate().getTime() <= to)
             {
-                System.out.println(e.getName());
-                System.out.println(e.getDate());
+                // System.out.println(e.getName());
+                // System.out.println(e.getDate());
+                //System.out.println(e.getName());
                 peridExpenses.add(e);
             }
         }
 
         for(var i : allIncomes)
         {
-            if(i.getDate().getTime()>from && i.getDate().getTime() < to)
+            if(i.getDate().getTime()>=from && i.getDate().getTime() <= to)
             {
-                System.out.println(i.getName());
+                //System.out.println(i.getName());
                 periodIncomes.add(i);
             }
         }
@@ -135,29 +140,32 @@ public class SummariesController {
         {
             dateIteterator = c.getTime();
             days[i] = c.getTime().getTime();
-            System.out.println("first");
-            System.out.println(fmt.format(dateIteterator));
-            System.out.println(fmt.format(peridExpenses.get(expesesIndex).getDate()));
-            if(fmt.format(dateIteterator).equals(fmt.format(peridExpenses.get(expesesIndex).getDate())))
+            if(expesesIndex < peridExpenses.size() && fmt.format(dateIteterator).equals(fmt.format(peridExpenses.get(expesesIndex).getDate())))
             {
-                var e = peridExpenses.get(expesesIndex);
-                daylyExpenses[i] = e.getAmount();
-                expansesArr.add(e.toJSON());
-                long curAmount = expanseCategoiresWithAmoutns.get(e.getCategory().getId());
-                expanseCategoiresWithAmoutns.put(e.getCategory().getId(), curAmount+e.getAmount());
-                expesesIndex++;
+                while(expesesIndex < peridExpenses.size() && fmt.format(dateIteterator).equals(fmt.format(peridExpenses.get(expesesIndex).getDate())))
+                {
+                    var e = peridExpenses.get(expesesIndex);
+                    daylyExpenses[i] += e.getAmount();
+                    expansesArr.add(e.toJSON());
+                    long curAmount = expanseCategoiresWithAmoutns.get(e.getCategory().getId());
+                    expanseCategoiresWithAmoutns.put(e.getCategory().getId(), curAmount+e.getAmount());
+                    expesesIndex++;
+                }
             } else 
             {
                 daylyExpenses[i] = 0;
             }
-            if(fmt.format(dateIteterator).equals(fmt.format(periodIncomes.get(incomesIndex).getDate())))
+            if(incomesIndex<periodIncomes.size() && fmt.format(dateIteterator).equals(fmt.format(periodIncomes.get(incomesIndex).getDate())))
             {
-                var in = periodIncomes.get(incomesIndex);
-                incomes[i] = in.getAmount();
-                incomeArray.add(in.toJSON());
-                long curAmount = incomeCategoiresWithAmoutns.get(in.getCategory().getId());
-                incomeCategoiresWithAmoutns.put(in.getCategory().getId(), curAmount+in.getAmount());
-                incomesIndex++;
+                while(incomesIndex<periodIncomes.size() && fmt.format(dateIteterator).equals(fmt.format(periodIncomes.get(incomesIndex).getDate())))
+                {
+                    var in = periodIncomes.get(incomesIndex);
+                    incomes[i] += in.getAmount();
+                    incomeArray.add(in.toJSON());
+                    long curAmount = incomeCategoiresWithAmoutns.get(in.getCategory().getId());
+                    incomeCategoiresWithAmoutns.put(in.getCategory().getId(), curAmount+in.getAmount());
+                    incomesIndex++;
+                }
             } else 
             {
                 incomes[i] = 0;
@@ -224,6 +232,7 @@ public class SummariesController {
         incomesJ.put("history", incomeArray);
         data.put("incomes", incomesJ);
 
+        System.out.println(data.toJSONString());
         return data;
     }
 

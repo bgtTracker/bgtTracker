@@ -92,34 +92,56 @@ export default function SummaryGetter(props) {
     };
   }
 
+  function datesAreOnSameDay(first, second) {
+    let bolean =
+      first.getFullYear() === second.getFullYear() &&
+      first.getMonth() === second.getMonth() &&
+      first.getDate() === second.getDate();
+    return bolean;
+  }
+
   function createRows(resposne) {
     let rows = [];
+    let childerkeyindex = 0;
     let expansesIndex = 0;
     let incomesIndex = 0;
     for (let i = 0; i < resposne.entity.expenses.data.length; i++) {
       if (resposne.entity.expenses.data[i] != 0 || resposne.entity.incomes.data[i] != 0) {
+        let date = new Date(resposne.entity.expenses.labels[i]);
         let details = [];
         if (resposne.entity.expenses.data[i] != 0) {
-          let detail = createDetails(
-            i,
-            new Date(resposne.entity.expenses.history[expansesIndex].dateStamp),
-            resposne.entity.expenses.history[expansesIndex].category,
-            resposne.entity.expenses.history[expansesIndex].name,
-            resposne.entity.expenses.history[expansesIndex].amount
-          );
-          details.push(detail);
-          expansesIndex++;
+          while (
+            expansesIndex < resposne.entity.expenses.history.length &&
+            datesAreOnSameDay(date, new Date(resposne.entity.expenses.history[expansesIndex].dateStamp))
+          ) {
+            let detail = createDetails(
+              i + childerkeyindex,
+              new Date(resposne.entity.expenses.history[expansesIndex].dateStamp),
+              resposne.entity.expenses.history[expansesIndex].category,
+              resposne.entity.expenses.history[expansesIndex].name,
+              resposne.entity.expenses.history[expansesIndex].amount
+            );
+            childerkeyindex++;
+            details.push(detail);
+            expansesIndex++;
+          }
         }
         if (resposne.entity.incomes.data[i] != 0) {
-          let detail = createDetails(
-            i + resposne.entity.expenses.data.length,
-            new Date(resposne.entity.incomes.history[incomesIndex].dataStamp),
-            resposne.entity.incomes.history[incomesIndex].category,
-            resposne.entity.incomes.history[incomesIndex].name,
-            resposne.entity.incomes.history[incomesIndex].amount
-          );
-          details.push(detail);
-          incomesIndex++;
+          while (
+            incomesIndex < resposne.entity.incomes.history.length &&
+            datesAreOnSameDay(date, new Date(resposne.entity.incomes.history[incomesIndex].dataStamp))
+          ) {
+            let detail = createDetails(
+              i + resposne.entity.expenses.data.length + childerkeyindex,
+              new Date(resposne.entity.incomes.history[incomesIndex].dataStamp),
+              resposne.entity.incomes.history[incomesIndex].category,
+              resposne.entity.incomes.history[incomesIndex].name,
+              resposne.entity.incomes.history[incomesIndex].amount
+            );
+            childerkeyindex++;
+            details.push(detail);
+            incomesIndex++;
+          }
         }
         rows.push(
           createData(
