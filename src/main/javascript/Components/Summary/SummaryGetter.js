@@ -5,6 +5,7 @@ import Grid from "@material-ui/core/Grid";
 import Paper from "@material-ui/core/Paper";
 import { makeStyles, createMuiTheme } from "@material-ui/core/styles";
 import HistoryTable from "../History/HistoryTable.js";
+import AuthService from "../../api/AuthService.js";
 
 const theme = createMuiTheme();
 
@@ -16,6 +17,13 @@ const useStyles = makeStyles({
     flexDirection: "column"
   }
 });
+
+let headCells = [
+  { id: "date", numeric: false, disablePadding: false, label: "Date" },
+  { id: "expenses", numeric: true, disablePadding: false, label: "Expenses" },
+  { id: "income", numeric: true, disablePadding: false, Label: "Income" },
+  { id: "balance", numeric: true, disablePadding: false, label: "Balance" }
+];
 
 export default function SummaryGetter(props) {
   const classes = useStyles();
@@ -55,7 +63,8 @@ export default function SummaryGetter(props) {
   useEffect(() => {
     clientJson({
       method: "GET",
-      path: "/testapi/summary/",
+      path: "/api/summary/",
+      headers: AuthService.getAuthHeader(),
       params: {
         from: fromDate,
         to: toDate,
@@ -93,10 +102,10 @@ export default function SummaryGetter(props) {
         if (resposne.entity.expenses.data[i] != 0) {
           let detail = createDetails(
             i,
-            new Date(resposne.entity.expenses.history[expansesIndex].Date),
-            resposne.entity.expenses.history[expansesIndex].Category,
-            resposne.entity.expenses.history[expansesIndex].Name,
-            resposne.entity.expenses.history[expansesIndex].Amount
+            new Date(resposne.entity.expenses.history[expansesIndex].dateStamp),
+            resposne.entity.expenses.history[expansesIndex].category,
+            resposne.entity.expenses.history[expansesIndex].name,
+            resposne.entity.expenses.history[expansesIndex].amount
           );
           details.push(detail);
           expansesIndex++;
@@ -104,10 +113,10 @@ export default function SummaryGetter(props) {
         if (resposne.entity.incomes.data[i] != 0) {
           let detail = createDetails(
             i + resposne.entity.expenses.data.length,
-            new Date(resposne.entity.incomes.history[incomesIndex].Date),
-            resposne.entity.incomes.history[incomesIndex].Category,
-            resposne.entity.incomes.history[incomesIndex].Name,
-            resposne.entity.incomes.history[incomesIndex].Amount
+            new Date(resposne.entity.incomes.history[incomesIndex].dataStamp),
+            resposne.entity.incomes.history[incomesIndex].category,
+            resposne.entity.incomes.history[incomesIndex].name,
+            resposne.entity.incomes.history[incomesIndex].amount
           );
           details.push(detail);
           incomesIndex++;

@@ -16,6 +16,7 @@ import SpentCircle from "../Charts/SpentCircle.js";
 import Paper from "@material-ui/core/Paper";
 import clientJson from "../../clientJson.js";
 import History from "../History/HistoryTableDetails.js";
+import AuthService from "../../api/AuthService.js";
 
 const theme = createMuiTheme();
 
@@ -108,13 +109,15 @@ export default function Summary() {
   useEffect(() => {
     clientJson({
       method: "GET",
-      path: "/testapi/summary/",
+      path: "/api/summary/",
+      headers: AuthService.getAuthHeader(),
       params: {
         from: fromDateForQuerry,
         to: toDateForQuerry,
         usrid: userID
       }
     }).then(response => {
+      console.log(response.entity);
       let sum = response.entity.expenses.data.reduce((a, b) => a + b, 0);
       let spent = (sum / response.entity.goal) * 100;
       setSpentCirceData({
