@@ -61,7 +61,7 @@ export default function Row(props) {
                   <TableRow>
                     <TableCell>Date</TableCell>
                     <TableCell>Name</TableCell>
-                    <TableCell align="right">Type</TableCell>
+                    <TableCell align="right">Category</TableCell>
                     <TableCell align="right">Amount</TableCell>
                   </TableRow>
                 </TableHead>

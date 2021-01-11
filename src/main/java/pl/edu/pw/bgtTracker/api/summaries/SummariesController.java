@@ -75,7 +75,7 @@ public class SummariesController {
         LocalDate toLocal = LocalDate.from(toDate.toInstant().atZone(ZoneId.of("GMT+1")));      
 
         int daysBetween = Math.toIntExact(ChronoUnit.DAYS.between(fromLocal, toLocal));
-
+        daysBetween++; //cur we include to day into the days 
 
 
         List<Expense> allexpenses = expenseRepository.findByUserOrderByDateAsc(user);
@@ -102,9 +102,8 @@ public class SummariesController {
         {
             if(e.getDate().getTime()>=from && e.getDate().getTime() <= to)
             {
-                // System.out.println(e.getName());
-                // System.out.println(e.getDate());
-                //System.out.println(e.getName());
+                System.out.println(e.getName());
+                System.out.println(e.getDate());
                 peridExpenses.add(e);
             }
         }
@@ -139,6 +138,7 @@ public class SummariesController {
         for(int i = 0; i < daysBetween; i++)
         {
             dateIteterator = c.getTime();
+            System.out.println(dateIteterator.toString());
             days[i] = c.getTime().getTime();
             if(expesesIndex < peridExpenses.size() && fmt.format(dateIteterator).equals(fmt.format(peridExpenses.get(expesesIndex).getDate())))
             {
@@ -232,7 +232,6 @@ public class SummariesController {
         incomesJ.put("history", incomeArray);
         data.put("incomes", incomesJ);
 
-        System.out.println(data.toJSONString());
         return data;
     }
 
