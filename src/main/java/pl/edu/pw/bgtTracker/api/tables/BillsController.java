@@ -41,15 +41,14 @@ public class BillsController {
         return newId2;
     }
 
-    @PostMapping("/api/editBill")
-    public void updateBillData(Authentication auth, @RequestParam(value = "id") String id, @RequestParam(value="name") String name, @RequestParam(value = "category_id") String category, @RequestParam(value="amount") String amount)
+    @PostMapping("/api/updateBill")
+    public void updateBillData(Authentication auth, @RequestParam(value = "id") String id, @RequestParam(value="name") String name, @RequestParam(value = "category_id") String category, @RequestParam(value="amount") String amount, @RequestParam(value="dueDate") String dueDate, @RequestParam(value="note") String note, @RequestParam(value = "bankNumber") String bankNumber)
     {
-        /* Odanajduje i zmienia zawartosc w bazie danych*/
-        long expenseId = Long.parseLong(id);
+        long billId = Long.parseLong(id);
         String newName = name;
         long newAmount = Long.parseLong(amount);
         long newCatId =  Long.parseLong(category);
-        billsService.editBill(expenseId, newName, newCatId, newAmount);
+        billsService.updateBill(billId, newName, newAmount, newCatId, dueDate, note, bankNumber);
 
     }
     @PostMapping("/api/deleteBill")
@@ -57,6 +56,13 @@ public class BillsController {
     {
         long expenseId = Long.parseLong(id);
         billsService.deleteBill(expenseId);
+    }
+
+    @PostMapping("/api/payBill")
+    public void payBill(Authentication auth, @RequestParam(value = "id") String id, @RequestParam(value = "date") String date)
+    {
+        long billId = Long.parseLong(id);
+        billsService.payBill(billId, date);
     }
 
     private long getUserId(Authentication auth)

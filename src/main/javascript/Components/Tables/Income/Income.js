@@ -24,8 +24,6 @@ export default function IncomePage() {
       //console.log("typ response Entitty", response.entity)
       setIncomes(response.entity.income);
     });
-    /* Testuje */
-    //postIncome(!newIncome)
   };
 
   const loadCategoryData = () => {

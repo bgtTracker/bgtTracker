@@ -39,12 +39,12 @@ public class ExpenseCategoriesController {
         return newId2;
     }
 
-    @PostMapping("/api/editExpenseCategory")
-    public void updateExpenseCategoryData(@RequestParam(value = "id") String id, @RequestParam(value="name") String name)
+    @PostMapping("/api/updateExpenseCategory")
+    public void updateExpenseCategoryData(@RequestParam(value = "id") String id, @RequestParam(value="name") String name, @RequestParam(value = "color") String color, @RequestParam(value = "note") String note)
     {
         long cat_id = Long.parseLong(id);
         String newName = name;
-        expenseCategoriesService.editExpenseCategory(cat_id, name);
+        expenseCategoriesService.updateExpenseCategory(cat_id, name, color, note);
     }
 
     @PostMapping("/api/deleteExpenseCategory")

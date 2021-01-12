@@ -64,21 +64,6 @@ public class IncomesService {
         return newIncome.getId();
     }
 
-    /*public long putIncome2(long usrId, String newName, long newAmount, long categoryId) {
-        Income newIncome = new Income();
-        AppUser u = userRepository.findById(usrId).get();
-        IncomeCategory cat = incomeCategoryRepository.findById(categoryId); // nie dalo sie get()
-        newIncome.setName(newName);
-        newIncome.setAmount(newAmount);
-        newIncome.setCategory(cat);
-        newIncome.setUser(u);
-        incomeRepository.save(newIncome);
-        System.out.println("test na konsoli");
-        System.out.println(newIncome.getId());
-
-        //return newIncome;
-    }*/
-
     public void editIncome(long incomeId, String newName, long newCatId, long newAmount) {
         Income findIncome = incomeRepository.findById(incomeId).get();
         IncomeCategory newCategory = incomeCategoryRepository.findById(newCatId);
@@ -95,5 +80,18 @@ public class IncomesService {
     }
 
 
+    public void updateIncome(long incomeId, long usrId, String newName, long newAmount, long newCatId, String date, String note) {
+        Income findIncome = incomeRepository.findById(incomeId).get();
+        IncomeCategory newCategory = incomeCategoryRepository.findById(newCatId);
+        String dateString = date.substring(5,7) + '/' + date.substring(8,10) + '/' + date.substring(0,4);
+        Date newDate = new Date(dateString);
 
+        findIncome.setName(newName);
+        findIncome.setAmount(newAmount);
+        findIncome.setCategory(newCategory);
+        findIncome.setDate(newDate);
+        findIncome.setNote(note);
+        incomeRepository.save(findIncome);
+
+    }
 }

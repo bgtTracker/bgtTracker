@@ -81,4 +81,18 @@ public class ExpensesService {
     public void deleteExpense(long expenseId) {
         expenseRepository.deleteById(expenseId);
     }
+
+    public void updateExpense(long expenseId, long usrId, String newName, long newAmount, long newCatId, String date, String note) {
+        Expense findExpense = expenseRepository.findById(expenseId).get();
+        ExpenseCategory newCategory = expenseCategoryRepository.findById(newCatId);
+        String dateString = date.substring(5,7) + '/' + date.substring(8,10) + '/' + date.substring(0,4);
+        Date newDate = new Date(dateString);
+
+        findExpense.setName(newName);
+        findExpense.setAmount(newAmount);
+        findExpense.setCategory(newCategory);
+        findExpense.setDate(newDate);
+        findExpense.setNote(note);
+        expenseRepository.save(findExpense);
+    }
 }

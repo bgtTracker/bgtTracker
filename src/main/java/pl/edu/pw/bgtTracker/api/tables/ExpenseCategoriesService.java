@@ -5,11 +5,8 @@ import net.minidev.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import pl.edu.pw.bgtTracker.db.entities.ExpenseCategory;
+import pl.edu.pw.bgtTracker.db.entities.*;
 import pl.edu.pw.bgtTracker.db.repos.*;
-import pl.edu.pw.bgtTracker.db.entities.Income;
-import pl.edu.pw.bgtTracker.db.entities.IncomeCategory;
-import pl.edu.pw.bgtTracker.db.entities.AppUser;
 
 import java.util.List;
 
@@ -58,5 +55,13 @@ public class ExpenseCategoriesService {
 
     public void deleteExpenseCategory(long cat_id) {
         expenseCategoryRepository.deleteById(cat_id);
+    }
+
+    public void updateExpenseCategory(long cat_id, String name, String color, String note) {
+        ExpenseCategory findCategory = expenseCategoryRepository.findById(cat_id);
+        findCategory.setName(name);
+        findCategory.setColor(color);
+        findCategory.setNote(note);
+        expenseCategoryRepository.save(findCategory);
     }
 }

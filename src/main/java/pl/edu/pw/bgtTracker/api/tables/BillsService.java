@@ -21,6 +21,8 @@ public class BillsService {
     private UserRepository userRepository;
     @Autowired
     private ExpenseCategoryRepository expenseCategoryRepository;
+    @Autowired
+    private ExpenseRepository expenseRepository;
 
     public JSONObject getBills(long userId) {
         AppUser user = userRepository.findById(userId).get();
@@ -64,5 +66,48 @@ public class BillsService {
 
     public void deleteBill(long billId) {
         billRepository.deleteById(billId);
+    }
+
+    public void updateBill(long billId, String newName, long newAmount, long newCatId, String dueDate, String note, String bankNumber) {
+        Bill findBill = billRepository.findById(billId).get();
+        ExpenseCategory newCategory = expenseCategoryRepository.findById(newCatId);
+
+        String dateString = dueDate.substring(5,7) + '/' + dueDate.substring(8,10) + '/' + dueDate.substring(0,4);
+        Date newDate = new Date(dateString);
+
+        findBill.setName(newName);
+        findBill.setAmount(newAmount);
+        findBill.setCategory(newCategory);
+        findBill.setDueDate(newDate);
+        findBill.setNote(note);
+        findBill.setBankNumber(bankNumber);
+        billRepository.save(findBill);
+    }
+
+    public void payBill(long billId, String date) {
+        Bill findBill = billRepository.findById(billId).get();
+
+        String dateString = date.substring(5,7) + '/' + date.substring(8,10) + '/' + date.substring(0,4);
+        Date newDate = new Date(dateString);
+
+        findBill.setPaymentDate(newDate);
+        findBill.setPaid(true);
+        billRepository.save(findBill);
+
+        String name = findBill.getName();
+        long amount = findBill.getAmount();
+        ExpenseCategory findCat = findBill.getCategory();
+        AppUser findUser = findBill.getUser();
+        String note = findBill.getNote();
+
+        Expense newExpense = new Expense();
+        newExpense.setName(name);
+        newExpense.setAmount(amount);
+        newExpense.setCategory(findCat);
+        newExpense.setDate(newDate);
+        newExpense.setUser(findUser);
+        newExpense.setNote(note);
+        expenseRepository.save(newExpense);
+
     }
 }

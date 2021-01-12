@@ -69,4 +69,12 @@ public class IncomeCategoriesService {
     public void deleteIncomeCategory(long cat_id) {
         incomeCategoryRepository.deleteById(cat_id);
     }
+
+    public void updateIncomeCategory(long cat_id, String name, String color, String note) {
+        IncomeCategory findCategory = incomeCategoryRepository.findById(cat_id);
+        findCategory.setName(name);
+        findCategory.setColor(color);
+        findCategory.setNote(note);
+        incomeCategoryRepository.save(findCategory);
+    }
 }
