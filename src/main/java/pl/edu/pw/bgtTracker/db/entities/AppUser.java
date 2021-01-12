@@ -20,6 +20,7 @@ public class AppUser {
     private String password;
     private String firstName;
     private String lastName;
+    private long balance;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     @JsonIgnore
@@ -57,12 +58,13 @@ public class AppUser {
     @JsonIgnore
     private List<IncomeCategory> incomeCategories = new ArrayList<>();
 
-    // @OneToOne(mappedBy = "user")
-    // private Limit limit;
-
-    public String toString() {
-        return id + " " + firstName + " " + lastName;
-    }
+    // @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    // @JsonIgnore
+    // private List<Limit> limits = new ArrayList<>();
+    
+    // public String toString() {
+    //     return id + " " + firstName + " " + lastName;
+    // }
 
     public AppUser(String email, String password, String firstName, String lastName) {
         this.email = email;

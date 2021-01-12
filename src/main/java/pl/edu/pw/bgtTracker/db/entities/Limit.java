@@ -13,11 +13,11 @@
 // public class Limit {
 //     private @Id @GeneratedValue long id;
 //     private long amount;
-
-//     // @OneToOne
-//     // @JoinColumn(name = "user_id", referencedColumnName = "id")
-//     // @JsonIgnore
-//     // private AppUser user;
+    
+//     @ManyToOne
+//     @JoinColumn(name = "user_id", referencedColumnName = "id")
+//     @JsonIgnore
+//     private AppUser user;
 
 //     public JSONObject toJSON() {
 //         JSONObject json = new JSONObject();
