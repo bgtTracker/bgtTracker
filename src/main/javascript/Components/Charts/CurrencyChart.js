@@ -37,32 +37,8 @@ export default function CurrencyChart(props) {
     },
     xaxis: {
       type: "datetime",
+      name: "Date",
       categories: props.lables
-    },
-    tooltip: {
-      y: [
-        {
-          title: {
-            formatter: function (val) {
-              return val + " (mins)";
-            }
-          }
-        },
-        {
-          title: {
-            formatter: function (val) {
-              return val + " per session";
-            }
-          }
-        },
-        {
-          title: {
-            formatter: function (val) {
-              return val;
-            }
-          }
-        }
-      ]
     },
     grid: {
       borderColor: "#f1f1f1"

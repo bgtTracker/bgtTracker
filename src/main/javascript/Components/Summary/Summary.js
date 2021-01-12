@@ -119,7 +119,7 @@ export default function Summary() {
     }).then(response => {
       console.log(response.entity);
       let sum = response.entity.expenses.data.reduce((a, b) => a + b, 0);
-      let spent = (sum / response.entity.goal) * 100;
+      let spent = (sum / response.entity.limit) * 100;
       setSpentCirceData({
         labels: ["Spent This Month"],
         data: [spent]

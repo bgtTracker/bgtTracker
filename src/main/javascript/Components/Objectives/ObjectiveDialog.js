@@ -98,7 +98,7 @@ export default function ObjectiveDialog(props) {
     if (!amountError && !priError && !descriptionError && !nameError) {
       props.handleSave({
         name: name,
-        amount: Number.parseInt(amount),
+        amount: Math.floor(Number.parseFloat(amount) * 100),
         description: description,
         date: date.getTime(),
         category: Number.parseInt(category),

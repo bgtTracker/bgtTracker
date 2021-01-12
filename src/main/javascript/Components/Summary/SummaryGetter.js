@@ -71,6 +71,7 @@ export default function SummaryGetter(props) {
         usrid: props.userID
       }
     }).then(response => {
+      changeCategoryDataTofloat(response);
       let rows = createRows(response);
       setRows(rows);
       setState(response.entity);
@@ -99,6 +100,14 @@ export default function SummaryGetter(props) {
       first.getDate() === second.getDate();
     return bolean;
   }
+  function changeCategoryDataTofloat(respone) {
+    for (let i = 0; i < respone.entity.CategoryData.data.length; i++) {
+      respone.entity.CategoryData.data[i] = respone.entity.CategoryData.data[i] / 100;
+    }
+    for (let i = 0; i < respone.entity.CategoryData.data.length; i++) {
+      respone.entity.IncomesCategoryData.data[i] = respone.entity.IncomesCategoryData.data[i] / 100;
+    }
+  }
 
   function createRows(resposne) {
     let rows = [];
@@ -106,6 +115,10 @@ export default function SummaryGetter(props) {
     let expansesIndex = 0;
     let incomesIndex = 0;
     for (let i = 0; i < resposne.entity.expenses.data.length; i++) {
+      //cuz our we store data in long - (float) data * 100
+      resposne.entity.expenses.data[i] = resposne.entity.expenses.data[i] / 100;
+      resposne.entity.incomes.data[i] = resposne.entity.incomes.data[i] / 100;
+      resposne.entity.BalanceData.data[i] = resposne.entity.BalanceData.data[i] / 100;
       if (resposne.entity.expenses.data[i] != 0 || resposne.entity.incomes.data[i] != 0) {
         let date = new Date(resposne.entity.expenses.labels[i]);
         let details = [];
@@ -119,7 +132,7 @@ export default function SummaryGetter(props) {
               new Date(resposne.entity.expenses.history[expansesIndex].dateStamp),
               resposne.entity.expenses.history[expansesIndex].category,
               resposne.entity.expenses.history[expansesIndex].name,
-              resposne.entity.expenses.history[expansesIndex].amount
+              resposne.entity.expenses.history[expansesIndex].amount / 100
             );
             childerkeyindex++;
             details.push(detail);
@@ -136,7 +149,7 @@ export default function SummaryGetter(props) {
               new Date(resposne.entity.incomes.history[incomesIndex].dataStamp),
               resposne.entity.incomes.history[incomesIndex].category,
               resposne.entity.incomes.history[incomesIndex].name,
-              resposne.entity.incomes.history[incomesIndex].amount
+              resposne.entity.incomes.history[incomesIndex].amount / 100
             );
             childerkeyindex++;
             details.push(detail);

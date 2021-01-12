@@ -24,19 +24,12 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-const testBalanse = [-1000, 1000, 1500];
-const testDay = [];
-
 let headCells = [
   { id: "name", label: "Name", numeric: false, disablePadding: false },
   { id: "date", label: "Date", numeric: true, disablePadding: false },
   { id: "category", label: "Category", numeric: true, disablePadding: false },
   { id: "amount", label: "Amount", numeric: true, disablePadding: false }
 ];
-
-//#############################3
-const limit = 10000;
-///###########################
 
 export default function Dashboard() {
   const classes = useStyles();
@@ -50,6 +43,7 @@ export default function Dashboard() {
   const [balanceData, setBalanceData] = React.useState();
   const [historyData, setHistoryData] = React.useState();
   const [currencyData, setCurrencyData] = React.useState();
+  const [limit, setLimit] = React.useState();
 
   React.useEffect(() => {
     fetch("/api/getExpenses", {
@@ -58,6 +52,7 @@ export default function Dashboard() {
     })
       .then(response => response.json())
       .then(data => {
+        console.log("exp");
         setExpenses(data);
       })
       .catch(error => {
@@ -69,6 +64,7 @@ export default function Dashboard() {
     })
       .then(response => response.json())
       .then(data => {
+        console.log("incomes");
         setInomces(data);
       })
       .catch(error => {
@@ -80,7 +76,20 @@ export default function Dashboard() {
     })
       .then(response => response.json())
       .then(data => {
+        console.log("currency");
         setCurrencyData(data);
+      })
+      .catch(error => {
+        console.error(error);
+      });
+    fetch("/api/limit", {
+      method: "GET",
+      headers: AuthService.getAuthHeader()
+    })
+      .then(response => response.json())
+      .then(data => {
+        console.log("limit");
+        setLimit(data);
       })
       .catch(error => {
         console.error(error);
@@ -92,7 +101,8 @@ export default function Dashboard() {
     incomes !== undefined &&
     spentData === undefined &&
     balanceData === undefined &&
-    historyData === undefined
+    historyData === undefined &&
+    limit !== undefined
   ) {
     console.log(incomes);
     console.log(expenses);
@@ -117,7 +127,7 @@ export default function Dashboard() {
     for (let i = firstDay; i <= lastDay; i.setDate(i.getDate() + 1)) {
       days.push(new Date(i));
     }
-
+    console.log("first");
     for (let day in days) {
       dailyExpenses.push(
         monthlyExpensesData.filter(elem => elem.date.getDate() == day).reduce((total, elem) => total + elem.amount, 0)
@@ -126,17 +136,20 @@ export default function Dashboard() {
         monthlyIncomesData.filter(elem => elem.date.getDate() == day).reduce((total, elem) => total + elem.amount, 0)
       );
       balance.push(
-        monthlyIncomesData.filter(elem => elem.date.getDate() == day).reduce((total, elem) => total + elem.amount, 0) -
-          monthlyExpensesData.filter(elem => elem.date.getDate() == day).reduce((total, elem) => total + elem.amount, 0)
+        (monthlyIncomesData.filter(elem => elem.date.getDate() == day).reduce((total, elem) => total + elem.amount, 0) -
+          monthlyExpensesData
+            .filter(elem => elem.date.getDate() == day)
+            .reduce((total, elem) => total + elem.amount, 0)) /
+          100
       );
     }
-
+    console.log("half");
     setHistoryData(
       monthlyExpensesData.map(elem => ({
         id: elem.id,
         name: elem.name,
         date: elem.date,
-        amount: elem.amount,
+        amount: elem.amount / 100,
         category: elem.category
       }))
     );
@@ -157,7 +170,7 @@ export default function Dashboard() {
       data: balance
     });
 
-    setSpentMoney(spentThisMonth);
+    setSpentMoney(spentThisMonth / 100);
     setSpentData({
       labels: ["Spent this month"],
       data: [(spentThisMonth / limit) * 100]

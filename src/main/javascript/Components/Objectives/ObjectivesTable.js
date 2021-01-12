@@ -25,8 +25,6 @@ import ObjectiveDialog from "./ObjectiveDialog.js";
 import AuthService from "../../api/AuthService.js";
 import Grid from "@material-ui/core/Grid";
 
-const money = 10000;
-
 const theme = createMuiTheme();
 
 function descendingComparator(a, b, orderBy) {
@@ -354,7 +352,6 @@ export default function ObjectivesTable(props) {
                     handleSave={editObjective}
                     handleDelete={props.deleteObjective}
                     handleConfim={props.confimObjective}
-                    money={money}
                   />
                 ))}
               {emptyRows > 0 && (

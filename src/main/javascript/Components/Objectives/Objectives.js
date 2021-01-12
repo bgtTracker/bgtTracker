@@ -24,11 +24,13 @@ export default function Objectives() {
     })
       .then(respone => respone.json())
       .then(respone => {
+        console.log(respone);
         if (respone.objectives === undefined) {
           setRows([]);
         } else {
           for (let o of respone.objectives) {
             o["date"] = new Date(o["date"]);
+            o["amount"] = o["amount"] / 100;
           }
           setRows(respone.objectives);
         }
@@ -47,7 +49,7 @@ export default function Objectives() {
     })
       .then(respone => {
         console.log(respone);
-        reloadNotifications();
+        reloadObjectives();
       })
       .catch(error => {
         console.log(error);
@@ -64,7 +66,7 @@ export default function Objectives() {
     })
       .then(respone => {
         console.log(respone);
-        reloadNotifications();
+        reloadObjectives();
       })
       .catch(error => {
         console.log(error);
@@ -83,7 +85,7 @@ export default function Objectives() {
     })
       .then(response => {
         console.log(response);
-        reloadNotifications();
+        reloadObjectives();
       })
       .catch(e => {
         ErrorCodeHandler(error.status.code);
@@ -101,7 +103,7 @@ export default function Objectives() {
     })
       .then(respone => {
         console.log(respone);
-        reloadNotifications();
+        reloadObjectives();
       })
       .catch(error => {
         console.log(error);
@@ -120,7 +122,7 @@ export default function Objectives() {
     })
       .then(response => {
         console.log(response);
-        reloadNotifications();
+        reloadObjectives();
       })
       .catch(e => {
         console.log(e);
@@ -140,7 +142,7 @@ export default function Objectives() {
     })
       .then(respone => {
         console.log(respone);
-        reloadNotifications();
+        reloadObjectives();
       })
       .catch(error => {
         console.log(error);
@@ -148,7 +150,7 @@ export default function Objectives() {
       });
   };
 
-  const reloadNotifications = () => {
+  const reloadObjectives = () => {
     setRealod(!reload);
   };
 
@@ -165,7 +167,7 @@ export default function Objectives() {
           editObjective={editObjective}
           deleteObjective={deleteObjective}
           deleteObjectives={deleteObjectives}
-          reloadFunc={reloadNotifications}
+          reloadFunc={reloadObjectives}
           confimObjective={confimObjective}
           confimObjectives={confimObjectives}
         />

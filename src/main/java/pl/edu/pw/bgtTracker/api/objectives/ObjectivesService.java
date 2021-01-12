@@ -85,7 +85,7 @@ public class ObjectivesService {
         {
             balance -= e.getAmount();
         }
-
+        
         if(balance < 0)
             balance = 0;
         JSONArray arr = new JSONArray();

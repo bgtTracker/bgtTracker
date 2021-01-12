@@ -62,6 +62,7 @@ public class SummariesController {
 
     public JSONObject getSummaryData(AppUser user, Long from, Long to) {
         int goal = 30000;
+        
         Date fromDate = new Date(from);
         Date toDate = new Date(to);
         System.out.println(fromDate.toString());
@@ -201,7 +202,7 @@ public class SummariesController {
 
         JSONObject data = new JSONObject();
 
-        data.put("goal", goal);
+        data.put("limit", goal);
 
         JSONObject balance = new JSONObject();
         balance.put("labels", days);
