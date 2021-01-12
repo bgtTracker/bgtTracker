@@ -10,6 +10,7 @@ import ErrorCodeHandling from "../ErrorCodeHandler";
 import { makeStyles } from "@material-ui/core/styles";
 import Row from "./Row.js";
 import clsx from "clsx";
+import CurrencyChart from "../Charts/CurrencyChart.js";
 
 const useStyles = makeStyles(theme => ({
   paper: {
@@ -48,6 +49,7 @@ export default function Dashboard() {
   const [spentData, setSpentData] = React.useState();
   const [balanceData, setBalanceData] = React.useState();
   const [historyData, setHistoryData] = React.useState();
+  const [currencyData, setCurrencyData] = React.useState();
 
   React.useEffect(() => {
     fetch("/api/getExpenses", {
@@ -68,6 +70,17 @@ export default function Dashboard() {
       .then(response => response.json())
       .then(data => {
         setInomces(data);
+      })
+      .catch(error => {
+        console.error(error);
+      });
+    fetch("/api/currency", {
+      method: "GET",
+      headers: AuthService.getAuthHeader()
+    })
+      .then(response => response.json())
+      .then(data => {
+        setCurrencyData(data);
       })
       .catch(error => {
         console.error(error);
@@ -195,6 +208,15 @@ export default function Dashboard() {
               <Skeleton variant="rect" />
             </Paper>
           )}
+        </Grid>
+        <Grid item xs={12}>
+          <Paper className={classes.paper}>
+            {currencyData ? (
+              <CurrencyChart series={currencyData.series} lables={currencyData.days} />
+            ) : (
+              <Skeleton variant="rect" />
+            )}
+          </Paper>
         </Grid>
       </Grid>
     </>

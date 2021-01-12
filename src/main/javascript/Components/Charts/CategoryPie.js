@@ -27,6 +27,7 @@ export default class CategoryPie extends Component {
           text: this.props.title
         },
         labels: this.props.labels,
+        colors: this.props.colors,
         chart: {
           size: 350,
           type: "donut"
@@ -41,9 +42,10 @@ export default class CategoryPie extends Component {
           expandOnClick: true
         },
         dataLabels: {
-          enabled: false
+          enabled: true
         },
         fill: {
+          colors: this.props.colors,
           type: "gradient"
         },
         responsive: [

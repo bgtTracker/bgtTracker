@@ -119,6 +119,7 @@ function Charts(props) {
                     <CategoryPie
                       labels={props.categoryData.labels}
                       data={props.categoryData.data}
+                      colors={props.categoryData.colors}
                       title={"Spendings per category"}
                     />
                   </TabPanel>
@@ -126,6 +127,7 @@ function Charts(props) {
                     <CategoryPie
                       labels={props.IncomesCategoryData.labels}
                       data={props.IncomesCategoryData.data}
+                      colors={props.IncomesCategoryData.colors}
                       title={"Incomes per category"}
                     />
                   </TabPanel>
