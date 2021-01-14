@@ -17,6 +17,7 @@ import Paper from "@material-ui/core/Paper";
 import clientJson from "../../clientJson.js";
 import History from "../History/HistoryTableDetails.js";
 import AuthService from "../../api/AuthService.js";
+import { Skeleton } from "@material-ui/lab";
 
 const theme = createMuiTheme();
 
@@ -165,7 +166,9 @@ export default function Summary() {
         <Grid item xs={12}>
           <Paper className={spentPercentage}>
             {SpentCirceData === undefined ? (
-              <h1>Loading...</h1>
+              <div style={{ alignSelf: "center" }}>
+                <Skeleton variant="circle" width={250} height={250} />
+              </div>
             ) : (
               <SpentCircle labels={SpentCirceData.labels} data={SpentCirceData.data} />
             )}

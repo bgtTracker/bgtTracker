@@ -70,7 +70,7 @@ export default function Dashboard() {
       .catch(error => {
         console.error(error);
       });
-    fetch("/api/currency", {
+    fetch("/api/currency/rates", {
       method: "GET",
       headers: AuthService.getAuthHeader()
     })

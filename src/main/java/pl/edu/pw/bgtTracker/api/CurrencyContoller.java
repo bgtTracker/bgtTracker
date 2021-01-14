@@ -6,9 +6,14 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+import com.google.api.client.json.Json;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
@@ -25,12 +30,15 @@ import pl.edu.pw.bgtTracker.db.repos.UserRepository;
 public class CurrencyContoller {
 
   @Autowired private UserRepository userRepository;
-  
-  @GetMapping
+  private String[] allCurrencies = {"CAD", "HKD", "ISK", "PHP", "DKK", "HUF", "CZK", "AUD", "RON", "SEK", "IDR", "INR", "BRL", "RUB", "HRK", "JPY", "THB", "CHF", "SGD", "PLN", "BGN", "TRY", "CNY", "NOK", "NZD", "ZAR", "USD", "MXN", "ILS", "GBP", "KRW", "MYR"};
+  private List<String> userCurrency = List.of("CAD", "HKD", "ISK", "PHP");
+  private List<String> leftCurrency = List.of("DKK", "HUF", "CZK", "AUD", "RON", "SEK", "IDR", "INR", "BRL", "RUB", "HRK", "JPY", "THB", "CHF", "SGD", "PLN", "BGN", "TRY", "CNY", "NOK", "NZD", "ZAR", "USD", "MXN", "ILS", "GBP", "KRW", "MYR");
+
+  @GetMapping("/rates")
   public JSONObject getCurrecnyRates(Authentication auth)
   {
       AppUser user = userRepository.findByEmail(auth.getName()); 
-      List<String> userCurrency = List.of("PLN", "PHP", "USD", "GBP");
+      // List<String> userCurrency = List.of("PLN", "PHP", "USD", "GBP");
       SimpleDateFormat fmt = new SimpleDateFormat("yyyy-MM-dd");
 
       //seting dates for querry
@@ -113,6 +121,55 @@ public class CurrencyContoller {
     }
 
     return body;
+  }
+
+  @GetMapping("/all")
+  private String[] getAllCurrency()
+  {
+    return allCurrencies;
+  }
+
+  @GetMapping("/user")
+  private List<String> getUserCurrencyContoler(Authentication auth)
+  {
+    AppUser user = userRepository.findByEmail(auth.getName());
+    return getUserCurrency(user);
+  }
+
+  private List<String> getUserCurrency(AppUser user)
+  {
+    return userCurrency;
+  }
+
+  @GetMapping("/lefttoadd")
+  private List<String> getLeftCurrencyContoler(Authentication auth)
+  {
+    AppUser user = userRepository.findByEmail(auth.getName());
+    return getLeftCurrency(user);
+  }
+
+  private List<String> getLeftCurrency(AppUser user)
+  {
+    return leftCurrency;
+  }
+
+  @GetMapping(value = "/userSummary", produces = MediaType.APPLICATION_JSON_VALUE)
+  private JSONObject getUserSummary(Authentication auth)
+  {
+    AppUser user = userRepository.findByEmail(auth.getName());
+    JSONObject data = new JSONObject();
+    data.put("user", getUserCurrency(user));
+    data.put("left", getLeftCurrency(user));
+    return data;
+  }
+
+  @PostMapping("/user")
+  private void setCurrencies(Authentication auth, @RequestBody String newCurrencies)
+  {
+    System.out.println(newCurrencies);
+    List<String> toAdd = new ArrayList<>();
+    List<String> toDelete = new ArrayList<>();
+    
   }
   
 }

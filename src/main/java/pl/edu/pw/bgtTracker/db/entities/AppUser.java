@@ -21,7 +21,8 @@ public class AppUser {
     private String firstName;
     private String lastName;
     private long balance;
-    //private long limit;
+    @Column(columnDefinition = "int8 default 250000")
+    private long userLimit;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     @JsonIgnore
@@ -59,6 +60,10 @@ public class AppUser {
     @JsonIgnore
     private List<IncomeCategory> incomeCategories = new ArrayList<>();
 
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    @JsonIgnore
+    private List<Currency> userCurrencies = new ArrayList<>();
+    
     // public String toString() {
     //     return id + " " + firstName + " " + lastName;
     // }

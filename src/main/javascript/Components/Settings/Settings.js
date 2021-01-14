@@ -13,6 +13,7 @@ import TextField from "@material-ui/core/TextField";
 import { set } from "date-fns";
 import AuthService from "../../api/AuthService.js";
 import ErrorCodeHandler from "../ErrorCodeHandler.js";
+import CurrencySelect from "./CurrencySelect.js";
 
 const theme = createMuiTheme();
 
@@ -274,6 +275,11 @@ export default function Settings() {
                   <Grid item>
                     <Button onClick={handleGoalChange}>Change Goal</Button>
                   </Grid>
+                </Grid>
+              </Grid>
+              <Grid item xs={12}>
+                <Grid container spacing={4} direction="row" alignItems="center" justify="center">
+                  <CurrencySelect />
                 </Grid>
               </Grid>
             </Grid>

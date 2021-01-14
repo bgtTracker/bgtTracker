@@ -6,6 +6,7 @@ import Paper from "@material-ui/core/Paper";
 import { makeStyles, createMuiTheme } from "@material-ui/core/styles";
 import HistoryTable from "../History/HistoryTable.js";
 import AuthService from "../../api/AuthService.js";
+import { Skeleton } from "@material-ui/lab";
 
 const theme = createMuiTheme();
 
@@ -176,7 +177,7 @@ export default function SummaryGetter(props) {
       <Grid container spacing={4}>
         <Grid item xs={12}>
           {state === undefined ? (
-            <h1>Loading...</h1>
+            <Skeleton variant="rect" height={300} animation="wave" />
           ) : (
             <Charts
               IncomesCategoryData={state.IncomesCategoryData}
@@ -188,7 +189,11 @@ export default function SummaryGetter(props) {
           )}
         </Grid>
         <Grid item xs={12}>
-          {rows === undefined ? <h1>Loading...</h1> : <HistoryTable details={true} rows={rows} />}
+          {rows === undefined ? (
+            <Skeleton variant="rect" height={200} animation="wave" />
+          ) : (
+            <HistoryTable details={true} rows={rows} />
+          )}
         </Grid>
       </Grid>
     </div>
