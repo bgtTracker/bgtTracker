@@ -2,11 +2,11 @@ package pl.edu.pw.bgtTracker.api;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
-import com.google.api.client.json.Json;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -23,6 +23,8 @@ import net.minidev.json.JSONObject;
 import net.minidev.json.parser.JSONParser;
 import net.minidev.json.parser.ParseException;
 import pl.edu.pw.bgtTracker.db.entities.AppUser;
+import pl.edu.pw.bgtTracker.db.entities.Currency;
+import pl.edu.pw.bgtTracker.db.repos.CurrencyRepository;
 import pl.edu.pw.bgtTracker.db.repos.UserRepository;
 
 @RestController
@@ -30,15 +32,16 @@ import pl.edu.pw.bgtTracker.db.repos.UserRepository;
 public class CurrencyContoller {
 
   @Autowired private UserRepository userRepository;
+  @Autowired private CurrencyRepository currencyRepository;
+
   private String[] allCurrencies = {"CAD", "HKD", "ISK", "PHP", "DKK", "HUF", "CZK", "AUD", "RON", "SEK", "IDR", "INR", "BRL", "RUB", "HRK", "JPY", "THB", "CHF", "SGD", "PLN", "BGN", "TRY", "CNY", "NOK", "NZD", "ZAR", "USD", "MXN", "ILS", "GBP", "KRW", "MYR"};
-  private List<String> userCurrency = List.of("CAD", "HKD", "ISK", "PHP");
-  private List<String> leftCurrency = List.of("DKK", "HUF", "CZK", "AUD", "RON", "SEK", "IDR", "INR", "BRL", "RUB", "HRK", "JPY", "THB", "CHF", "SGD", "PLN", "BGN", "TRY", "CNY", "NOK", "NZD", "ZAR", "USD", "MXN", "ILS", "GBP", "KRW", "MYR");
+  
 
   @GetMapping("/rates")
   public JSONObject getCurrecnyRates(Authentication auth)
   {
       AppUser user = userRepository.findByEmail(auth.getName()); 
-      // List<String> userCurrency = List.of("PLN", "PHP", "USD", "GBP");
+      List<String> userCurrency = getUserCurrenctStrign(user);
       SimpleDateFormat fmt = new SimpleDateFormat("yyyy-MM-dd");
 
       //seting dates for querry
@@ -59,7 +62,7 @@ public class CurrencyContoller {
       String result = restTemplate.getForObject(uri, String.class);
 
       JSONObject resultObject = (JSONObject) paresStringToJson(result).get("rates"); 
-      System.out.println(resultObject.toJSONString());
+
       JSONObject data = new JSONObject();
       
       List<Long> days = new ArrayList<>();
@@ -133,12 +136,23 @@ public class CurrencyContoller {
   private List<String> getUserCurrencyContoler(Authentication auth)
   {
     AppUser user = userRepository.findByEmail(auth.getName());
-    return getUserCurrency(user);
+    return getUserCurrenctStrign(user);
   }
 
-  private List<String> getUserCurrency(AppUser user)
+  private List<Currency> getUserCurrency(AppUser user)
   {
-    return userCurrency;
+    return user.getUserCurrencies();
+  }
+
+  private List<String> getUserCurrenctStrign(AppUser user)
+  {
+    List<Currency> userCurrencies = user.getUserCurrencies();
+    List<String> toReturn = new ArrayList<>();
+    for(var c : userCurrencies)
+    {
+      toReturn.add(c.getName());
+    }
+    return toReturn;
   }
 
   @GetMapping("/lefttoadd")
@@ -150,7 +164,17 @@ public class CurrencyContoller {
 
   private List<String> getLeftCurrency(AppUser user)
   {
-    return leftCurrency;
+    List<String> currentUserCurrencies = getUserCurrenctStrign(user);
+    List<String> leftCurrencies = new ArrayList<>();
+    for(var c: allCurrencies)
+    {
+      if(!currentUserCurrencies.contains(c))
+      {
+        leftCurrencies.add(c);
+      }
+    }
+
+    return leftCurrencies;
   }
 
   @GetMapping(value = "/userSummary", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -158,17 +182,53 @@ public class CurrencyContoller {
   {
     AppUser user = userRepository.findByEmail(auth.getName());
     JSONObject data = new JSONObject();
-    data.put("user", getUserCurrency(user));
+    data.put("user", getUserCurrenctStrign(user));
     data.put("left", getLeftCurrency(user));
     return data;
   }
 
   @PostMapping("/user")
-  private void setCurrencies(Authentication auth, @RequestBody String newCurrencies)
+  private void setCurrencies(Authentication auth, @RequestBody String newCurrenciesBody)
   {
-    System.out.println(newCurrencies);
-    List<String> toAdd = new ArrayList<>();
-    List<String> toDelete = new ArrayList<>();
+    AppUser user = userRepository.findByEmail(auth.getName());
+   
+    newCurrenciesBody = newCurrenciesBody.substring(1, newCurrenciesBody.length()-1);
+
+    List<String> newCurrenciesWithQuotes = new ArrayList<>(Arrays.asList(newCurrenciesBody.split("\\s*,\\s*")));
+    List<String> newCurrencies = new ArrayList<>();
+    for(var nc : newCurrenciesWithQuotes)
+    {
+      newCurrencies.add(nc.substring(1, nc.length()-1));
+    }
+    
+    List<Currency> currentUserCurrencies = user.getUserCurrencies();
+    List<Currency> toDelete = new ArrayList<>();
+    
+    for(var c: currentUserCurrencies)
+    {
+      if(!newCurrencies.contains(c.getName()))
+      {
+        toDelete.add(c);
+      }
+      else
+      {
+        newCurrencies.remove(c.getName());
+      }
+    }
+
+    for(var nc: newCurrencies)
+    {
+      Currency newCurrecny = new Currency();
+      newCurrecny.setName(nc);
+      newCurrecny.setUser(user);
+      currencyRepository.save(newCurrecny);
+    }
+
+    for(var dc: toDelete)
+    {
+      currencyRepository.delete(dc);
+    }
+
     
   }
   

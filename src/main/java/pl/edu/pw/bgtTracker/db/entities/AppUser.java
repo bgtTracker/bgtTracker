@@ -22,7 +22,7 @@ public class AppUser {
     private String lastName;
     private long balance;
     @Column(columnDefinition = "int8 default 250000")
-    private long userLimit;
+    private long userLimit = 250000;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     @JsonIgnore
