@@ -44,7 +44,6 @@ import Bill from "./Tables/Bill/Bill";
 import firebase from "firebase/app";
 import "firebase/messaging";
 import clientJson from "../clientJson.js";
-import NotificationSystem from "react-notification-system";
 import NotificationMenu from "./Notifications/NotificationMenu.js";
 import { Skeleton } from "@material-ui/lab";
 import AuthService from "../api/AuthService";
@@ -52,6 +51,7 @@ import Objectives from "./Objectives/Objectives.js";
 import ErrorRedirect from "./ErrorRedirect404.js";
 import ErrorCodeHandling from "./ErrorCodeHandler.js";
 import { useSnackbar } from "notistack";
+import Comments from "./Comments/Comments.js";
 
 const drawerWidth = 240;
 
@@ -335,8 +335,7 @@ export default function MainPage() {
         try {
           addNotification(event.data.firebaseMessaging.payload.data);
         } catch (e) {
-          //no idea why it works so i don't bother rn
-          //of course i'm sorry for this horrible thing but liblary has forced my hand
+          console.error(e);
         }
       }
     });
@@ -438,6 +437,7 @@ export default function MainPage() {
             <Route exact path={`${path}/expenses`} component={Expense} />
             <Route exact path={`${path}/bills`} component={Bill} />
             <Route exact path={`${path}/objectives`} component={Objectives} />
+            <Route exact path={`${path}/comments`} component={Comments} />
             <Route path="*" component={ErrorRedirect} />
           </Switch>
         </Container>

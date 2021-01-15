@@ -97,6 +97,7 @@ export default function ObjectiveDialog(props) {
   const handleSave = () => {
     if (!amountError && !priError && !descriptionError && !nameError) {
       props.handleSave({
+        id: props.row.id,
         name: name,
         amount: Math.floor(Number.parseFloat(amount) * 100),
         description: description,

@@ -52,16 +52,13 @@ public class SummariesController {
             "October", "November", "December" };
 
     @GetMapping(value = { "/" }, produces = MediaType.APPLICATION_JSON_VALUE)
-    public String getUserExpanse(@RequestParam(value = "from", defaultValue = "2017-10-01") Long from,
-            @RequestParam(value = "to", defaultValue = ("11111111111111")) Long to, Authentication auth) {
-        System.out.println("from: " + from);
-        System.out.println("to: " + to);
+    public String getUserExpanse(@RequestParam(value = "from") Long from,
+            @RequestParam(value = "to") Long to, Authentication auth) {
         AppUser user = userRepository.findByEmail(auth.getName());
         return getSummaryData(user, from, to).toString();
     }
 
     public JSONObject getSummaryData(AppUser user, Long from, Long to) {
-        int goal = 30000;
         
         Date fromDate = new Date(from);
         Date toDate = new Date(to);
@@ -202,7 +199,7 @@ public class SummariesController {
 
         JSONObject data = new JSONObject();
 
-        data.put("limit", goal);
+        data.put("limit", user.getUserLimit());
 
         JSONObject balance = new JSONObject();
         balance.put("labels", days);

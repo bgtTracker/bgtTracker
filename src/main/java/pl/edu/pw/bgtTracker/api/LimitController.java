@@ -21,9 +21,9 @@ public class LimitController {
   @GetMapping("/api/limit")
   public Long getLimit(Authentication auth)
   {
-    Long limit = 300000L; //3000 money
-    System.out.println("limit");
-    return limit;
+    AppUser user = userRepository.findByEmail(auth.getName());
+
+    return user.getUserLimit();
   }
   
 }
