@@ -33,6 +33,9 @@ public class AppUser {
     private List<BankAccount> accounts = new ArrayList<>();
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private List<Bank> banks = new ArrayList<>();
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     @JsonIgnore
     private List<Bill> bills = new ArrayList<>();
 

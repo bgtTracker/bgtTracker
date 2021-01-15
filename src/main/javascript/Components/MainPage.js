@@ -32,6 +32,10 @@ import {
   SettingsOutlined as SettingsOutlinedIcon,
   WorkOutline as WorkOutlineIcon
 } from "@material-ui/icons";
+import { Skeleton } from "@material-ui/lab";
+import { useSnackbar } from "notistack";
+import firebase from "firebase/app";
+import "firebase/messaging";
 
 import ChangeTitle from "./ChangeTitle";
 import Dashboard from "./Dashborad/Dashboard.js";
@@ -41,16 +45,13 @@ import Settings from "./Settings/Settings.js";
 import Income from "./Tables/Income/Income";
 import Expense from "./Tables/Expense/Expense";
 import Bill from "./Tables/Bill/Bill";
-import firebase from "firebase/app";
-import "firebase/messaging";
+import Accounts from "./Accounts";
 import clientJson from "../clientJson.js";
 import NotificationMenu from "./Notifications/NotificationMenu.js";
-import { Skeleton } from "@material-ui/lab";
 import AuthService from "../api/AuthService";
 import Objectives from "./Objectives/Objectives.js";
 import ErrorRedirect from "./ErrorRedirect404.js";
 import ErrorCodeHandling from "./ErrorCodeHandler.js";
-import { useSnackbar } from "notistack";
 import Comments from "./Comments/Comments.js";
 
 const drawerWidth = 240;
@@ -437,6 +438,7 @@ export default function MainPage() {
             <Route exact path={`${path}/expenses`} component={Expense} />
             <Route exact path={`${path}/bills`} component={Bill} />
             <Route exact path={`${path}/objectives`} component={Objectives} />
+            <Route exact path={`${path}/accounts`} component={Accounts} />
             <Route exact path={`${path}/comments`} component={Comments} />
             <Route path="*" component={ErrorRedirect} />
           </Switch>
