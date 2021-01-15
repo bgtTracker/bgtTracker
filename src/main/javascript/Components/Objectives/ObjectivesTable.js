@@ -305,6 +305,7 @@ export default function ObjectivesTable(props) {
   const emptyRows = rowsPerPage - Math.min(rowsPerPage, rows.length - page * rowsPerPage);
 
   const editObjective = toSave => {
+    console.log("eddddit save");
     props.editObjective(toSave);
   };
 

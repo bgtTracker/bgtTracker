@@ -67,7 +67,8 @@ export default function Settings() {
 
   const [open, setOpen] = useState(false);
   const [passDialogOpen, setPassDialogOpen] = useState(false);
-  const [goal, setGoal] = useState(5000);
+  const [limit, setLimit] = useState(0);
+  const [errorLimit, setErrorLimit] = useState(false);
 
   function HandleNamesChange() {
     setOpen(true);
@@ -76,6 +77,15 @@ export default function Settings() {
   function handleClose() {
     setOpen(false);
   }
+
+  const checkLimit = event => {
+    if (isNaN(event.target.value)) {
+      setErrorLimit(true);
+    } else {
+      setErrorLimit(false);
+    }
+    setLimit(event.target.value);
+  };
 
   function handleClickClose() {
     setName(tempName);
@@ -129,8 +139,24 @@ export default function Settings() {
       });
   }
 
-  function handleGoalChange() {
-    setPassword(temppass);
+  function handleLimitChange() {
+    console.log("limit save");
+    console.log(errorLimit);
+    if (errorLimit === false) {
+      console.log("limit save2");
+      fetch("/api/limit", {
+        method: "Put",
+        headers: AuthService.getAuthHeader(),
+        body: JSON.stringify(Math.floor(Number.parseFloat(limit) * 100))
+      })
+        .then(respone => {
+          console.log(respone);
+        })
+        .catch(error => {
+          console.log(error);
+          ErrorCodeHandler(error.status);
+        });
+    }
   }
 
   useEffect(() => {
@@ -155,6 +181,17 @@ export default function Settings() {
       .then(respone => {
         setLastName(respone);
         setTempLastName(respone);
+      })
+      .catch(error => {
+        ErrorCodeHandler(error.status);
+      });
+    fetch("/api/limit", {
+      method: "GET",
+      headers: AuthService.getAuthHeader()
+    })
+      .then(respone => respone.text())
+      .then(respone => {
+        setLimit(respone / 100);
       })
       .catch(error => {
         ErrorCodeHandler(error.status);
@@ -265,15 +302,16 @@ export default function Settings() {
                 <Grid container spacing={4} direction="row" alignItems="center" justify="center">
                   <Grid item xs={4}>
                     <TextField
-                      id="goal"
-                      label="goal"
+                      id="limit"
+                      label="Limit"
                       variant="outlined"
-                      value={goal}
-                      onChange={e => setGoal(e.target.value)}
+                      error={errorLimit}
+                      value={limit}
+                      onChange={checkLimit}
                     />
                   </Grid>
                   <Grid item>
-                    <Button onClick={handleGoalChange}>Change Goal</Button>
+                    <Button onClick={handleLimitChange}>Change Goal</Button>
                   </Grid>
                 </Grid>
               </Grid>

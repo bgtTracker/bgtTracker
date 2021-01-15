@@ -89,6 +89,7 @@ export default function Row(props) {
   };
 
   const handleSave = toSave => {
+    console.log("save edit");
     props.handleSave(toSave);
   };
 

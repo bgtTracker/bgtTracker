@@ -39,7 +39,7 @@ public class Objective {
         data.put("description", description);
         data.put("priority", priority);
         data.put("date", date.getTime());
-        data.put("category-id", category.getId());
+        data.put("categoryId", category.getId());
         data.put("category", category.getName());
         data.put("amount", amount);
 

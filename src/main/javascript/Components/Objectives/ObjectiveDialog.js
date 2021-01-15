@@ -55,7 +55,7 @@ export default function ObjectiveDialog(props) {
   const maxWidth = "xl";
   const open = props.open;
   const [date, setDate] = React.useState(props.row.date);
-  const [category, setCategory] = React.useState(props.row.category);
+  const [category, setCategory] = React.useState(props.row.categoryId);
   const [name, setName] = React.useState(props.row.name);
   const [amount, setAmount] = React.useState(props.row.amount);
   const [description, setDescription] = React.useState(props.row.description);

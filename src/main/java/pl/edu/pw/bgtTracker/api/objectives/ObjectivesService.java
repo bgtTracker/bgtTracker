@@ -112,6 +112,7 @@ public class ObjectivesService {
      * @param newObjective - new data to 
      */
     public void editObjective(JSONObject newObjective) {
+        System.out.println(newObjective.toJSONString());
         Objective objective = objectiveRepository.findById((Long) newObjective.get("id")).get();
         setObjectivToJson(newObjective, objective);
         objectiveRepository.save(objective);

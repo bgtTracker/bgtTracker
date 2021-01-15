@@ -59,6 +59,7 @@ export default function Objectives() {
 
   const editObjective = toSave => {
     console.log("save");
+    console.log(toSave);
     fetch("/api/editobjective", {
       method: "PUT",
       body: JSON.stringify(toSave),

@@ -46,7 +46,7 @@ public class ObjectivesController {
         return data;
     }
 
-    @PutMapping("/api/editobjectives")
+    @PutMapping("/api/editobjective")
     public void editObjective(Authentication auth, @RequestBody String bodyString, HttpServletResponse httpServletResponse) {
         JSONObject newObjective = paresStringToJson(bodyString, httpServletResponse);
         objectivesService.editObjective(newObjective);
