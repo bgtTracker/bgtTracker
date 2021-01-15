@@ -12,12 +12,11 @@ import javax.persistence.*;
 public class BankAccount {
     private @Id @GeneratedValue long id;
     private String number;
-    private String name;
+    private long balance;
     private boolean active;
 
-    @ManyToOne
+    @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JoinColumn(name = "bank_id", referencedColumnName = "id")
-    @JsonIgnore
     private Bank bank;
 
     @ManyToOne

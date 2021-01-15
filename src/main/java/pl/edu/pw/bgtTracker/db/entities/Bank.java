@@ -18,4 +18,9 @@ public class Bank {
     @OneToMany(mappedBy = "bank")
     @JsonIgnore
     private List<BankAccount> accounts = new ArrayList<>();
+
+    @ManyToOne
+    @JoinColumn(name = "user_id", referencedColumnName = "id")
+    @JsonIgnore
+    private AppUser user;
 }
