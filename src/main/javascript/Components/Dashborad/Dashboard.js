@@ -107,7 +107,7 @@ export default function Dashboard() {
     console.log(incomes);
     console.log(expenses);
     let expensesWithDate = expenses.expense.map(elem => ({ ...elem, date: new Date(elem.dateStamp) }));
-    let inomsesWithDate = incomes.income.map(elem => ({ ...elem, date: new Date(elem.dateStamp) }));
+    let inomsesWithDate = incomes.income.map(elem => ({ ...elem, date: new Date(elem.dataStamp) }));
     console.log(expensesWithDate);
     console.log(inomsesWithDate);
     const today = new Date();
