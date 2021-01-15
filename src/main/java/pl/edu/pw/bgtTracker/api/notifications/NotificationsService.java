@@ -34,16 +34,14 @@ public class NotificationsService {
 
     }
 
-    // @Scheduled(fixedDelay = 7000, initialDelay = 4000)
-    // public void sendTestMsg() throws InterruptedException, ExecutionException 
-    // {
-    //     BgtTrackerApplication.logger.info("Sending test msg");
-    //     sendWaring(1, "KOCHAM PW ja dupia", "warning");
-    //     // sendNotifiaction("1", "KOCHAM PW ja dupia2", "info", "info");
-    //     // sendNotifiaction("1", "KOCHAM PW ja dupia2", "success", "success");
-    //     // sendNotifiaction("1", "KOCHAM PW ja dupia2", "error", "error");
-    //     //seq++;
-    // }
+    public void sendTestMsg(Long id) throws InterruptedException, ExecutionException 
+    {
+        sendWaring(id, "Test", "warning");
+        // sendSuccess(id, "Test", "info");
+        // sendInfo(id, "Test", "success");
+        // sendError(id, "Test", "error");
+        //seq++;
+    }
 
     /**
      * Send notificatos through push service to a topic(either user topic or general topic)
@@ -107,7 +105,7 @@ public class NotificationsService {
      * @throws ExecutionException
      */
     public void sendInfo(long userID, String msg, String title) throws InterruptedException, ExecutionException {
-        long id = this.putAlert(userID, msg, "warning", title).getId();
+        long id = this.putAlert(userID, msg, "info", title).getId();
         this.sendNotifiaction(id, Long.toString(userID), msg, "info", title);
     }
 
@@ -120,7 +118,7 @@ public class NotificationsService {
      * @throws ExecutionException
      */
     public void sendSuccess(long userID, String msg, String title) throws InterruptedException, ExecutionException {
-        long id = this.putAlert(userID, msg, "warning", title).getId();
+        long id = this.putAlert(userID, msg, "success", title).getId();
         this.sendNotifiaction(id, Long.toString(userID), msg, "success", title);
     }
 
@@ -133,7 +131,7 @@ public class NotificationsService {
      * @throws ExecutionException
      */
     public void sendError(long userID, String msg, String title) throws InterruptedException, ExecutionException {
-        long id = this.putAlert(userID, msg, "warning", title).getId();
+        long id = this.putAlert(userID, msg, "error", title).getId();
         this.sendNotifiaction(id, Long.toString(userID), msg, "error", title);
     }
 

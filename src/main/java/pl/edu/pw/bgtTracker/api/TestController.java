@@ -1,6 +1,7 @@
 package pl.edu.pw.bgtTracker.api;
 
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -10,29 +11,21 @@ import org.springframework.web.bind.annotation.RestController;
 
 import net.minidev.json.JSONArray;
 import net.minidev.json.JSONObject;
+import pl.edu.pw.bgtTracker.api.notifications.NotificationsService;
 import pl.edu.pw.bgtTracker.db.entities.AppUser;
 import pl.edu.pw.bgtTracker.db.entities.ExpenseCategory;
 import pl.edu.pw.bgtTracker.db.repos.TestExpenseCategoryRepository;
 import pl.edu.pw.bgtTracker.db.repos.UserRepository;
 
 @RestController
-public class TestExpenseCategoryRepositoryController {
-    @Autowired private TestExpenseCategoryRepository expenseCategoryRepository;
+public class TestController {
     @Autowired private UserRepository userRepository;
+    @Autowired private NotificationsService notificationsService;
 
-    @GetMapping(value = {"/testapi/getexpensecategory"}, produces = MediaType.APPLICATION_JSON_VALUE)
-    public JSONObject getExpenseCategory(Authentication auth) {
+    @GetMapping("/api/notitest")
+    public void testNoti(Authentication auth) throws InterruptedException, ExecutionException 
+    {
         AppUser user = userRepository.findByEmail(auth.getName());
-        JSONObject data = new JSONObject();
-
-        List<ExpenseCategory> categories = user.getExpenseCategories();
-
-        JSONArray arr = new JSONArray();
-        for (var c : categories) {
-            arr.add(c.toJSON());
-        }
-
-        data.put("expenseCategories", arr);
-        return data;
+        notificationsService.sendTestMsg(user.getId());
     }
 }

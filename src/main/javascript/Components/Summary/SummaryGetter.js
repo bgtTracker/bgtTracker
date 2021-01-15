@@ -72,6 +72,8 @@ export default function SummaryGetter(props) {
         usrid: props.userID
       }
     }).then(response => {
+      console.log("notpgo");
+      console.log(response);
       changeCategoryDataTofloat(response);
       let rows = createRows(response);
       setRows(rows);
