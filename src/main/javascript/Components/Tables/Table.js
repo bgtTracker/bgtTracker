@@ -83,24 +83,20 @@ export default class CustomPaginationTable extends React.Component {
     this.updateData = this.updateData.bind(this);
     this.handleDeleteButtonClick = this.handleDeleteButtonClick.bind(this);
     this.handleRowSelect = this.handleRowSelect.bind(this);
-    this.isD2 = this.isD2.bind(this);
     this.handlePayBillButton = this.handlePayBillButton.bind(this);
-    //this.handleEditButtonClick = this.handleEditButtonClick.bind(this)
-    //this.testClick = this.testClick.bind(this)
+
   }
   componentDidMount() {
     this.fetchData();
   }
   fetchData() {
     if (this.props.type === "income") {
-      //console.log("Pobieram dane income")
       this.setState(() => {
         clientJson({
           method: "GET",
           path: "/api/getIncomes/",
           headers: AuthService.getAuthHeader()
         }).then(response => {
-          //console.log("Pobrane entitty", response.entity)
           this.setState({ data: response.entity.income });
         });
       });
@@ -150,23 +146,6 @@ export default class CustomPaginationTable extends React.Component {
     }
   }
 
-  /*handleEditButtonClick() {
-    this.setState(prevState => {
-      console.log(prevState);
-      let ret;
-      if (prevState.cellEditMode === "dbclick") {
-        console.log("tak");
-        alert("Edit mode disactivated");
-        ret = { cellEditMode: "none" };
-      }
-      if (prevState.cellEditMode === "none") {
-        alert("Edit mode activated");
-        console.log("taktak");
-        ret = { cellEditMode: "dbclick" };
-      }
-      return ret;
-    });
-  }*/
   handlePayBillButton() {
     console.log("this.state.selected", this.state.selected);
     console.log("this.state.selectedContenet", this.state.selectedContent.isPaid);
@@ -400,12 +379,9 @@ export default class CustomPaginationTable extends React.Component {
     }
   }
 
-  isD2(newData) {
-    console.log("Lets try it again");
-    //this.props.insertFun(newData)
-  }
 
   isExpandableRow(row) {
+    /* tells if row is expandable always returns true cuz all rows are*/
     return true;
   }
 
@@ -475,30 +451,24 @@ export default class CustomPaginationTable extends React.Component {
     this.props.handleDel(selectedId);
     data.splice(tableId, 1);
     this.setState({ data: data });
-    //this.setState(() => {this.fetchData()})
     this.setState({ selected: -1 });
+
   }
   handleRowSelect(row) {
     this.setState(prevState => {
       return { selected: row.id, selectedContent: row };
     });
   }
-  handletest() {
-    console.log("working");
-  }
+
+
   render() {
-    console.log("czemu niedziala", this.state.data);
-    //console.log("Wyswietlam tabele")
-    //console.log(this.state.data[0])
+
     const type = this.props.type;
 
-    //this.state.data =  this.props.data
-    var category = this.props.category;
-
-    var rows;
-    var modalType;
-    var modalLabel;
-    var modalButtonLabel;
+    let rows;
+    let modalType;
+    let modalLabel;
+    let modalButtonLabel;
 
     if (type === "income") {
       rows = [
@@ -589,7 +559,6 @@ export default class CustomPaginationTable extends React.Component {
       )
     );
 
-    console.log("props2", this.props.type);
     const options = {
       page: 1, // which page you want to show as default
       sizePerPageList: [
@@ -628,9 +597,6 @@ export default class CustomPaginationTable extends React.Component {
 
     return (
       <div>
-        {console.log("props3", this.props.type)}
-        {/*this.componentDidMount()*/}
-        {/*console.log(this.props.test)*/}
         <BootstrapTable
           data={this.state.data}
           keyField="id"
@@ -649,7 +615,6 @@ export default class CustomPaginationTable extends React.Component {
 
         <Row>
           &nbsp;&nbsp;&nbsp;
-          {console.log("Selected row to edit/delete: " + this.state.selected)}
           <ModalWithForm
             buttonLabel={modalButtonLabel}
             type={modalType}
@@ -681,7 +646,6 @@ export default class CustomPaginationTable extends React.Component {
               </Button>
             </div>
           )}
-          {console.log(typeof this.state.data[0])}
         </Row>
       </div>
     );

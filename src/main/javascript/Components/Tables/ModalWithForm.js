@@ -177,6 +177,11 @@ export default class ModalWithForm extends React.Component {
             return false;
           }
         }
+        if(parseFloat(this.state.amount)>10000000)
+        {
+          alert("To large number! maximum is 9999999!")
+          return false;
+        }
         return true;
       } else {
         alert("You have to choose category and name, amount and date");
@@ -309,6 +314,7 @@ export default class ModalWithForm extends React.Component {
             placeholder="Enter text"
             onChange={this.changeName}
             value={this.state.name}
+            maxLength={50}
           />
         </FormGroup>
         {this.state.type === "bill" && (
@@ -392,7 +398,7 @@ export default class ModalWithForm extends React.Component {
         </Row>
         <FormGroup>
           <Label>Note</Label>
-          <Input type="textarea" name="note" id="note" onChange={this.changeNote} value={this.state.note} />
+          <Input type="textarea" name="note" id="note" onChange={this.changeNote} value={this.state.note} maxLength={254}/>
         </FormGroup>
       </div>
     );
@@ -409,6 +415,7 @@ export default class ModalWithForm extends React.Component {
                 placeholder="Enter text"
                 onChange={this.changeName}
                 value={this.state.name}
+                maxLength={50}
               />
             </FormGroup>
           </Col>
@@ -428,7 +435,7 @@ export default class ModalWithForm extends React.Component {
         </Row>
         <FormGroup>
           <Label>Note</Label>
-          <Input type="textarea" name="note" id="note" onChange={this.changeNote} />
+          <Input type="textarea" name="note" id="note" onChange={this.changeNote} value={this.state.note} maxLength={254}/>
         </FormGroup>
       </div>
     );
