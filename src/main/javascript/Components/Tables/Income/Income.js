@@ -29,7 +29,7 @@ export default function IncomePage() {
         id: delId
       }
     }).catch(response => {
-      alert("Error refresh page!")
+      alert("Error - cannot delete last category refresh page!")
     });
   };
 

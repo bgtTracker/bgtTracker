@@ -49,8 +49,8 @@ export default function Bill() {
       params: {
         id: delId
       }
-    }).then(response => {
-      console.log(response);
+    }).catch(response => {
+      alert("Error - cannot delete last category refresh page!");
     });
   };
 
