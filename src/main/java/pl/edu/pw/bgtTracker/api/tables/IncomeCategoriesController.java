@@ -23,6 +23,27 @@ public class IncomeCategoriesController {
         this.incomeCategoriesService = incomeCategoriesService;
     }
 
+    /**
+     * Returns object of user income categories
+     * 
+     * Json schema
+     * {
+     *      category: [
+     *          {
+     *              //income category
+     *              id: income category id,
+     *              name: income category name,
+     *              color: income category color,
+     *              note: income category note
+     * 
+     *          },{},{}...
+     * 
+     *      ]
+     * }
+     * 
+     * @param auth
+     * @return
+     */
     @GetMapping(value = {"/api/getIncomeCategory"}, produces = MediaType.APPLICATION_JSON_VALUE)
     public JSONObject getIncomeCategory(Authentication auth)
     {
@@ -30,6 +51,14 @@ public class IncomeCategoriesController {
         return incomeCategoriesService.getCategories(id);
     }
 
+    /**
+     * Saves new income category to data base
+     * @param auth
+     * @param name
+     * @param color
+     * @param note
+     * @return
+     */
     @PostMapping("/api/newIncomeCategory")
     public long newIncomeCategoryData(Authentication auth, @RequestParam(value = "name") String name , @RequestParam(value = "color") String color, @RequestParam(value = "note") String note)
     {
@@ -39,6 +68,13 @@ public class IncomeCategoriesController {
         return newId2;
     }
 
+    /**
+     * Updates income category
+     * @param id
+     * @param name
+     * @param color
+     * @param note
+     */
     @PostMapping("/api/updateIncomeCategory")
     public void updateIncomeCategoryData(@RequestParam(value = "id") String id, @RequestParam(value="name") String name, @RequestParam(value = "color") String color, @RequestParam(value = "note") String note)
     {
@@ -47,6 +83,10 @@ public class IncomeCategoriesController {
         incomeCategoriesService.updateIncomeCategory(cat_id, name, color, note);
     }
 
+    /**
+     * Deletes income category
+     * @param id
+     */
     @PostMapping("/api/deleteIncomeCategory")
     public void deleteIncomeCategory(@RequestParam(value = "id") String id)
     {
@@ -54,6 +94,11 @@ public class IncomeCategoriesController {
         incomeCategoriesService.deleteIncomeCategory(cat_id);
     }
 
+    /**
+     * Returns user id
+     * @param auth
+     * @return
+     */
     private long getUserId(Authentication auth) {
         AppUser u = userRepository.findByEmail(auth.getName());
         return u.getId();

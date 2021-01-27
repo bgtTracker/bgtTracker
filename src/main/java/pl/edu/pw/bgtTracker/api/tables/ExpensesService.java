@@ -22,6 +22,29 @@ public class ExpensesService {
     @Autowired
     private ExpenseCategoryRepository expenseCategoryRepository;
 
+    /**
+     * Returns json with user's expenses
+     * 
+     * Json schema
+     * {
+     *      expense: [
+     *          {
+     *              //expense
+     *              id: expense id,
+     *              amount: expense amount,
+     *              name: expense name,
+     *              category: expense category name,
+     *              category_id: expense category id,
+     *              user: owner id   
+     *              date: expense due date
+     *              note: note/comment to this expense
+     *              dateStamp: expanse date stamp
+     *         },{},{}...
+     *      ]
+     * }
+     * @param userId
+     * @return JSONObject
+     */
     public JSONObject getExpenses(long userId) {
         AppUser user = userRepository.findById(userId).get();
         List<Expense> expenses = expenseRepository.findByUser(user);
@@ -36,7 +59,16 @@ public class ExpensesService {
         js.put("expense", jsArr);
         return js;
     }
-
+    /**
+     * Saves new expense to data base
+     * @param usrId
+     * @param newName
+     * @param newAmount
+     * @param categoryId
+     * @param date
+     * @param note
+     * @return
+     */
     public long putExpense(long usrId, String newName, long newAmount, long categoryId, String date, String note) {
         Expense newExpense = new Expense();
         AppUser u = userRepository.findById(usrId).get();
@@ -53,7 +85,16 @@ public class ExpensesService {
 
         return newExpense.getId();
     }
-
+    /**
+     * Saves new expense to data base
+     * @param user
+     * @param newName
+     * @param newAmount
+     * @param category
+     * @param date
+     * @param note
+     * @return
+     */
     public long putExpense(AppUser user, String newName, long newAmount, ExpenseCategory category, Date date, String note) {
         Expense newExpense = new Expense();
         newExpense.setName(newName);
@@ -68,7 +109,14 @@ public class ExpensesService {
     }
 
     
-
+    /**
+     * not used
+     * Updates existing expense in data base 
+     * @param expenseId
+     * @param newName
+     * @param newCatId
+     * @param newAmount
+     */
     public void editExpense(long expenseId, String newName, long newCatId, long newAmount) {
         Expense findExpense = expenseRepository.findById(expenseId).get();
         ExpenseCategory newCategory = expenseCategoryRepository.findById(newCatId);
@@ -78,10 +126,24 @@ public class ExpensesService {
         expenseRepository.save(findExpense);
     }
 
+    /**
+     * Deletes expense of given id
+     * @param expenseId
+     */
     public void deleteExpense(long expenseId) {
         expenseRepository.deleteById(expenseId);
     }
 
+    /**
+     * Updates existing expense in data base 
+     * @param expenseId
+     * @param usrId
+     * @param newName
+     * @param newAmount
+     * @param newCatId
+     * @param date
+     * @param note
+     */
     public void updateExpense(long expenseId, long usrId, String newName, long newAmount, long newCatId, String date, String note) {
         Expense findExpense = expenseRepository.findById(expenseId).get();
         ExpenseCategory newCategory = expenseCategoryRepository.findById(newCatId);

@@ -22,7 +22,25 @@ public class ExpenseCategoriesController {
         this.userRepository = userRepository;
         this.expenseCategoriesService = expenseCategoriesService;
     }
-
+    
+    /**
+     * Returs object of user expense categories
+     * 
+     * Json schema
+     * {
+     *     category: [
+     *          {
+     *              //expense category
+     *              id: expense category id,
+     *              name: expense category name,
+     *              color: expense category color,
+     *              note: expense category note
+     * 
+     *          },{},{}...]
+     * } 
+     * @param auth
+     * @return
+     */
     @GetMapping(value = {"/api/getExpenseCategory"}, produces = MediaType.APPLICATION_JSON_VALUE)
     public JSONObject getExpenseCategory(Authentication auth)
     {
@@ -30,6 +48,14 @@ public class ExpenseCategoriesController {
         return expenseCategoriesService.getCategories(id);
     }
 
+    /**
+     * Creates new expense category object in data base
+     * @param auth
+     * @param name
+     * @param color
+     * @param note
+     * @return
+     */
     @PostMapping("/api/newExpenseCategory")
     public long newExpenseCategoryData(Authentication auth, @RequestParam(value = "name") String name, @RequestParam(value = "color") String color, @RequestParam(value = "note") String note)
     {
@@ -39,6 +65,13 @@ public class ExpenseCategoriesController {
         return newId2;
     }
 
+    /**
+     * Updates user expense category
+     * @param id
+     * @param name
+     * @param color
+     * @param note
+     */
     @PostMapping("/api/updateExpenseCategory")
     public void updateExpenseCategoryData(@RequestParam(value = "id") String id, @RequestParam(value="name") String name, @RequestParam(value = "color") String color, @RequestParam(value = "note") String note)
     {
@@ -47,6 +80,10 @@ public class ExpenseCategoriesController {
         expenseCategoriesService.updateExpenseCategory(cat_id, name, color, note);
     }
 
+    /**
+     * Deletes expense category
+     * @param id
+     */
     @PostMapping("/api/deleteExpenseCategory")
     public void deleteExpenseCategory(@RequestParam(value = "id") String id)
     {
@@ -54,6 +91,11 @@ public class ExpenseCategoriesController {
         expenseCategoriesService.deleteExpenseCategory(cat_id);
     }
 
+    /**
+     * Returns user id
+     * @param auth
+     * @return
+     */
     private long getUserId(Authentication auth) {
         AppUser u = userRepository.findByEmail(auth.getName());
         return u.getId();

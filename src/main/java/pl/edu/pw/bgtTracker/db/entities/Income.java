@@ -31,6 +31,22 @@ public class Income {
     @JsonIgnore
     private IncomeCategory category;
 
+    /**
+     *  Returns single income object
+     *  {
+     *              //income
+     *              id: income id,
+     *              amount: income amount,
+     *              name: income name,
+     *              category: income category name,
+     *              category_id: income category id,
+     *              user: owner id   
+     *              date: income due date
+     *              note: note/comment to this income
+     *              dateStamp: income date stamp
+     *         }
+     * @return JSONObject
+     */
     public JSONObject toJSON(){
         JSONObject json = new JSONObject();
         json.put("id", Long.toString(id));

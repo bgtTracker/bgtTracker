@@ -37,6 +37,24 @@ public class Bill {
     @JsonIgnore
     private AppUser user;
 
+    /**
+     * Returns single bill object
+     *  {
+     *              //bill
+     *              id: bill id,
+     *              amount: bill amount,
+     *              name: bill name,
+     *              category: expense/bill category name,
+     *              category_id: expense/bill category id,
+     *              user: owner id
+     *              date: bill due date
+     *              paymentDay: date when bill was paid if its not paid its empty
+     *              bankAccount: bill bank account
+     *              isPaid: true/false if its paid its true
+     *              note: note/comment to this bill
+     *         }
+     * @return JSONObject
+     */
     public JSONObject toJSON() {
 
         JSONObject json = new JSONObject();

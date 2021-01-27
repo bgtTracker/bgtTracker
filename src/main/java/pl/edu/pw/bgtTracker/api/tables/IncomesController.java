@@ -26,7 +26,29 @@ public class IncomesController {
         this.userRepository = userRepository;
     }
 
-
+    /**
+     * Returns json with user's incomes
+     * 
+     * Json schema
+     * {
+     *      income: [
+     *          {
+     *              //income
+     *              id: income id,
+     *              amount: income amount,
+     *              name: income name,
+     *              category: income category name,
+     *              category_id: income category id,
+     *              user: owner id   
+     *              date: income due date
+     *              note: note/comment to this income
+     *              dateStamp: income date stamp
+     *         },{},{}...
+     *      ]
+     * }
+     * @param auth
+     * @return JSONObject
+     */
     @GetMapping(value ={"/api/getIncomes"},produces = MediaType.APPLICATION_JSON_VALUE)
     public JSONObject getIncomeData(Authentication auth)
     {
@@ -36,6 +58,16 @@ public class IncomesController {
 
     }
 
+    /**
+     * Saves new income to data base
+     * @param auth
+     * @param name
+     * @param category
+     * @param amount
+     * @param date
+     * @param note
+     * @return
+     */
     @PostMapping("/api/newIncome")
     public long newIncomeData(Authentication auth, @RequestParam(value = "name") String name, @RequestParam(value="category_id") String category, @RequestParam(value="amount") String amount , @RequestParam(value = "date") String date, @RequestParam(value = "note") String note)
     {
@@ -50,7 +82,16 @@ public class IncomesController {
         return newId;
         //return newId2;
     }
-
+    /**
+     * Updates existing income in data base
+     * @param auth
+     * @param id
+     * @param name
+     * @param category
+     * @param amount
+     * @param date
+     * @param note
+     */
     @PostMapping("/api/updateIncome")
     public void updateIncomeData(Authentication auth, @RequestParam(value = "id") String id, @RequestParam(value="name") String name, @RequestParam(value = "category_id") String category, @RequestParam(value="amount") String amount, @RequestParam(value = "date") String date, @RequestParam(value = "note") String note)
     {
@@ -63,7 +104,11 @@ public class IncomesController {
         incomesService.updateIncome(incomeId, usrId, newName, newAmount, newCatId, date, note);
 
     }
-
+    /**
+     * Deletes income
+     * @param auth
+     * @param id
+     */
     @PostMapping("/api/deleteIncome")
     public void deleteIncomeData(Authentication auth, @RequestParam(value = "id") String id)
     {
@@ -72,7 +117,11 @@ public class IncomesController {
         incomesService.deleteIncome(incomeId);
     }
 
-
+    /**
+     * Returns user id
+     * @param auth
+     * @return
+     */
     private long getUserId(Authentication auth)
     {
         AppUser u = userRepository.findByEmail(auth.getName());

@@ -11,13 +11,39 @@ import "../../../../../node_modules/bootstrap/dist/css/bootstrap.min.css";
 import clientJson from "../../clientJson";
 import AuthService from "../../api/AuthService";
 
+/**
+ * Function colorFormat
+ * params:
+ * cell - content of cell to format
+ * row - whole row 
+ * returns reactstrap Badge in given color 
+ */
 function colorFormat(cell, row) {
   return <Badge style={{ backgroundColor: cell, color: cell }}>category color {cell}</Badge>;
 }
+
+/**
+ * Function amountFormat
+ * params:
+ * cell - content of cell to format
+ * row - whole row 
+ * returns formated amount to two decimal places
+ * 10000 -> 100.00
+ */
 function amountFormat(cell, row) {
   var t = (parseFloat(cell) / 100).toFixed(2);
   return t;
 }
+/**
+ * Function sortData
+ * params:
+ * c first cell to sort
+ * d second cell to sort
+ * order - sorting order desc or asc
+ * 
+ * function used in sorting table
+ * returns -1 if c is bigger 0 if equal and 1 if less then d for desc order
+ */
 function sortData(c, d, order) {
   var a = c.date;
   var b = d.date;
@@ -65,8 +91,15 @@ function sortData(c, d, order) {
   }
 }
 
-//const userId = 15;
 
+/**
+ * CustomPaginationTable class
+ * creates react table object with proper pagination 
+ * params:
+ * type:  [income|expense|bill|category]
+ * subtype(optional): [income|expense]
+ * handleDel: async function to delete proper object in database
+ */
 export default class CustomPaginationTable extends React.Component {
   constructor(props) {
     super(props);

@@ -28,6 +28,28 @@ public class IncomesService {
     @Autowired
     private IncomeCategoryRepository incomeCategoryRepository;
 
+    /**
+     * Returns json with user's incomes
+     * Json schema
+     * {
+     *      income: [
+     *          {
+     *              //income
+     *              id: income id,
+     *              amount: income amount,
+     *              name: income name,
+     *              category: income category name,
+     *              category_id: income category id,
+     *              user: owner id   
+     *              date: income due date
+     *              note: note/comment to this income
+     *              dateStamp: income date stamp
+     *         },{},{}...
+     *      ]
+     * }
+     * @param userId
+     * @return JSONObject
+     */
     public JSONObject getIncomes(long userId)
     {
         AppUser user = userRepository.findById(userId).get();
@@ -44,6 +66,16 @@ public class IncomesService {
         return js;
     }
 
+    /**
+     * Saves new income to data base
+     * @param usrId
+     * @param newName
+     * @param newAmount
+     * @param categoryId
+     * @param date
+     * @param note
+     * @return
+     */
     public long putIncome(long usrId, String newName, long newAmount, long categoryId, String date, String note) {
         Income newIncome = new Income();
         AppUser u = userRepository.findById(usrId).get();
@@ -64,6 +96,14 @@ public class IncomesService {
         return newIncome.getId();
     }
 
+    /**
+     * Not used
+     * Updates income in data base
+     * @param incomeId
+     * @param newName
+     * @param newCatId
+     * @param newAmount
+     */
     public void editIncome(long incomeId, String newName, long newCatId, long newAmount) {
         Income findIncome = incomeRepository.findById(incomeId).get();
         IncomeCategory newCategory = incomeCategoryRepository.findById(newCatId);
@@ -74,12 +114,26 @@ public class IncomesService {
         //return;
     }
 
+    /**
+     * Deletes income
+     * @param id
+     */
     public void deleteIncome(long id) {
         //long categoryId = Long.parseLong(id);
         incomeRepository.deleteById(id);
     }
 
 
+    /**
+     * Updates income in data base
+     * @param incomeId
+     * @param usrId
+     * @param newName
+     * @param newAmount
+     * @param newCatId
+     * @param date
+     * @param note
+     */
     public void updateIncome(long incomeId, long usrId, String newName, long newAmount, long newCatId, String date, String note) {
         Income findIncome = incomeRepository.findById(incomeId).get();
         IncomeCategory newCategory = incomeCategoryRepository.findById(newCatId);

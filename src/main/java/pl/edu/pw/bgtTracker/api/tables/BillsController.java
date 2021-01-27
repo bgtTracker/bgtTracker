@@ -21,12 +21,48 @@ public class BillsController {
         this.userRepository = userRepository;
     }
 
+    /**
+     * Returns object of user bills
+     * 
+     * Json schema
+     * {
+     *      bill: [
+     *         {
+     *              //bill
+     *              id: bill id,
+     *              amount: bill amount,
+     *              name: bill name,
+     *              category: expense/bill category name,
+     *              category_id: expense/bill category id,
+     *              user: owner id,
+     *              date: bill due date,
+     *              paymentDay: date when bill was paid if its not paid its empty
+     *              bankAccount: bill bank account
+     *              isPaid: true/false if its paid its true
+     *              note: note/comment to this bill
+     *         },{},{}....
+     *      ]
+     * } 
+     * @param auth
+     * @return JSONObject
+     */
     @GetMapping(value ={"/api/getBills"},produces = MediaType.APPLICATION_JSON_VALUE)
     public JSONObject getBillData(Authentication auth){
         long id = this.getUserId(auth);
         return billsService.getBills(id);
     }
 
+    /**
+     * Creates new bill object in data base and returns new bill's id
+     * @param auth
+     * @param name
+     * @param category
+     * @param amount
+     * @param dueDate
+     * @param note
+     * @param bankNumber
+     * @return
+     */
     @PostMapping("/api/newBill")
     public long newBillData(Authentication auth, @RequestParam(value = "name") String name, @RequestParam(value="category_id") String category, @RequestParam(value="amount") String amount, @RequestParam(value="dueDate") String dueDate, @RequestParam(value="note") String note, @RequestParam(value = "bankNumber") String bankNumber)
     {
@@ -41,6 +77,17 @@ public class BillsController {
         return newId2;
     }
 
+    /**
+     * Updates user bill
+     * @param auth
+     * @param id
+     * @param name
+     * @param category
+     * @param amount
+     * @param dueDate
+     * @param note
+     * @param bankNumber
+     */
     @PostMapping("/api/updateBill")
     public void updateBillData(Authentication auth, @RequestParam(value = "id") String id, @RequestParam(value="name") String name, @RequestParam(value = "category_id") String category, @RequestParam(value="amount") String amount, @RequestParam(value="dueDate") String dueDate, @RequestParam(value="note") String note, @RequestParam(value = "bankNumber") String bankNumber)
     {
@@ -51,6 +98,12 @@ public class BillsController {
         billsService.updateBill(billId, newName, newAmount, newCatId, dueDate, note, bankNumber);
 
     }
+
+    /**
+     * Deletes bill
+     * @param auth
+     * @param id
+     */
     @PostMapping("/api/deleteBill")
     public void deleteBillData(Authentication auth, @RequestParam(value = "id") String id)
     {
@@ -58,6 +111,12 @@ public class BillsController {
         billsService.deleteBill(expenseId);
     }
 
+    /**
+     * Changes bill state ispaid to true and saves current data in paymentday
+     * @param auth
+     * @param id
+     * @param date
+     */
     @PostMapping("/api/payBill")
     public void payBill(Authentication auth, @RequestParam(value = "id") String id, @RequestParam(value = "date") String date)
     {
@@ -65,6 +124,11 @@ public class BillsController {
         billsService.payBill(billId, date);
     }
 
+    /**
+     * Returns user id
+     * @param auth
+     * @return
+     */
     private long getUserId(Authentication auth)
     {
         AppUser u = userRepository.findByEmail(auth.getName());

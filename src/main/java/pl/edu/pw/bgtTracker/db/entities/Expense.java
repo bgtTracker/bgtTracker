@@ -34,7 +34,22 @@ public class Expense {
     @JsonIgnore
     private ExpenseCategory category;
 
-
+    /**
+     * Returns single expense object
+     *  {
+     *              //expense
+     *              id: expense id,
+     *              amount: expense amount,
+     *              name: expense name,
+     *              category: expense category name,
+     *              category_id: expense category id,
+     *              user: owner id   
+     *              date: expense due date
+     *              note: note/comment to this expense
+     *              dateStamp: expanse date stamp
+     *         }
+     * @return JSONObject
+     */
     public JSONObject toJSON() {
         JSONObject json = new JSONObject();
         json.put("id", Long.toString(id));

@@ -19,7 +19,26 @@ public class ExpenseCategoriesService {
     @Autowired
     private ExpenseCategoryRepository expenseCategoryRepository;
 
-
+    /**
+     * Returns json object with user's expense categories
+     * 
+     * Json schema
+     * {
+     *      category: [
+     *          {
+     *              //expense category
+     *              id: expense category id,
+     *              name: expense category name,
+     *              color: expense category color,
+     *              note: expense category note
+     * 
+     *          },{},{}...
+     * 
+     *      ]
+     * }
+     * @param userId
+     * @return
+     */
     public JSONObject getCategories(long userId) {
         AppUser user = userRepository.findById(userId).get();
         List<ExpenseCategory> expensesCat = expenseCategoryRepository.findByUserId(userId);
@@ -35,7 +54,14 @@ public class ExpenseCategoriesService {
         js.put("category", jsArr);
         return js;
     }
-
+    /**
+     * Saves new expense category to data base
+     * @param usrId
+     * @param newName
+     * @param color
+     * @param note
+     * @return
+     */
     public long putExpenseCategory(long usrId, String newName, String color, String note) {
         ExpenseCategory newCategory = new ExpenseCategory();
         AppUser u = userRepository.findById(usrId).get();
@@ -46,17 +72,33 @@ public class ExpenseCategoriesService {
          expenseCategoryRepository.save(newCategory);
         return newCategory.getId();
     }
-
+    /**
+     * Not used
+     * Updates existing expense category in data base
+     * @param cat_id
+     * @param name
+     */
     public void editExpenseCategory(long cat_id, String name) {
         ExpenseCategory findCategory = expenseCategoryRepository.findById(cat_id);
         findCategory.setName(name);
         expenseCategoryRepository.save(findCategory);
     }
 
+    /**
+     * Deletes expense category
+     * @param cat_id
+     */
     public void deleteExpenseCategory(long cat_id) {
         expenseCategoryRepository.deleteById(cat_id);
     }
 
+    /**
+     * Updates existing expense category in data base
+     * @param cat_id
+     * @param name
+     * @param color
+     * @param note
+     */
     public void updateExpenseCategory(long cat_id, String name, String color, String note) {
         ExpenseCategory findCategory = expenseCategoryRepository.findById(cat_id);
         findCategory.setName(name);

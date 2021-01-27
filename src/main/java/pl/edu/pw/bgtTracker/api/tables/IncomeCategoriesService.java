@@ -29,6 +29,26 @@ public class IncomeCategoriesService {
     @Autowired
     private IncomeCategoryRepository incomeCategoryRepository;
 
+    /**
+     * Returns json with user's income categories
+     * 
+     * Json schema
+     * {
+     *      category: [
+     *          {
+     *              //income category
+     *              id: income category id,
+     *              name: income category name,
+     *              color: income category color,
+     *              note: income category note
+     * 
+     *          },{},{}...
+     * 
+     *      ]
+     * }
+     * @param userId
+     * @return
+     */
     public JSONObject getCategories(long userId){
 
 
@@ -47,6 +67,14 @@ public class IncomeCategoriesService {
         return js;
     }
 
+    /**
+     * Saves new income category to data base
+     * @param usrId
+     * @param newName
+     * @param color
+     * @param note
+     * @return
+     */
     public long putIncomeCategory(long usrId, String newName, String color, String note) {
         IncomeCategory newCategory = new IncomeCategory();
         AppUser u = userRepository.findById(usrId).get();
@@ -60,16 +88,33 @@ public class IncomeCategoriesService {
         return newCategory.getId();
     }
 
+    /**
+     * Not used
+     * Updates existing income category in data base
+     * @param cat_id
+     * @param name
+     */
     public void editIncomeCategory(long cat_id, String name) {
         IncomeCategory findCategory = incomeCategoryRepository.findById(cat_id);
         findCategory.setName(name);
         incomeCategoryRepository.save(findCategory);
     }
 
+    /**
+     * Deletes income category
+     * @param cat_id
+     */
     public void deleteIncomeCategory(long cat_id) {
         incomeCategoryRepository.deleteById(cat_id);
     }
 
+    /**
+     * Updates existing income category in data base
+     * @param cat_id
+     * @param name
+     * @param color
+     * @param note
+     */
     public void updateIncomeCategory(long cat_id, String name, String color, String note) {
         IncomeCategory findCategory = incomeCategoryRepository.findById(cat_id);
         findCategory.setName(name);

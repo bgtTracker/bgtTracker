@@ -21,12 +21,27 @@ public class ExpensesController {
         this.userRepository = userRepository;
     }
 
+    /**
+     * Returns Json object of user expenses
+     * @param auth
+     * @return JSONObject
+     */
     @GetMapping(value ={"/api/getExpenses"},produces = MediaType.APPLICATION_JSON_VALUE)
     public JSONObject getExpenseData(Authentication auth){
         long id = this.getUserId(auth);
         return expensesService.getExpenses(id);
     }
 
+    /**
+     * Creates new expense object in data base and returns new expense's id
+     * @param auth
+     * @param name
+     * @param category
+     * @param amount
+     * @param date
+     * @param note
+     * @return
+     */
     @PostMapping("/api/newExpense")
     public long newExpenseData(Authentication auth, @RequestParam(value = "name") String name, @RequestParam(value="category_id") String category, @RequestParam(value="amount") String amount, @RequestParam String date ,@RequestParam String note)
     {
@@ -44,6 +59,16 @@ public class ExpensesController {
         return newId;
     }
 
+    /**
+     * Updates user expense of given id
+     * @param auth
+     * @param id
+     * @param name
+     * @param category
+     * @param amount
+     * @param date
+     * @param note
+     */
     @PostMapping("/api/updateExpense")
     public void updateExpenseData(Authentication auth, @RequestParam(value = "id") String id, @RequestParam(value="name") String name, @RequestParam(value = "category_id") String category, @RequestParam(value="amount") String amount, @RequestParam String date ,@RequestParam String note)
     {
@@ -57,6 +82,11 @@ public class ExpensesController {
 
     }
 
+    /**
+     * Deletes expense of given id
+     * @param auth
+     * @param id
+     */
     @PostMapping("/api/deleteExpense")
     public void deleteExpenseData(Authentication auth, @RequestParam(value = "id") String id)
     {
@@ -65,6 +95,11 @@ public class ExpensesController {
         expensesService.deleteExpense(expenseId);
     }
 
+    /**
+     * Returns user id from Authentication
+     * @param auth
+     * @return
+     */
     private long getUserId(Authentication auth)
     {
         AppUser u = userRepository.findByEmail(auth.getName());

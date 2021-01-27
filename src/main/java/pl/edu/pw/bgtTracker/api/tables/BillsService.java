@@ -24,6 +24,31 @@ public class BillsService {
     @Autowired
     private ExpenseRepository expenseRepository;
 
+    /**
+     * Returns json with user's bills
+     * 
+     * Json schema
+     * {
+     *      bill: [
+     *         {
+     *              //bill
+     *              id: bill id,
+     *              amount: bill amount,
+     *              name: bill name,
+     *              category: expense/bill category name,
+     *              category_id: expense/bill category id,
+     *              user: owner id,
+     *              date: bill due date,
+     *              paymentDay: date when bill was paid if its not paid its empty
+     *              bankAccount: bill bank account
+     *              isPaid: true/false if its paid its true
+     *              note: note/comment to this bill
+     *         },{},{}....
+     *      ]
+     * } 
+     * @param userId
+     * @return JSONObject
+     */
     public JSONObject getBills(long userId) {
         AppUser user = userRepository.findById(userId).get();
         List<Bill> bills =  billRepository.findByUser(user);
@@ -39,7 +64,17 @@ public class BillsService {
         js.put("bill", jsArr);
         return js;
     }
-
+    /**
+     * Saves new bill to data base
+     * @param usrId
+     * @param newName
+     * @param newAmount
+     * @param categoryId
+     * @param dueDate
+     * @param note
+     * @param bank
+     * @return new bill id
+     */
     public long putBill(long usrId, String newName, long newAmount, long categoryId, String dueDate, String note, String bank) {
         Bill newBill = new Bill();
         AppUser u = userRepository.findById(usrId).get();
@@ -60,14 +95,26 @@ public class BillsService {
 
         return newBill.getId();
     }
-
+    
     public void editBill(long expenseId, String newName, long newCatId, long newAmount) {
     }
-
+    /**
+     * Deletes bill
+     * @param billId
+     */
     public void deleteBill(long billId) {
         billRepository.deleteById(billId);
     }
-
+    /**
+     * Updates existing bill in data base
+     * @param billId
+     * @param newName
+     * @param newAmount
+     * @param newCatId
+     * @param dueDate
+     * @param note
+     * @param bankNumber
+     */
     public void updateBill(long billId, String newName, long newAmount, long newCatId, String dueDate, String note, String bankNumber) {
         Bill findBill = billRepository.findById(billId).get();
         ExpenseCategory newCategory = expenseCategoryRepository.findById(newCatId);
@@ -83,7 +130,11 @@ public class BillsService {
         findBill.setBankNumber(bankNumber);
         billRepository.save(findBill);
     }
-
+    /**
+     * Switch isPaid flag to true and creates new expense
+     * @param billId
+     * @param date
+     */
     public void payBill(long billId, String date) {
         Bill findBill = billRepository.findById(billId).get();
 
