@@ -27,6 +27,10 @@ import pl.edu.pw.bgtTracker.BgtTrackerApplication;
 @Service
 public class FcmClient {
 
+    /**
+     * Setup whole firebase and conntct to it uses FirebaseOption Builder for now 
+     * @param settings
+     */
     public FcmClient(FcmSettings settings) {
         Path p = Paths.get(settings.getServiceAccountFile());
         try (InputStream serviceAccount = Files.newInputStream(p)) {

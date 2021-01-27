@@ -72,6 +72,8 @@ export default function SummaryGetter(props) {
         usrid: props.userID
       }
     }).then(response => {
+      console.log("notpgo");
+      console.log(response);
       changeCategoryDataTofloat(response);
       let rows = createRows(response);
       setRows(rows);
@@ -105,7 +107,7 @@ export default function SummaryGetter(props) {
     for (let i = 0; i < respone.entity.CategoryData.data.length; i++) {
       respone.entity.CategoryData.data[i] = respone.entity.CategoryData.data[i] / 100;
     }
-    for (let i = 0; i < respone.entity.CategoryData.data.length; i++) {
+    for (let i = 0; i < respone.entity.IncomesCategoryData.data.length; i++) {
       respone.entity.IncomesCategoryData.data[i] = respone.entity.IncomesCategoryData.data[i] / 100;
     }
   }

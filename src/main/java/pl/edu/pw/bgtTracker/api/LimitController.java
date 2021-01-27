@@ -20,6 +20,11 @@ public class LimitController {
   
   @Autowired private UserRepository userRepository;
   
+  /**
+   * Returns user limit
+   * @param auth
+   * @return
+   */
   @GetMapping("/api/limit")
   public Long getLimit(Authentication auth)
   {
@@ -28,6 +33,11 @@ public class LimitController {
     return user.getUserLimit();
   }
 
+  /**
+   * Set user limit limit is in body 
+   * @param auth
+   * @param newLimit - body limit
+   */
   @PutMapping("/api/limit")
   public void setLimit(Authentication auth, @RequestBody String newLimit)
   {

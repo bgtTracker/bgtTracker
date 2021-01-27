@@ -20,7 +20,11 @@ export default class CategoryPie extends Component {
   constructor(probs) {
     super(probs);
 
+    let name = "ApexChart";
+    if (this.props.name) name = this.props.name;
+
     this.state = {
+      name: name,
       series: this.props.data,
       options: {
         title: {
@@ -66,7 +70,7 @@ export default class CategoryPie extends Component {
   }
   render() {
     return (
-      <div className="ApexChart">
+      <div className={this.state.name}>
         <ApexChart height="350" series={this.state.series} options={this.state.options} type="donut" />
       </div>
     );

@@ -198,6 +198,18 @@ export default function Settings() {
       });
   }, []);
 
+  const trigetTest = () => {
+    fetch("/api/notitest", {
+      method: "GET",
+      headers: AuthService.getAuthHeader()
+    })
+      .then(respone => {})
+      .catch(error => {
+        console.log(error);
+        ErrorCodeHandler(error.status);
+      });
+  };
+
   return (
     <div>
       <Grid container spacing={4}>
@@ -319,6 +331,9 @@ export default function Settings() {
                 <Grid container spacing={4} direction="row" alignItems="center" justify="center">
                   <CurrencySelect />
                 </Grid>
+              </Grid>
+              <Grid item xs={12}>
+                <Button onClick={trigetTest}>Triger notifications</Button>
               </Grid>
             </Grid>
           </Paper>

@@ -18,6 +18,10 @@ public class Currency {
   @JsonIgnore
   private AppUser user;
 
+  public String toString(){
+    return name;
+  }
+  
   public JSONObject toJSON()
   {
     JSONObject obj = new JSONObject();
