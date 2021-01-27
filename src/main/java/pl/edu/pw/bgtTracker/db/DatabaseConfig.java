@@ -3,6 +3,7 @@ package pl.edu.pw.bgtTracker.db;
 import org.springframework.boot.jdbc.DataSourceBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
 
 import javax.sql.DataSource;
 import java.net.URI;
@@ -12,6 +13,7 @@ import java.net.URISyntaxException;
 public class DatabaseConfig {
 
     @Bean
+    @Profile("!test")
     public DataSource dataSource() throws URISyntaxException {
         URI dbUri = new URI(System.getenv("DATABASE_URL"));
 
@@ -29,5 +31,16 @@ public class DatabaseConfig {
                 .password(password);
 
         return builder.build();
+    }
+
+    @Bean
+    @Profile("test")
+    public DataSource testDataSource() {
+        return DataSourceBuilder.create()
+                .driverClassName("org.h2.Driver")
+                .url("jdbc:h2:mem:db;DB_CLOSE_DELAY=-1")
+                .username("admin")
+                .password("admin")
+                .build();
     }
 }
