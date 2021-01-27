@@ -107,7 +107,7 @@ export default function SummaryGetter(props) {
     for (let i = 0; i < respone.entity.CategoryData.data.length; i++) {
       respone.entity.CategoryData.data[i] = respone.entity.CategoryData.data[i] / 100;
     }
-    for (let i = 0; i < respone.entity.CategoryData.data.length; i++) {
+    for (let i = 0; i < respone.entity.IncomesCategoryData.data.length; i++) {
       respone.entity.IncomesCategoryData.data[i] = respone.entity.IncomesCategoryData.data[i] / 100;
     }
   }

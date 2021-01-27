@@ -58,6 +58,44 @@ public class SummariesController {
         return getSummaryData(user, from, to).toString();
     }
 
+    /**
+     * Makes summary for a user from date to date and retuns in in json
+     * schema
+     * {
+     * incomes: {
+     *           lables: [] //array with timestamps for incomes
+     *           data : [] // array with data with incomes
+     *            history: [ // array with the same data but competed and not ready to use in charts
+     *                      {} 
+     *                      ]    
+     *           },
+     * expenses: {
+     *           lables: [] //array with timestamps for expenses
+     *           data : [] // array with data with expenses
+     *            history: [ // array with the same data but competed and not ready to use in charts
+     *                      {} 
+     *                      ]    
+     *           },
+     * IncomesCategoryData: {
+     *           lables: [] //array with names of categories 
+     *           data : [] // array with data how much spent
+     *           colors" [] // colors of  given categories
+     *           },
+     * CategoryData: { // expanses categories
+     *           lables: [] //array with names of categories 
+     *           data : [] // array with data how much spent
+     *           colors" [] // colors of  given categories
+     *           },
+     * BalanceData: { // expanses categories
+     *           lables: [] //array with timestamps for every day
+     *           data : [] // array with balance
+     *           }
+     * }
+     * @param user user for whom that summary will be made
+     * @param from form timestamp - date in ms 
+     * @param to to timestamp - date in ms 
+     * @return
+     */
     public JSONObject getSummaryData(AppUser user, Long from, Long to) {
         
         Date fromDate = new Date(from);
@@ -232,6 +270,7 @@ public class SummariesController {
 
         return data;
     }
+
 
     // @GetMapping(value = {"/history"}, produces = MediaType.APPLICATION_JSON_VALUE)
     // public String getUserHistory(@RequestParam(value = "from", defaultValue = "2017-10-01") String from,

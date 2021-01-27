@@ -125,6 +125,7 @@ function Charts(props) {
                   </TabPanel>
                   <TabPanel value={valueCategories} index={1} dir={theme.direction}>
                     <CategoryPie
+                      name={"Incomes"}
                       labels={props.IncomesCategoryData.labels}
                       data={props.IncomesCategoryData.data}
                       colors={props.IncomesCategoryData.colors}

@@ -37,6 +37,11 @@ public class CurrencyContoller {
   private String[] allCurrencies = {"CAD", "HKD", "ISK", "PHP", "DKK", "HUF", "CZK", "AUD", "RON", "SEK", "IDR", "INR", "BRL", "RUB", "HRK", "JPY", "THB", "CHF", "SGD", "PLN", "BGN", "TRY", "CNY", "NOK", "NZD", "ZAR", "USD", "MXN", "ILS", "GBP", "KRW", "MYR"};
   
 
+  /**
+   * Returns currency rates for a given user
+   * @param auth
+   * @return
+   */
   @GetMapping("/rates")
   public JSONObject getCurrecnyRates(Authentication auth)
   {
@@ -109,6 +114,11 @@ public class CurrencyContoller {
       return data;
   }
 
+  /**
+   * Parses json from given string
+   * @param jsonString
+   * @return
+   */
   private JSONObject paresStringToJson(String jsonString)
   {
     JSONParser parser = new JSONParser(JSONParser.MODE_JSON_SIMPLE);
@@ -126,12 +136,21 @@ public class CurrencyContoller {
     return body;
   }
 
+  /**
+   * Returns all available currencies
+   * @return
+   */
   @GetMapping("/all")
   private String[] getAllCurrency()
   {
     return allCurrencies;
   }
 
+  /**
+   * Returns user's currencies
+   * @param auth
+   * @return
+   */
   @GetMapping("/user")
   private List<String> getUserCurrencyContoler(Authentication auth)
   {
@@ -144,6 +163,10 @@ public class CurrencyContoller {
     return user.getUserCurrencies();
   }
 
+  /**
+   * Returns user Currencies in a List of strings
+   * @param user 
+   */
   private List<String> getUserCurrenctStrign(AppUser user)
   {
     List<Currency> userCurrencies = user.getUserCurrencies();
@@ -155,6 +178,10 @@ public class CurrencyContoller {
     return toReturn;
   }
 
+  /**
+   * Returns currencies that are available but user hasn't added them yet
+   * @param auth 
+   */
   @GetMapping("/lefttoadd")
   private List<String> getLeftCurrencyContoler(Authentication auth)
   {
@@ -162,6 +189,10 @@ public class CurrencyContoller {
     return getLeftCurrency(user);
   }
 
+  /**
+   * Returns currencies that are available but user hasn't added them yet
+   * @param user
+   */
   private List<String> getLeftCurrency(AppUser user)
   {
     List<String> currentUserCurrencies = getUserCurrenctStrign(user);
@@ -177,6 +208,11 @@ public class CurrencyContoller {
     return leftCurrencies;
   }
 
+  /**
+   * Returns user and left currencies 
+   * @param auth
+   * @return JSON
+   */
   @GetMapping(value = "/userSummary", produces = MediaType.APPLICATION_JSON_VALUE)
   private JSONObject getUserSummary(Authentication auth)
   {
@@ -187,15 +223,24 @@ public class CurrencyContoller {
     return data;
   }
 
+  /**
+   * Set new currencies for a user
+   * @param auth
+   * @param newCurrenciesBody
+   */
   @PostMapping("/user")
   private void setCurrencies(Authentication auth, @RequestBody String newCurrenciesBody)
   {
     AppUser user = userRepository.findByEmail(auth.getName());
-   
-    newCurrenciesBody = newCurrenciesBody.substring(1, newCurrenciesBody.length()-1);
 
-    List<String> newCurrenciesWithQuotes = new ArrayList<>(Arrays.asList(newCurrenciesBody.split("\\s*,\\s*")));
+    String newCurrenciesBodyWithOutBaces = newCurrenciesBody.substring(1, newCurrenciesBody.length()-1);
+    List<String> newCurrenciesWithQuotes;
+    if(newCurrenciesBodyWithOutBaces.length() != 0)
+      newCurrenciesWithQuotes = new ArrayList<>(Arrays.asList(newCurrenciesBodyWithOutBaces.split("\\s*,\\s*")));
+    else
+    newCurrenciesWithQuotes = new ArrayList<>();
     List<String> newCurrencies = new ArrayList<>();
+
     for(var nc : newCurrenciesWithQuotes)
     {
       newCurrencies.add(nc.substring(1, nc.length()-1));
@@ -203,7 +248,8 @@ public class CurrencyContoller {
     
     List<Currency> currentUserCurrencies = user.getUserCurrencies();
     List<Currency> toDelete = new ArrayList<>();
-    
+
+
     for(var c: currentUserCurrencies)
     {
       if(!newCurrencies.contains(c.getName()))
@@ -216,6 +262,9 @@ public class CurrencyContoller {
       }
     }
 
+    System.out.println(newCurrencies.toString());
+    System.out.println(toDelete.toString());
+    
     for(var nc: newCurrencies)
     {
       Currency newCurrecny = new Currency();
@@ -226,10 +275,8 @@ public class CurrencyContoller {
 
     for(var dc: toDelete)
     {
-      currencyRepository.delete(dc);
+      currencyRepository.deleteById(dc.getId());
     }
-
-    
   }
   
 }
