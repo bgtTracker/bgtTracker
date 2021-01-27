@@ -54,13 +54,13 @@ public class UserController {
     @PostMapping("/password")
     public boolean setPassword(Authentication auth, @RequestBody OldNewPassword oldNewPassword) throws InterruptedException, ExecutionException{
         var user = repository.findByEmail(auth.getName());
-        if (user.getPassword().equals(encoder.encode(oldNewPassword.getOldPassword()))) {
+        if (encoder.matches(oldNewPassword.getOldPassword(), user.getPassword())) {
             user.setPassword(encoder.encode(oldNewPassword.getNewPassword()));
             repository.save(user);
             try {
-                notificationsService.sendSuccess(user.getId(), "Password changed succesfuly", "Password Change");
+                notificationsService.sendSuccess(user.getId(), "Password changed successfully", "Password Change");
             }
-            catch(InterruptedException | ExecutionException e ) {
+            catch(InterruptedException | ExecutionException e) {
                 return false;
             }
             return true;
