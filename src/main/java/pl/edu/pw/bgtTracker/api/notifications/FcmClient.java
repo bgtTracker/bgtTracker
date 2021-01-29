@@ -27,6 +27,7 @@ import pl.edu.pw.bgtTracker.BgtTrackerApplication;
 @Service
 public class FcmClient {
 
+    FirebaseApp app;
     /**
      * Setup whole firebase and conntct to it uses FirebaseOption Builder for now 
      * @param settings
@@ -36,8 +37,12 @@ public class FcmClient {
         try (InputStream serviceAccount = Files.newInputStream(p)) {
             FirebaseOptions options = new FirebaseOptions.Builder()
                     .setCredentials(GoogleCredentials.fromStream(serviceAccount)).build();
-
-            FirebaseApp.initializeApp(options);
+            try {
+                FirebaseApp.initializeApp(options);
+            }catch(IllegalStateException e)
+            {
+                //for now do nothing
+            }
         } catch (IOException e) {
             BgtTrackerApplication.logger.error("init fcm", e);
         }

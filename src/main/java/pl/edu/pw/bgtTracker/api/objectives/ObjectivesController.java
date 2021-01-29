@@ -34,7 +34,7 @@ public class ObjectivesController {
         System.out.println(bodyString);
         JSONObject body = this.paresStringToJson(bodyString, httpServletResponse);
 
-        objectivesService.addObjective(body, appuser);
+        body = objectivesService.addObjective(body, appuser);
 
         return body;
     }

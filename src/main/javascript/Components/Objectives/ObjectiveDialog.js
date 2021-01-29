@@ -102,7 +102,7 @@ export default function ObjectiveDialog(props) {
         amount: Math.floor(Number.parseFloat(amount) * 100),
         description: description,
         date: date.getTime(),
-        category: Number.parseInt(category),
+        categoryId: Number.parseInt(category),
         priority: Number.parseInt(priority)
       });
       props.handleClose();

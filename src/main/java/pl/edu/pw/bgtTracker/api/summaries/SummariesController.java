@@ -170,7 +170,6 @@ public class SummariesController {
         for(int i = 0; i < daysBetween; i++)
         {
             dateIteterator = c.getTime();
-            System.out.println(dateIteterator.toString());
             days[i] = c.getTime().getTime();
             if(expesesIndex < peridExpenses.size() && fmt.format(dateIteterator).equals(fmt.format(peridExpenses.get(expesesIndex).getDate())))
             {

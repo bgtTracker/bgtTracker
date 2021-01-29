@@ -36,12 +36,13 @@ public class ObjectivesService {
      * @param objectiveJson - data for objective
      * @param user - user that will have the objective
      */
-    public void addObjective(JSONObject objectiveJson, AppUser user) {
+    public JSONObject addObjective(JSONObject objectiveJson, AppUser user) {
         //Objective objective
         Objective objective = new Objective();
         objective = setObjectivToJson(objectiveJson, objective);
         objective.setUser(user);
-        objectiveRepository.save(objective);
+        objective =  objectiveRepository.save(objective);
+        return objective.toJSON();
     }
 
     public void addObjective(Long amount, String name, String description, Date date, Long priority, ExpenseCategory category, AppUser user) {
@@ -138,7 +139,7 @@ public class ObjectivesService {
         objective.setDescription((String) newObjective.get("description"));
         objective.setDate(new Date((Long) newObjective.get("date")));
         objective.setPriority((Long) newObjective.get("priority"));
-        objective.setCategory(expenseCategoryRepository.findById((Long) newObjective.get("category")).get());
+        objective.setCategory(expenseCategoryRepository.findById((Long) newObjective.get("categoryId")).get());
         return objective;
     }
 

@@ -31,7 +31,7 @@ import pl.edu.pw.bgtTracker.db.repos.UserRepository;
 public class CommentsContoller {
     @Autowired private UserRepository userRepository;
     @Autowired private CommentsRepository commentsRepository;
-
+  
     @GetMapping("/getAll")
     private JSONObject getALL(Authentication auth)
     {
@@ -110,4 +110,5 @@ public class CommentsContoller {
 
       return body;
   }
+
 }
