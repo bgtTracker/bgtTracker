@@ -3,6 +3,7 @@ import ReactDOM from "react-dom";
 import { BrowserRouter as Router, Redirect, Route, Switch } from "react-router-dom";
 import Login from "./Components/Login/Login";
 import Register from "./Components/Login/Register";
+import Registration from "./Components/Login/RegistrationPage.js";
 import MainPage from "./Components/MainPage";
 import firebase from "firebase/app";
 import "firebase/messaging";
@@ -10,6 +11,10 @@ import clientJson from "./clientJson.js";
 import AuthenticatedRoute from "./Components/AuthenticatedRoute";
 import AuthService from "./api/AuthService";
 import { SnackbarProvider } from "notistack";
+
+//redux imports
+import { Provider } from "react-redux";
+import store from "./store.js";
 
 async function initPush() {
   if ("serviceWorker" in navigator) {
@@ -34,18 +39,20 @@ export default function App() {
   }, []);
 
   return (
-    <SnackbarProvider maxSnack={4}>
-      <Router>
-        <Switch>
-          <Route exact path="/">
-            {(isAuth !== null && ((isAuth === true && <Redirect to="/app" />) || <Redirect to="/login" />)) || null}
-          </Route>
-          <Route exact path="/login" component={Login} />
-          <Route exact path="/register" component={Register} />
-          <AuthenticatedRoute path="/app" component={MainPage} />
-        </Switch>
-      </Router>
-    </SnackbarProvider>
+    <Provider store={store}>
+      <SnackbarProvider maxSnack={4}>
+        <Router>
+          <Switch>
+            <Route exact path="/">
+              {(isAuth !== null && ((isAuth === true && <Redirect to="/app" />) || <Redirect to="/login" />)) || null}
+            </Route>
+            <Route exact path="/login" component={Login} />
+            <Route exact path="/register" component={Registration} />
+            <AuthenticatedRoute path="/app" component={MainPage} />
+          </Switch>
+        </Router>
+      </SnackbarProvider>
+    </Provider>
   );
 }
 
