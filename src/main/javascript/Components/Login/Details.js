@@ -1,10 +1,11 @@
 import React from "react";
 import { Button, Container, Grid, TextField, Typography } from "@material-ui/core";
-import { makeStyles } from "@material-ui/core/styles";
+import { makeStyles, withStyles } from "@material-ui/core/styles";
 import { connect } from "react-redux";
 import { goBack, setUserExists, setLimit } from "../../actions/registerActions.js";
 import AuthService, { User } from "../../api/AuthService";
 import { useHistory } from "react-router-dom";
+// import PurpleGradientButton from "../Misc/ColoredButtons.js";
 
 const useStyles = makeStyles(theme => ({
   paper: {
@@ -25,6 +26,12 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
+export const PurpleGradientButton = withStyles(theme => ({
+  root: {
+    backgroundImage: "linear-gradient(-225deg, #231557 0%, #44107A 29%, #FF1361 67%, #FFF800 100%)"
+  }
+}))(Button);
+
 function Details(props) {
   const classes = useStyles();
   const history = useHistory();
@@ -37,7 +44,7 @@ function Details(props) {
       return;
     }
 
-    await AuthService.login(user.getCreds());
+    await AuthService.login(props.user.getCreds());
 
     //send details to reducer
     props.setLimit(document.getElementById("limit"));
@@ -62,13 +69,16 @@ function Details(props) {
                 id="limit"
                 label="Limit"
                 value={props.limit}
+                onChange={e => {
+                  props.setLimit(e.target.value);
+                }}
                 autoFocus
               />
             </Grid>
           </Grid>
-          <Button type="submit" fullWidth variant="contained" color="primary" className={classes.submit}>
+          <PurpleGradientButton type="submit" fullWidth variant="contained" color="primary" className={classes.submit}>
             Sign Up
-          </Button>
+          </PurpleGradientButton>
           <Button
             fullWidth
             variant="contained"

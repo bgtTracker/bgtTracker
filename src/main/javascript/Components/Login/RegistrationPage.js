@@ -24,12 +24,12 @@ const ColorlibConnector = withStyles({
   },
   active: {
     "& $line": {
-      backgroundImage: "linear-gradient( 95deg,rgb(242,113,33) 0%,rgb(233,64,87) 50%,rgb(138,35,135) 100%)"
+      backgroundImage: "linear-gradient(to right, #00dbde 0%, #fc00ff 100%)"
     }
   },
   completed: {
     "& $line": {
-      backgroundImage: "linear-gradient( 95deg,rgb(242,113,33) 0%,rgb(233,64,87) 50%,rgb(138,35,135) 100%)"
+      backgroundImage: "linear-gradient(to right, #00dbde 0%, #fc00ff 100%)"
     }
   },
   line: {
@@ -53,11 +53,11 @@ const useColorlibStepIconStyles = makeStyles({
     alignItems: "center"
   },
   active: {
-    backgroundImage: "linear-gradient( 136deg, rgb(242,113,33) 0%, rgb(233,64,87) 50%, rgb(138,35,135) 100%)",
+    backgroundImage: "linear-gradient(to right, #00dbde 0%, #fc00ff 100%)",
     boxShadow: "0 4px 10px 0 rgba(0,0,0,.25)"
   },
   completed: {
-    backgroundImage: "linear-gradient( 136deg, rgb(242,113,33) 0%, rgb(233,64,87) 50%, rgb(138,35,135) 100%)"
+    backgroundImage: "linear-gradient(to right, #00dbde 0%, #fc00ff 100%)"
   }
 });
 
@@ -119,7 +119,7 @@ const useStyles = makeStyles(theme => ({
   },
   avatar: {
     margin: theme.spacing(1),
-    backgroundColor: theme.palette.secondary.main
+    backgroundImage: "linear-gradient(to right, #00dbde 0%, #fc00ff 100%)"
   }
 }));
 
