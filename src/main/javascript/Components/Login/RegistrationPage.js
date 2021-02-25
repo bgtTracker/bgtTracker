@@ -5,14 +5,15 @@ import clsx from "clsx";
 import Stepper from "@material-ui/core/Stepper";
 import Step from "@material-ui/core/Step";
 import StepLabel from "@material-ui/core/StepLabel";
-import Check from "@material-ui/icons/Check";
 import SettingsIcon from "@material-ui/icons/Settings";
 import GroupAddIcon from "@material-ui/icons/GroupAdd";
-import VideoLabelIcon from "@material-ui/icons/VideoLabel";
 import StepConnector from "@material-ui/core/StepConnector";
-import Button from "@material-ui/core/Button";
-import Typography from "@material-ui/core/Typography";
 import Register from "./Register.js";
+import Details from "./Details.js";
+import SwipeableViews from "react-swipeable-views";
+import { PersonAddOutlined } from "@material-ui/icons";
+import Avatar from "@material-ui/core/Avatar";
+import Container from "@material-ui/core/Container";
 
 import { connect } from "react-redux";
 import { nextStep, goBack } from "../../actions/registerActions.js";
@@ -98,7 +99,12 @@ ColorlibStepIcon.propTypes = {
 
 const useStyles = makeStyles(theme => ({
   root: {
-    width: "100%"
+    marginTop: theme.spacing(8),
+    width: "100%",
+    backgroundColor: "#fafafa",
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center"
   },
   button: {
     marginRight: theme.spacing(1)
@@ -106,6 +112,14 @@ const useStyles = makeStyles(theme => ({
   instructions: {
     marginTop: theme.spacing(1),
     marginBottom: theme.spacing(1)
+  },
+  steeper: {
+    backgroundColor: "#fafafa",
+    width: "100%"
+  },
+  avatar: {
+    margin: theme.spacing(1),
+    backgroundColor: theme.palette.secondary.main
   }
 }));
 
@@ -118,50 +132,29 @@ function RegistrationPage(props) {
   const activeStep = props.step;
   const steps = getSteps();
 
-  const handleNext = () => {
-    props.nextStep();
-  };
-
-  const handleBack = () => {
-    props.goBack();
-  };
-
-  const handleReset = () => {
-    setActiveStep(0);
-  };
-
   return (
-    <div className={classes.root}>
-      <Register />
-      <Stepper alternativeLabel activeStep={activeStep} connector={<ColorlibConnector />}>
-        {steps.map(label => (
-          <Step key={label}>
-            <StepLabel StepIconComponent={ColorlibStepIcon}>{label}</StepLabel>
-          </Step>
-        ))}
-      </Stepper>
-      <div>
-        {activeStep === steps.length ? (
-          <div>
-            <Typography className={classes.instructions}>All steps completed - you&apos;re finished</Typography>
-            <Button onClick={handleReset} className={classes.button}>
-              Reset
-            </Button>
-          </div>
-        ) : (
-          <div>
-            <div>
-              <Button disabled={activeStep === 0} onClick={handleBack} className={classes.button}>
-                Back
-              </Button>
-              <Button variant="contained" color="primary" onClick={handleNext} className={classes.button}>
-                {activeStep === steps.length - 1 ? "Finish" : "Next"}
-              </Button>
-            </div>
-          </div>
-        )}
+    <Container maxWidth="xs">
+      <div className={classes.root}>
+        <Avatar className={classes.avatar}>
+          <PersonAddOutlined />
+        </Avatar>
+        <SwipeableViews
+          axis="x"
+          index={activeStep}
+          // onChangeIndex={handleChangeIndexChart}
+        >
+          <Register />
+          <Details />
+        </SwipeableViews>
+        <Stepper className={classes.steeper} alternativeLabel activeStep={activeStep} connector={<ColorlibConnector />}>
+          {steps.map(label => (
+            <Step key={label}>
+              <StepLabel StepIconComponent={ColorlibStepIcon}>{label}</StepLabel>
+            </Step>
+          ))}
+        </Stepper>
       </div>
-    </div>
+    </Container>
   );
 }
 

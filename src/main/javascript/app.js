@@ -11,6 +11,7 @@ import clientJson from "./clientJson.js";
 import AuthenticatedRoute from "./Components/AuthenticatedRoute";
 import AuthService from "./api/AuthService";
 import { SnackbarProvider } from "notistack";
+import { ThemeProvider } from "@material-ui/core/styles";
 
 //redux imports
 import { Provider } from "react-redux";
