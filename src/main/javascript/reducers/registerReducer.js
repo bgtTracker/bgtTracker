@@ -1,6 +1,7 @@
-import { REGISTER_GO_BACK, REGISTER_NEXT_STEP } from "../actions/types.js";
+import { REGISTER_GO_BACK, REGISTER_NEXT_STEP, REGISTER_ADD_USER } from "../actions/types.js";
 const initialState = {
-  step: 0
+  step: 0,
+  user: undefined
 };
 
 export default function (state = initialState, action) {
@@ -16,6 +17,11 @@ export default function (state = initialState, action) {
       return {
         ...state,
         step: state.step + 1
+      };
+    case REGISTER_ADD_USER:
+      return {
+        ...state,
+        user: action.payload
       };
     default:
       return state;

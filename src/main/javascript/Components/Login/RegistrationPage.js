@@ -66,8 +66,7 @@ function ColorlibStepIcon(props) {
 
   const icons = {
     1: <SettingsIcon />,
-    2: <GroupAddIcon />,
-    3: <VideoLabelIcon />
+    2: <GroupAddIcon />
   };
 
   return (

@@ -1,4 +1,4 @@
-import { REGISTER_GO_BACK, REGISTER_NEXT_STEP } from "./types.js";
+import { REGISTER_GO_BACK, REGISTER_NEXT_STEP, REGISTER_ADD_USER } from "./types.js";
 
 export const nextStep = () => dispatch => {
   dispatch({
@@ -9,5 +9,12 @@ export const nextStep = () => dispatch => {
 export const goBack = () => dispatch => {
   dispatch({
     type: REGISTER_GO_BACK
+  });
+};
+
+export const addUser = user => dispatch => {
+  dispatch({
+    type: REGISTER_ADD_USER,
+    payload: user
   });
 };
