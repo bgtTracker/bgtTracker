@@ -12,15 +12,13 @@ import Badge from "@material-ui/core/Badge";
 import { element } from "prop-types";
 
 const useStyles = makeStyles(theme => ({
-  root: {
-    width: "100%",
-    "& > * + *": {
-      marginTop: theme.spacing(2)
-    }
+  alert: {
+    width: "280px"
   }
 }));
 
 export default function NotificationMenu(props) {
+  const classes = useStyles();
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
   const [dissmed, setDissmed] = React.useState([]);
@@ -83,6 +81,7 @@ export default function NotificationMenu(props) {
               <Collapse key={element.id} in={checkOpen(element)}>
                 <MenuItem>
                   <Alert
+                    className={classes.alert}
                     severity={element.level}
                     variant="filled"
                     action={
