@@ -11,11 +11,13 @@ import clientJson from "./clientJson.js";
 import AuthenticatedRoute from "./Components/AuthenticatedRoute";
 import AuthService from "./api/AuthService";
 import { SnackbarProvider } from "notistack";
-import { ThemeProvider } from "@material-ui/core/styles";
+import { ThemeProvider, createMuiTheme } from "@material-ui/core/styles";
 
 //redux imports
 import { Provider } from "react-redux";
 import store from "./store.js";
+
+const theme = createMuiTheme();
 
 async function initPush() {
   if ("serviceWorker" in navigator) {
@@ -42,16 +44,18 @@ export default function App() {
   return (
     <Provider store={store}>
       <SnackbarProvider maxSnack={4}>
-        <Router>
-          <Switch>
-            <Route exact path="/">
-              {(isAuth !== null && ((isAuth === true && <Redirect to="/app" />) || <Redirect to="/login" />)) || null}
-            </Route>
-            <Route exact path="/login" component={Login} />
-            <Route exact path="/register" component={Registration} />
-            <AuthenticatedRoute path="/app" component={MainPage} />
-          </Switch>
-        </Router>
+        <ThemeProvider theme={theme}>
+          <Router>
+            <Switch>
+              <Route exact path="/">
+                {(isAuth !== null && ((isAuth === true && <Redirect to="/app" />) || <Redirect to="/login" />)) || null}
+              </Route>
+              <Route exact path="/login" component={Login} />
+              <Route exact path="/register" component={Registration} />
+              <AuthenticatedRoute path="/app" component={MainPage} />
+            </Switch>
+          </Router>
+        </ThemeProvider>
       </SnackbarProvider>
     </Provider>
   );

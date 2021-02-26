@@ -2,10 +2,15 @@ import React from "react";
 import { Button, Container, Grid, TextField, Typography } from "@material-ui/core";
 import { makeStyles, withStyles } from "@material-ui/core/styles";
 import { connect } from "react-redux";
-import { goBack, setUserExists, setLimit } from "../../actions/registerActions.js";
+import { goBack, setUserExists, setLimit, setReminderTime, setSendReminder } from "../../actions/registerActions.js";
 import AuthService, { User } from "../../api/AuthService";
 import { useHistory } from "react-router-dom";
-// import PurpleGradientButton from "../Misc/ColoredButtons.js";
+import { MuiPickersUtilsProvider, KeyboardTimePicker } from "@material-ui/pickers";
+import DateFnsUtils from "@date-io/date-fns";
+import Collapse from "@material-ui/core/Collapse";
+import Switch from "@material-ui/core/Switch";
+
+import { PurpleGradientButton } from "../Misc/ColoredButtons.js";
 
 const useStyles = makeStyles(theme => ({
   paper: {
@@ -26,12 +31,6 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-export const PurpleGradientButton = withStyles(theme => ({
-  root: {
-    backgroundImage: "linear-gradient(-225deg, #231557 0%, #44107A 29%, #FF1361 67%, #FFF800 100%)"
-  }
-}))(Button);
-
 function Details(props) {
   const classes = useStyles();
   const history = useHistory();
@@ -46,8 +45,16 @@ function Details(props) {
 
     await AuthService.login(props.user.getCreds());
 
-    //send details to reducer
-    props.setLimit(document.getElementById("limit"));
+    fetch("/api/limit", {
+      method: "Put",
+      headers: AuthService.getAuthHeader(),
+      body: JSON.stringify(Math.floor(Number.parseFloat(props.limit) * 100))
+    })
+      .then(respone => {})
+      .catch(error => {
+        console.log(error);
+        ErrorCodeHandler(error.status);
+      });
 
     history.push("/app");
   };
@@ -75,6 +82,43 @@ function Details(props) {
                 autoFocus
               />
             </Grid>
+            <Grid item xs={12}>
+              <Grid container direction={"row"}>
+                <Grid item>
+                  <h6>Send a daily reminder?</h6>
+                </Grid>
+                <Grid item>
+                  <div style={{ marginTop: "-10px" }}>
+                    <Switch
+                      checked={props.sendReminder}
+                      onChange={e => props.setSendReminder(e.target.checked)}
+                      name=""
+                    />
+                  </div>
+                </Grid>
+              </Grid>
+            </Grid>
+            <Grid item xs={12}>
+              <div style={{ marginTop: "-25px" }}>
+                <Collapse in={props.sendReminder}>
+                  <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                    <KeyboardTimePicker
+                      style={{ width: "100%" }}
+                      margin="normal"
+                      id="time-reminder"
+                      label="Time to send a reminder"
+                      value={props.time}
+                      onChange={data => {
+                        props.setReminderTime(data);
+                      }}
+                      KeyboardButtonProps={{
+                        "aria-label": "change time"
+                      }}
+                    />
+                  </MuiPickersUtilsProvider>
+                </Collapse>
+              </div>
+            </Grid>
           </Grid>
           <PurpleGradientButton type="submit" fullWidth variant="contained" color="primary" className={classes.submit}>
             Sign Up
@@ -98,7 +142,9 @@ function Details(props) {
 const mapStateToProps = state => ({
   step: state.register.step,
   user: state.register.user,
-  limit: state.register.limit
+  limit: state.register.limit,
+  time: state.register.reminderTime,
+  sendReminder: state.register.sendReminder
 });
 
-export default connect(mapStateToProps, { goBack, setUserExists, setLimit })(Details);
+export default connect(mapStateToProps, { goBack, setUserExists, setLimit, setReminderTime, setSendReminder })(Details);

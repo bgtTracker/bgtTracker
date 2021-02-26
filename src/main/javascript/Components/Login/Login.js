@@ -15,7 +15,7 @@ import {
 } from "@material-ui/core";
 import { LockOutlined } from "@material-ui/icons";
 import AuthService, { UserCredentials } from "../../api/AuthService";
-
+import { PurpleGradientButton } from "../Misc/ColoredButtons.js";
 import ChangeTitle from "../ChangeTitle";
 
 const useStyles = makeStyles(theme => ({
@@ -98,9 +98,9 @@ export default function Login() {
             helperText={isError ? "Invalid email or password" : undefined}
           />
           <FormControlLabel control={<Checkbox name="remember" id="remember" color="primary" />} label="Remember me" />
-          <Button type="submit" fullWidth variant="contained" color="primary" className={classes.submit}>
+          <PurpleGradientButton type="submit" fullWidth variant="contained" color="primary" className={classes.submit}>
             Sign In
-          </Button>
+          </PurpleGradientButton>
         </form>
         <Grid container>
           <Grid item xs>

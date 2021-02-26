@@ -3,10 +3,12 @@ import {
   REGISTER_NEXT_STEP,
   REGISTER_ADD_USER,
   REGISTER_SET_LIMIT,
-  REGISTER_SET_USER_EXIST
+  REGISTER_SET_USER_EXIST,
+  REGISTER_SET_REMINDER_TIME,
+  REGISTER_SET_SEND_REMINDER
 } from "./types.js";
-import AuthService from "../api/AuthService.js";
-import ErrorCodeHandler from "../Components/ErrorCodeHandler.js";
+// import AuthService from "../api/AuthService.js";
+// import ErrorCodeHandler from "../Components/ErrorCodeHandler.js";
 
 export const nextStep = () => dispatch => {
   dispatch({
@@ -28,21 +30,10 @@ export const addUser = user => dispatch => {
 };
 
 export const setLimit = limit => dispatch => {
-  fetch("/api/limit", {
-    method: "Put",
-    headers: AuthService.getAuthHeader(),
-    body: JSON.stringify(Math.floor(Number.parseFloat(limit) * 100))
-  })
-    .then(respone => {
-      dispatch({
-        type: REGISTER_SET_LIMIT,
-        payload: limit
-      });
-    })
-    .catch(error => {
-      console.log(error);
-      ErrorCodeHandler(error.status);
-    });
+  dispatch({
+    type: REGISTER_SET_LIMIT,
+    payload: limit
+  });
 };
 
 export const setUserExists = exists => dispatch => {
@@ -54,5 +45,19 @@ export const setUserExists = exists => dispatch => {
   dispatch({
     type: REGISTER_SET_USER_EXIST,
     payload: exists
+  });
+};
+
+export const setReminderTime = time => dispatch => {
+  dispatch({
+    type: REGISTER_SET_REMINDER_TIME,
+    payload: time
+  });
+};
+
+export const setSendReminder = send => dispatch => {
+  dispatch({
+    type: REGISTER_SET_SEND_REMINDER,
+    payload: send
   });
 };
