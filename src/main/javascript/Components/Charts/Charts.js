@@ -3,7 +3,7 @@ import clsx from "clsx";
 import Container from "@material-ui/core/Container";
 import Grid from "@material-ui/core/Grid";
 import Paper from "@material-ui/core/Paper";
-import { makeStyles, createMuiTheme } from "@material-ui/core/styles";
+import { makeStyles, useTheme } from "@material-ui/core/styles";
 import BarChart from "./BarChart.js";
 import CAP from "./CategoryAmount/CategoryAmountPrinter.js";
 import CategoryPie from "./CategoryPie.js";
@@ -17,8 +17,6 @@ import Tab from "@material-ui/core/Tab";
 import Typography from "@material-ui/core/Typography";
 import PropTypes from "prop-types";
 import Box from "@material-ui/core/Box";
-
-const theme = createMuiTheme();
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -55,6 +53,7 @@ function a11yProps(index) {
 
 function Charts(props) {
   let classes = useStyles();
+  const theme = useTheme();
   let fixedHeightPaperChart = clsx(classes.paper, classes.fixedHeightChart);
   let CategoryAmountFixedHeight = clsx(classes.paper, classes.fixedHeightCategory);
 

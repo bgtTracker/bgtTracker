@@ -5,13 +5,11 @@ import Menu from "@material-ui/core/Menu";
 import MenuItem from "@material-ui/core/MenuItem";
 import Fade from "@material-ui/core/Fade";
 import NotificationsOutlined from "@material-ui/icons/NotificationsOutlined";
-import { makeStyles, createMuiTheme } from "@material-ui/core/styles";
+import { makeStyles } from "@material-ui/core/styles";
 import { Alert, AlertTitle } from "@material-ui/lab";
 import Collapse from "@material-ui/core/Collapse";
 import Badge from "@material-ui/core/Badge";
 import { element } from "prop-types";
-
-const theme = createMuiTheme();
 
 const useStyles = makeStyles(theme => ({
   root: {

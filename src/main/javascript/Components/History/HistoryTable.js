@@ -1,7 +1,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 import clsx from "clsx";
-import { lighten, makeStyles, createMuiTheme } from "@material-ui/core/styles";
+import { lighten, makeStyles } from "@material-ui/core/styles";
 import Table from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
 import TableCell from "@material-ui/core/TableCell";
@@ -22,8 +22,6 @@ import CSVexporter from "./CSVexporter.js";
 import RowDetails from "./RowDetails.js";
 import RowNoDetails from "./Row.js";
 import DataConverter from "./DataConveret.js";
-
-const theme = createMuiTheme();
 
 function createDetails(id, date, type, name, amount) {
   return { id, date, type, name, amount };

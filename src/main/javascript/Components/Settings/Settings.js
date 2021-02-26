@@ -8,14 +8,12 @@ import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogTitle from "@material-ui/core/DialogTitle";
-import { makeStyles, createMuiTheme } from "@material-ui/core/styles";
+import { makeStyles } from "@material-ui/core/styles";
 import TextField from "@material-ui/core/TextField";
 import { set } from "date-fns";
 import AuthService from "../../api/AuthService.js";
 import ErrorCodeHandler from "../ErrorCodeHandler.js";
 import CurrencySelect from "./CurrencySelect.js";
-
-const theme = createMuiTheme();
 
 const useStyles = makeStyles(theme => ({
   form: {

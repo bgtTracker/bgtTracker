@@ -8,16 +8,14 @@ import HistoryTable from "../History/HistoryTable.js";
 import AuthService from "../../api/AuthService.js";
 import { Skeleton } from "@material-ui/lab";
 
-const theme = createMuiTheme();
-
-const useStyles = makeStyles({
+const useStyles = makeStyles(theme => ({
   paper: {
     padding: theme.spacing(2),
     display: "flex",
     overflow: "auto",
     flexDirection: "column"
   }
-});
+}));
 
 let headCells = [
   { id: "date", numeric: false, disablePadding: false, label: "Date" },

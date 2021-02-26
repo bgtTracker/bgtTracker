@@ -6,7 +6,7 @@ import DialogTitle from "@material-ui/core/DialogTitle";
 import Grid from "@material-ui/core/Grid";
 import TextField from "@material-ui/core/TextField";
 import Button from "@material-ui/core/Button";
-import { createMuiTheme, makeStyles } from "@material-ui/core/styles";
+import { makeStyles } from "@material-ui/core/styles";
 import FormControl from "@material-ui/core/FormControl";
 import Select from "@material-ui/core/Select";
 import DateFnsUtils from "@date-io/date-fns";
@@ -18,9 +18,7 @@ import AuthService from "../../api/AuthService.js";
 import { Skeleton } from "@material-ui/lab";
 import ErrorCodeHandler from "../ErrorCodeHandler.js";
 
-const theme = createMuiTheme();
-
-const useStyles = makeStyles({
+const useStyles = makeStyles(theme => ({
   smalleTextField: {
     height: 50
   },
@@ -48,7 +46,7 @@ const useStyles = makeStyles({
   formControl: {
     minWidth: 220
   }
-});
+}));
 
 export default function ObjectiveDialog(props) {
   const classes = useStyles();

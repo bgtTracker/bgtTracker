@@ -1,7 +1,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 import clsx from "clsx";
-import { lighten, makeStyles, createMuiTheme } from "@material-ui/core/styles";
+import { lighten, makeStyles } from "@material-ui/core/styles";
 import Table from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
 import TableCell from "@material-ui/core/TableCell";
@@ -24,8 +24,6 @@ import RowNoDetails from "../History/Row.js";
 import ObjectiveDialog from "./ObjectiveDialog.js";
 import AuthService from "../../api/AuthService.js";
 import Grid from "@material-ui/core/Grid";
-
-const theme = createMuiTheme();
 
 function descendingComparator(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {

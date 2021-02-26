@@ -19,9 +19,7 @@ import History from "../History/HistoryTableDetails.js";
 import AuthService from "../../api/AuthService.js";
 import { Skeleton } from "@material-ui/lab";
 
-const theme = createMuiTheme();
-
-const useStyles = makeStyles({
+const useStyles = makeStyles(theme => ({
   list: {
     width: 250
   },
@@ -43,7 +41,7 @@ const useStyles = makeStyles({
     overflow: "auto",
     flexDirection: "column"
   }
-});
+}));
 
 export default function Summary() {
   let userID = 1;
