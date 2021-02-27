@@ -17,7 +17,16 @@ import { ThemeProvider, createMuiTheme } from "@material-ui/core/styles";
 import { Provider } from "react-redux";
 import store from "./store.js";
 
-const theme = createMuiTheme();
+const theme = createMuiTheme({
+  mainGradients: {
+    pink: {
+      backgroundImage: "linear-gradient(120deg, #f093fb 0%, #f5576c 100%)"
+    },
+    purpleRed: {
+      backgroundImage: "linear-gradient(-225deg, #231557 0%, #44107A 29%, #FF1361 67%, #FFF800 100%)"
+    }
+  }
+});
 
 async function initPush() {
   if ("serviceWorker" in navigator) {

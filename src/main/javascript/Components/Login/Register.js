@@ -4,7 +4,7 @@ import { makeStyles } from "@material-ui/core/styles";
 import { Button, Container, CssBaseline, Grid, Link, TextField, Typography } from "@material-ui/core";
 import RegexTextField from "../RegexTextField";
 import AuthService, { User } from "../../api/AuthService";
-import { PurpleGradientButton } from "../Misc/ColoredButtons.js";
+import { PinkGradientButton } from "../Misc/ColoredButtons.js";
 import ChangeTitle from "../ChangeTitle";
 
 import { connect } from "react-redux";
@@ -155,9 +155,9 @@ function Register(props) {
           <Button type="submit" fullWidth variant="contained" color="primary" className={classes.submit}>
             Sign Up - Leave default details
           </Button>
-          <PurpleGradientButton fullWidth variant="contained" color="primary" onClick={onNextStep}>
+          <PinkGradientButton fullWidth variant="contained" color="primary" onClick={onNextStep}>
             Next Step - Configure account details
-          </PurpleGradientButton>
+          </PinkGradientButton>
           <Grid container justify="flex-end">
             <Grid item>
               <Link component={RouterLink} to="/login" variant="body2">

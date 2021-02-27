@@ -5,7 +5,7 @@ import Menu from "@material-ui/core/Menu";
 import MenuItem from "@material-ui/core/MenuItem";
 import Fade from "@material-ui/core/Fade";
 import NotificationsOutlined from "@material-ui/icons/NotificationsOutlined";
-import { makeStyles } from "@material-ui/core/styles";
+import { makeStyles, withStyles } from "@material-ui/core/styles";
 import { Alert, AlertTitle } from "@material-ui/lab";
 import Collapse from "@material-ui/core/Collapse";
 import Badge from "@material-ui/core/Badge";
@@ -14,6 +14,11 @@ import { element } from "prop-types";
 const useStyles = makeStyles(theme => ({
   alert: {
     width: "280px"
+  },
+  menuItemCentred: {
+    root: {
+      justifyContent: "centre"
+    }
   }
 }));
 
@@ -43,6 +48,12 @@ export default function NotificationMenu(props) {
     props.removeNotication(element.id);
     element.open = false;
     setDissmed(dissmed => [...dissmed, element.id]);
+  };
+
+  const dismissAll = () => {
+    props.notifications.map(element => {
+      handleDissmisal(element);
+    });
   };
 
   return (
@@ -76,6 +87,7 @@ export default function NotificationMenu(props) {
             open={open}
             onClose={handleClose}
             TransitionComponent={Fade}
+            autoFocus={false}
           >
             {props.notifications.map(element => (
               <Collapse key={element.id} in={checkOpen(element)}>
@@ -96,6 +108,11 @@ export default function NotificationMenu(props) {
                 </MenuItem>
               </Collapse>
             ))}
+            <MenuItem className={classes.menuItemCentred}>
+              <Button className={classes.alert} onClick={dismissAll}>
+                Dismiss all
+              </Button>
+            </MenuItem>
           </Menu>
         </div>
       )}

@@ -10,7 +10,7 @@ import DateFnsUtils from "@date-io/date-fns";
 import Collapse from "@material-ui/core/Collapse";
 import Switch from "@material-ui/core/Switch";
 
-import { PurpleGradientButton } from "../Misc/ColoredButtons.js";
+import { PinkGradientButton } from "../Misc/ColoredButtons.js";
 
 const useStyles = makeStyles(theme => ({
   paper: {
@@ -120,9 +120,9 @@ function Details(props) {
               </div>
             </Grid>
           </Grid>
-          <PurpleGradientButton type="submit" fullWidth variant="contained" color="primary" className={classes.submit}>
+          <PinkGradientButton type="submit" fullWidth variant="contained" color="primary" className={classes.submit}>
             Sign Up
-          </PurpleGradientButton>
+          </PinkGradientButton>
           <Button
             fullWidth
             variant="contained"

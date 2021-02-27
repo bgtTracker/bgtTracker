@@ -1,6 +1,6 @@
 import React from "react";
 import { Link as RouterLink, useHistory } from "react-router-dom";
-import { makeStyles } from "@material-ui/core/styles";
+import { makeStyles, useTheme } from "@material-ui/core/styles";
 import {
   Avatar,
   Button,
@@ -15,8 +15,9 @@ import {
 } from "@material-ui/core";
 import { LockOutlined } from "@material-ui/icons";
 import AuthService, { UserCredentials } from "../../api/AuthService";
-import { PurpleGradientButton } from "../Misc/ColoredButtons.js";
+import { PinkGradientButton } from "../Misc/ColoredButtons.js";
 import ChangeTitle from "../ChangeTitle";
+import clsx from "clsx";
 
 const useStyles = makeStyles(theme => ({
   paper: {
@@ -27,7 +28,8 @@ const useStyles = makeStyles(theme => ({
   },
   avatar: {
     margin: theme.spacing(1),
-    backgroundColor: theme.palette.secondary.main
+    backgroundColor: theme.palette.secondary.main,
+    backgroundImage: "linear-gradient(120deg, #f093fb 0%, #f5576c 100%)"
   },
   form: {
     width: "100%",
@@ -40,6 +42,8 @@ const useStyles = makeStyles(theme => ({
 
 export default function Login() {
   const classes = useStyles();
+  const theme = useTheme();
+  const avatarWithPinkGradientClass = clsx(classes.avatar, theme.mainGradients.pink);
   const history = useHistory();
   const [isError, setError] = React.useState(false);
 
@@ -64,7 +68,7 @@ export default function Login() {
       <ChangeTitle title="Sign in - bgtTracker" />
       <CssBaseline />
       <div className={classes.paper}>
-        <Avatar className={classes.avatar}>
+        <Avatar className={avatarWithPinkGradientClass}>
           <LockOutlined />
         </Avatar>
         <Typography component="h1" variant="h5">
@@ -98,9 +102,9 @@ export default function Login() {
             helperText={isError ? "Invalid email or password" : undefined}
           />
           <FormControlLabel control={<Checkbox name="remember" id="remember" color="primary" />} label="Remember me" />
-          <PurpleGradientButton type="submit" fullWidth variant="contained" color="primary" className={classes.submit}>
+          <PinkGradientButton type="submit" fullWidth variant="contained" color="primary" className={classes.submit}>
             Sign In
-          </PurpleGradientButton>
+          </PinkGradientButton>
         </form>
         <Grid container>
           <Grid item xs>
