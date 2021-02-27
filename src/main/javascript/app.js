@@ -2,31 +2,18 @@ import React from "react";
 import ReactDOM from "react-dom";
 import { BrowserRouter as Router, Redirect, Route, Switch } from "react-router-dom";
 import Login from "./Components/Login/Login";
-import Register from "./Components/Login/Register";
 import Registration from "./Components/Login/RegistrationPage.js";
 import MainPage from "./Components/MainPage";
-import firebase from "firebase/app";
 import "firebase/messaging";
-import clientJson from "./clientJson.js";
 import AuthenticatedRoute from "./Components/AuthenticatedRoute";
 import AuthService from "./api/AuthService";
 import { SnackbarProvider } from "notistack";
 import { ThemeProvider, createMuiTheme } from "@material-ui/core/styles";
+import useMediaQuery from "@material-ui/core/useMediaQuery";
 
 //redux imports
 import { Provider } from "react-redux";
 import store from "./store.js";
-
-const theme = createMuiTheme({
-  mainGradients: {
-    pink: {
-      backgroundImage: "linear-gradient(120deg, #f093fb 0%, #f5576c 100%)"
-    },
-    purpleRed: {
-      backgroundImage: "linear-gradient(-225deg, #231557 0%, #44107A 29%, #FF1361 67%, #FFF800 100%)"
-    }
-  }
-});
 
 async function initPush() {
   if ("serviceWorker" in navigator) {
@@ -45,6 +32,22 @@ async function initPush() {
 
 export default function App() {
   const [isAuth, setAuth] = React.useState(null);
+
+  const prefersDarkMode = useMediaQuery("(prefers-color-scheme: dark)");
+
+  const theme = createMuiTheme({
+    palette: {
+      type: prefersDarkMode ? "dark" : "light"
+    },
+    mainGradients: {
+      pink: {
+        backgroundImage: "linear-gradient(120deg, #f093fb 0%, #f5576c 100%)"
+      },
+      purpleRed: {
+        backgroundImage: "linear-gradient(-225deg, #231557 0%, #44107A 29%, #FF1361 67%, #FFF800 100%)"
+      }
+    }
+  });
 
   React.useEffect(() => {
     (async () => setAuth(await AuthService.verifyUser()))();

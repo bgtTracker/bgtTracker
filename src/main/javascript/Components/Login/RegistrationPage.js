@@ -101,7 +101,6 @@ const useStyles = makeStyles(theme => ({
   root: {
     marginTop: theme.spacing(8),
     width: "100%",
-    backgroundColor: "#fafafa",
     display: "flex",
     flexDirection: "column",
     alignItems: "center"
@@ -114,7 +113,7 @@ const useStyles = makeStyles(theme => ({
     marginBottom: theme.spacing(1)
   },
   steeper: {
-    backgroundColor: "#fafafa",
+    backgroundColor: theme.palette.background.default,
     width: "100%"
   },
   avatar: {

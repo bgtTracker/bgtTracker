@@ -1,8 +1,10 @@
 import React from "react";
 import ApexChart from "react-apexcharts";
 import PropTypes from "prop-types";
+import { useTheme } from "@material-ui/core/styles";
 
 export default function CurrencyChart(props) {
+  const theme = useTheme();
   var options = {
     series: props.series,
     chart: {
@@ -14,6 +16,9 @@ export default function CurrencyChart(props) {
     },
     dataLabels: {
       enabled: true
+    },
+    theme: {
+      mode: theme.palette.type
     },
     stroke: {
       width: [5, 7, 5],

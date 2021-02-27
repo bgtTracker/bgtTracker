@@ -1,9 +1,6 @@
 import React from "react";
 import PropTypes from "prop-types";
-import Table from "@material-ui/core/Table";
-import TableBody from "@material-ui/core/TableBody";
 import TableCell from "@material-ui/core/TableCell";
-import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
 import Typography from "@material-ui/core/Typography";
 import Checkbox from "@material-ui/core/Checkbox";
@@ -14,10 +11,15 @@ import Grid from "@material-ui/core/Grid";
 import LinearProgress from "@material-ui/core/LinearProgress";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import ObjectiveDialog from "./ObjectiveDialog.js";
-import clientJson from "../../clientJson.js";
-import AuthService from "../../api/AuthService.js";
+import { useTheme } from "@material-ui/core/styles";
 
 function LinearProgressWithLabel(props) {
+  const theme = useTheme();
+  let color = "primary";
+  if (theme.palette.type === "dark") {
+    color = "secondary";
+  }
+
   return (
     <Box display="flex" alignItems="center">
       <Box minWidth={80}>
@@ -26,7 +28,7 @@ function LinearProgressWithLabel(props) {
         </Typography>
       </Box>
       <Box width="100%" mr={1}>
-        <LinearProgress variant="determinate" {...props} />
+        <LinearProgress color={color} variant="determinate" {...props} />
       </Box>
       <Box minWidth={35}>
         <Typography variant="body2" color="textSecondary">{`${Math.round(props.value)}%`}</Typography>
@@ -44,9 +46,15 @@ LinearProgressWithLabel.propTypes = {
 };
 
 function CircularProgressWithLabel(props) {
+  const theme = useTheme();
+  let color = "primary";
+  if (theme.palette.type === "dark") {
+    color = "secondary";
+  }
+
   return (
     <Box position="relative" display="inline-flex">
-      <CircularProgress variant="determinate" {...props} />
+      <CircularProgress color={color} variant="determinate" {...props} />
       <Box
         top={0}
         left={0}

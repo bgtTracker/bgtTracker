@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import ApexChart from "react-apexcharts";
 import config from "./config.js";
 import PropTypes from "prop-types";
+import { useTheme } from "@material-ui/core/styles";
 
 const colors = config.chartColors;
 
@@ -16,65 +17,64 @@ let columnColors = [
   colors.pink
 ];
 
-export default class CategoryPie extends Component {
-  constructor(probs) {
-    super(probs);
+export default function CategoryPie(props) {
+  let name = "ApexChart";
+  if (props.name) name = props.name;
 
-    let name = "ApexChart";
-    if (this.props.name) name = this.props.name;
-
-    this.state = {
-      name: name,
-      series: this.props.data,
-      options: {
-        title: {
-          text: this.props.title
+  const theme = useTheme();
+  const state = {
+    name: name,
+    series: props.data,
+    options: {
+      title: {
+        text: props.title
+      },
+      labels: props.labels,
+      colors: props.colors,
+      chart: {
+        size: 350,
+        type: "donut"
+      },
+      theme: {
+        mode: theme.palette.type
+      },
+      plotOptions: {
+        pie: {
+          size: 200
         },
-        labels: this.props.labels,
-        colors: this.props.colors,
-        chart: {
-          size: 350,
-          type: "donut"
+        donut: {
+          size: "55%"
         },
-        plotOptions: {
-          pie: {
-            size: 200
-          },
-          donut: {
-            size: "55%"
-          },
-          expandOnClick: true
-        },
-        dataLabels: {
-          enabled: true
-        },
-        fill: {
-          colors: this.props.colors,
-          type: "gradient"
-        },
-        responsive: [
-          {
-            breakpoint: 480,
-            options: {
-              chart: {
-                width: 200
-              },
-              legend: {
-                position: "bottom"
-              }
+        expandOnClick: true
+      },
+      dataLabels: {
+        enabled: true
+      },
+      fill: {
+        colors: props.colors,
+        type: "gradient"
+      },
+      responsive: [
+        {
+          breakpoint: 480,
+          options: {
+            chart: {
+              width: 200
+            },
+            legend: {
+              position: "bottom"
             }
           }
-        ]
-      }
-    };
-  }
-  render() {
-    return (
-      <div className={this.state.name}>
-        <ApexChart height="350" series={this.state.series} options={this.state.options} type="donut" />
-      </div>
-    );
-  }
+        }
+      ]
+    }
+  };
+
+  return (
+    <div className={state.name}>
+      <ApexChart height="350" series={state.series} options={state.options} type="donut" />
+    </div>
+  );
 }
 
 CategoryPie.propTypes = {

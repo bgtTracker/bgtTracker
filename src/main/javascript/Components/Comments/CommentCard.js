@@ -8,8 +8,8 @@ import CardMedia from "@material-ui/core/CardMedia";
 import Button from "@material-ui/core/Button";
 import Typography from "@material-ui/core/Typography";
 import CommentDialog from "./CommentDialog.js";
-import { set } from "date-fns";
 import AuthService from "../../api/AuthService.js";
+import { DarkThemeButton } from "../Misc/ColoredButtons.js";
 
 // const useStyles = makeStyles({
 
@@ -72,12 +72,12 @@ export default function CommentCard(props) {
           </CardContent>
         </CardActionArea>
         <CardActions>
-          <Button onClick={handleDelete} size="small" color="primary">
+          <DarkThemeButton fullWidth color="primary" onClick={handleDelete} size="small">
             Delete
-          </Button>
-          <Button onClick={handleOpen} size="small" color="primary">
+          </DarkThemeButton>
+          <DarkThemeButton fullWidth color="primary" onClick={handleOpen} size="small">
             Edit
-          </Button>
+          </DarkThemeButton>
         </CardActions>
       </Card>
       <CommentDialog open={open} handleSave={handleSave} handleClose={handleClose} comment={props.comment} />

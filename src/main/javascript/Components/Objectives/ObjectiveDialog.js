@@ -17,6 +17,7 @@ import MenuItem from "@material-ui/core/MenuItem";
 import AuthService from "../../api/AuthService.js";
 import { Skeleton } from "@material-ui/lab";
 import ErrorCodeHandler from "../ErrorCodeHandler.js";
+import { DarkThemeButton } from "../Misc/ColoredButtons.js";
 
 const useStyles = makeStyles(theme => ({
   smalleTextField: {
@@ -169,14 +170,14 @@ export default function ObjectiveDialog(props) {
                   <h3> Add category before adding objective, you can do that in expenses page</h3>
                 </Grid>
                 <Grid item xs={6}>
-                  <Button onClick={redirectToExpensePage} color="primary">
+                  <DarkThemeButton fullWidth onClick={redirectToExpensePage} color="primary">
                     Go to expense page
-                  </Button>
+                  </DarkThemeButton>
                 </Grid>
                 <Grid item xs={6}>
-                  <Button onClick={handleClose} color="primary">
+                  <DarkThemeButton fullWidth onClick={handleClose} color="primary">
                     Close
-                  </Button>
+                  </DarkThemeButton>
                 </Grid>
               </Grid>
             </DialogContent>
@@ -320,12 +321,12 @@ export default function ObjectiveDialog(props) {
               </Grid>
             </DialogContent>
             <DialogActions>
-              <Button onClick={handleSave} color="primary">
+              <DarkThemeButton fullWidth onClick={handleSave} color="primary">
                 Save
-              </Button>
-              <Button onClick={handleClose} color="primary">
+              </DarkThemeButton>
+              <DarkThemeButton fullWidth onClick={handleClose} color="primary">
                 Cancel
-              </Button>
+              </DarkThemeButton>
             </DialogActions>
           </Dialog>
         </div>

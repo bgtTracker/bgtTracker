@@ -5,18 +5,8 @@ import DialogContent from "@material-ui/core/DialogContent";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import Grid from "@material-ui/core/Grid";
 import TextField from "@material-ui/core/TextField";
-import Button from "@material-ui/core/Button";
 import { createMuiTheme, makeStyles } from "@material-ui/core/styles";
-import FormControl from "@material-ui/core/FormControl";
-import Select from "@material-ui/core/Select";
-import DateFnsUtils from "@date-io/date-fns";
-import { MuiPickersUtilsProvider, KeyboardDatePicker } from "@material-ui/pickers";
-import InputLabel from "@material-ui/core/InputLabel";
-import Input from "@material-ui/core/Input";
-import MenuItem from "@material-ui/core/MenuItem";
-import AuthService from "../../api/AuthService.js";
-import { Skeleton } from "@material-ui/lab";
-import ErrorCodeHandler from "../ErrorCodeHandler.js";
+import { DarkThemeButton } from "../Misc/ColoredButtons.js";
 
 const theme = createMuiTheme();
 
@@ -105,7 +95,7 @@ export default function ObjectiveDialog(props) {
           onClose={handleClose}
           aria-labelledby="max-width-dialog-title"
         >
-          <DialogTitle id="max-width-dialog-title">Objective:</DialogTitle>
+          <DialogTitle id="max-width-dialog-title">Comment: </DialogTitle>
           <DialogContent>
             <Grid container direction="column" justify="space-around">
               <Grid item xs={6}>
@@ -137,12 +127,12 @@ export default function ObjectiveDialog(props) {
             </Grid>
           </DialogContent>
           <DialogActions>
-            <Button onClick={handleSave} color="primary">
+            <DarkThemeButton fullWidth onClick={handleSave} color="primary">
               Save
-            </Button>
-            <Button onClick={handleClose} color="primary">
+            </DarkThemeButton>
+            <DarkThemeButton fullWidth onClick={handleClose} color="primary">
               Cancel
-            </Button>
+            </DarkThemeButton>
           </DialogActions>
         </Dialog>
       </div>

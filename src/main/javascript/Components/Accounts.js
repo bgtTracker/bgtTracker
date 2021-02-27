@@ -17,6 +17,7 @@ import AddIcon from "@material-ui/icons/Add";
 import EditIcon from "@material-ui/icons/Edit";
 import AuthService from "../api/AuthService";
 import ErrorCodeHandling from "./ErrorCodeHandler";
+import { DarkThemeButton } from "./Misc/ColoredButtons.js";
 
 const useStyles = makeStyles(theme => ({
   gridItem: {
@@ -157,12 +158,12 @@ function EditAccountDialog({ accounts, setAccounts, accIndex, banks, setBanks, o
         />
       </DialogContent>
       <DialogActions>
-        <Button onClick={onClose} color="primary">
+        <DarkThemeButton onClick={onClose} color="primary">
           Cancel
-        </Button>
-        <Button onClick={onClickAccept} color="primary">
+        </DarkThemeButton>
+        <DarkThemeButton onClick={onClickAccept} color="primary">
           {actionName}
-        </Button>
+        </DarkThemeButton>
       </DialogActions>
     </Dialog>
   );

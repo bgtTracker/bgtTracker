@@ -14,6 +14,7 @@ import { set } from "date-fns";
 import AuthService from "../../api/AuthService.js";
 import ErrorCodeHandler from "../ErrorCodeHandler.js";
 import CurrencySelect from "./CurrencySelect.js";
+import { DarkThemeButton } from "../Misc/ColoredButtons.js";
 
 const useStyles = makeStyles(theme => ({
   form: {
@@ -253,9 +254,9 @@ export default function Settings() {
                         </Grid>
                       </DialogContent>
                       <DialogActions>
-                        <Button onClick={handleClickClose} color="primary">
+                        <DarkThemeButton onClick={handleClickClose} color="primary">
                           Done
-                        </Button>
+                        </DarkThemeButton>
                       </DialogActions>
                     </Dialog>
                   </Grid>
@@ -298,9 +299,9 @@ export default function Settings() {
                         </Grid>
                       </DialogContent>
                       <DialogActions>
-                        <Button onClick={handlePassworChange} color="primary">
+                        <DarkThemeButton onClick={handlePassworChange} color="primary">
                           Done
-                        </Button>
+                        </DarkThemeButton>
                       </DialogActions>
                     </Dialog>
                   </Grid>
