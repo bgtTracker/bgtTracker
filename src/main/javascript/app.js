@@ -1,19 +1,13 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import { BrowserRouter as Router, Redirect, Route, Switch } from "react-router-dom";
-import Login from "./Components/Login/Login";
-import Registration from "./Components/Login/RegistrationPage.js";
-import MainPage from "./Components/MainPage";
 import "firebase/messaging";
-import AuthenticatedRoute from "./Components/AuthenticatedRoute";
-import AuthService from "./api/AuthService";
 import { SnackbarProvider } from "notistack";
-import { ThemeProvider, createMuiTheme } from "@material-ui/core/styles";
-import useMediaQuery from "@material-ui/core/useMediaQuery";
 
 //redux imports
 import { Provider } from "react-redux";
 import store from "./store.js";
+
+import InnerApp from "./innerApp.js";
 
 async function initPush() {
   if ("serviceWorker" in navigator) {
@@ -30,44 +24,11 @@ async function initPush() {
   }
 }
 
-export default function App() {
-  const [isAuth, setAuth] = React.useState(null);
-
-  const prefersDarkMode = useMediaQuery("(prefers-color-scheme: dark)");
-
-  const theme = createMuiTheme({
-    palette: {
-      type: prefersDarkMode ? "dark" : "light"
-    },
-    mainGradients: {
-      pink: {
-        backgroundImage: "linear-gradient(120deg, #f093fb 0%, #f5576c 100%)"
-      },
-      purpleRed: {
-        backgroundImage: "linear-gradient(-225deg, #231557 0%, #44107A 29%, #FF1361 67%, #FFF800 100%)"
-      }
-    }
-  });
-
-  React.useEffect(() => {
-    (async () => setAuth(await AuthService.verifyUser()))();
-  }, []);
-
+function App(props) {
   return (
     <Provider store={store}>
       <SnackbarProvider maxSnack={4}>
-        <ThemeProvider theme={theme}>
-          <Router>
-            <Switch>
-              <Route exact path="/">
-                {(isAuth !== null && ((isAuth === true && <Redirect to="/app" />) || <Redirect to="/login" />)) || null}
-              </Route>
-              <Route exact path="/login" component={Login} />
-              <Route exact path="/register" component={Registration} />
-              <AuthenticatedRoute path="/app" component={MainPage} />
-            </Switch>
-          </Router>
-        </ThemeProvider>
+        <InnerApp />
       </SnackbarProvider>
     </Provider>
   );
@@ -76,3 +37,5 @@ export default function App() {
 ReactDOM.render(<App />, document.getElementById("root"));
 
 initPush();
+
+export default App;

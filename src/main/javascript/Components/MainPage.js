@@ -15,7 +15,8 @@ import {
   ListItemText,
   Toolbar,
   Typography,
-  Button
+  Button,
+  Tooltip
 } from "@material-ui/core";
 import {
   AccountBalanceWalletOutlined as AccountBalanceWalletOutlinedIcon,
@@ -30,7 +31,9 @@ import {
   NotificationsOutlined as NotificationsOutlinedIcon,
   ReceiptOutlined as ReceiptOutlinedIcon,
   SettingsOutlined as SettingsOutlinedIcon,
-  WorkOutline as WorkOutlineIcon
+  WorkOutline as WorkOutlineIcon,
+  Brightness4 as LightThemeIcon,
+  Brightness7 as DarkThemeIcon
 } from "@material-ui/icons";
 import { Skeleton } from "@material-ui/lab";
 import { useSnackbar } from "notistack";
@@ -53,6 +56,10 @@ import Objectives from "./Objectives/Objectives.js";
 import ErrorRedirect from "./ErrorRedirect404.js";
 import ErrorCodeHandling from "./ErrorCodeHandler.js";
 import Comments from "./Comments/Comments.js";
+import { connect } from "react-redux";
+import { changeTheme } from "../actions/themeActions.js";
+import { toggleOpenDraw } from "../actions/mainActions.js";
+import useMediaQuery from "@material-ui/core/useMediaQuery";
 
 const drawerWidth = 240;
 
@@ -238,17 +245,35 @@ async function SubscribeToUserTopic(user) {
   }
 }
 
-export default function MainPage() {
+function MainPage(props) {
   const classes = useStyles();
   const history = useHistory();
-  const [drawerOpen, setDrawerOpen] = React.useState(true);
+  // const [drawerOpen, setDrawerOpen] = React.useState(false);
+  const drawerOpen = props.drawerOpen;
+  const setDrawerOpen = () => {
+    props.toggleOpenDraw();
+  };
   const { path, url } = useRouteMatch();
-  const [fireBaseInit, setFireBaseInit] = React.useState(false);
   const [userSubscribed, setUserSubscribed] = React.useState(false);
   const [listenerAdded, setListinerAdded] = React.useState(false);
   const [notifications, setNotfications] = React.useState();
   const [lodaing, setLodaing] = React.useState(false);
+
   const { enqueueSnackbar, closeSnackbar } = useSnackbar();
+
+  let darkTheme = props.darkTheme;
+  console.log("darlkkk" + darkTheme);
+  if (darkTheme == null) {
+    darkTheme = useMediaQuery("(prefers-color-scheme: dark)");
+  }
+  console.log("darlkkk2" + darkTheme);
+  const ToggleTheme = () => {
+    if (!props.darkTheme) {
+      props.changeTheme(true);
+      return;
+    }
+    props.changeTheme(false);
+  };
 
   if (firebase.apps.length === 0) {
     InitFireBase();
@@ -284,25 +309,6 @@ export default function MainPage() {
         onExited: reloadNotifications,
         variant: data.level,
         preventDuplicate: true,
-        // content: (
-        //   <Alert
-        //     severity={data.level}
-        //     variant="filled"
-        //     action={
-        //       <React.Fragment>
-        //       <Button size="small" color="inherit" onClick={() => {removeNotication(data.id); closeSnackbar(key);}}>
-        //           Got it
-        //       </Button>
-        //       <Button size="small" color="inherit" onClick={() => { closeSnackbar(key); reloadNotifications(); }}>
-        //           Dismis
-        //       </Button>
-        //     </React.Fragment>
-        //     }
-        //   >
-        //     <AlertTitle>{data.title}</AlertTitle>
-        //     {data.msg}
-        //   </Alert>
-        // ),
         action: key => (
           <React.Fragment>
             <Button
@@ -395,6 +401,11 @@ export default function MainPage() {
           <Typography variant="h6" color="inherit" noWrap className={classes.title}>
             bgtTracker
           </Typography>
+          <Tooltip title="Toggle light/dark theme">
+            <IconButton color="inherit" onClick={ToggleTheme}>
+              {props.darkTheme ? <DarkThemeIcon /> : <LightThemeIcon />}
+            </IconButton>
+          </Tooltip>
           {notifications === undefined ? (
             <Skeleton animation="wave" variant="circle" width={40} height={40} />
           ) : (
@@ -411,6 +422,16 @@ export default function MainPage() {
       </AppBar>
       <Drawer
         variant="permanent"
+        classes={{
+          paper: clsx(classes.drawerPaper, !false && classes.drawerPaperClose)
+        }}
+        open={true}
+      >
+        <Divider />
+        <List style={{ marginTop: 60 }}>{drawerItems(classes, url)}</List>
+      </Drawer>
+      <Drawer
+        variant="temporary"
         classes={{
           paper: clsx(classes.drawerPaper, !drawerOpen && classes.drawerPaperClose)
         }}
@@ -445,7 +466,13 @@ export default function MainPage() {
           </Switch>
         </Container>
       </main>
-      {/* <NotificationSystem ref={notificationSystem} /> */}
     </div>
   );
 }
+
+const mapStateToProps = state => ({
+  darkTheme: state.theme.darkTheme,
+  drawerOpen: state.main.drawerOpen
+});
+
+export default connect(mapStateToProps, { changeTheme, toggleOpenDraw })(MainPage);

@@ -25,6 +25,9 @@ function BarChart(props) {
         height: 350,
         type: "bar"
       },
+      theme: {
+        mode: theme.palette.type
+      },
       title: {
         text: props.title
       },
@@ -34,9 +37,6 @@ function BarChart(props) {
           columnWidth: "45%",
           distributed: true
         }
-      },
-      theme: {
-        mode: theme.palette.type
       },
       dataLabels: {
         enabled: props.dataLabelsShow

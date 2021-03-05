@@ -3,6 +3,7 @@ import ApexChart from "react-apexcharts";
 import config from "./config.js";
 import PropTypes from "prop-types";
 import { useTheme } from "@material-ui/core/styles";
+import { connect } from "react-redux";
 
 const colors = config.chartColors;
 
@@ -19,6 +20,7 @@ let columnColors = [
 
 function BalanceChart(props) {
   const theme = useTheme();
+  const d = props.drawerOpen;
   const state = {
     series: [
       {
@@ -29,10 +31,17 @@ function BalanceChart(props) {
     options: {
       title: {
         text: "Balance"
+        // style: {
+        //   color: theme.palette.text.primary,
+        // }
       },
+      // tooltip: {
+      //   theme: 'dark',
+      // },
       chart: {
         type: "bar",
         height: 450
+        //background: theme.palette.background.paper
       },
       theme: {
         mode: theme.palette.type
@@ -62,11 +71,17 @@ function BalanceChart(props) {
       yaxis: {
         title: {
           text: "Balance"
+          // style: {
+          //   color: theme.palette.text.primary
+          // }
         },
         labels: {
           formatter: function (y) {
             return y.toFixed(0);
           }
+          // style: {
+          //   colors: [theme.palette.text.primary],
+          // }
         }
       },
       xaxis: {
@@ -74,6 +89,9 @@ function BalanceChart(props) {
         categories: props.labels,
         labels: {
           rotate: -90
+          // style: {
+          //   colors: [theme.palette.text.primary],
+          // }
         }
       }
     }
@@ -99,4 +117,8 @@ BalanceChart.defaultProps = {
   currency: "pln"
 };
 
-export default BalanceChart;
+const mapStateToProps = state => ({
+  drawerOpen: state.main.drawerOpen
+});
+
+export default connect(mapStateToProps, {})(BalanceChart);
