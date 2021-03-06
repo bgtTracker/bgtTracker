@@ -270,9 +270,13 @@ function MainPage(props) {
   const ToggleTheme = () => {
     if (!props.darkTheme) {
       props.changeTheme(true);
+      window.location.reload();
+      //sometimes charts fail to switch theme so page reload to solve
+      //that users should change themes all that often so refresh is not a big problem
       return;
     }
     props.changeTheme(false);
+    window.location.reload();
   };
 
   if (firebase.apps.length === 0) {
