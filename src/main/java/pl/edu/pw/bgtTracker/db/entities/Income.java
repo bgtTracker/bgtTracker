@@ -2,8 +2,11 @@ package pl.edu.pw.bgtTracker.db.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import net.minidev.json.JSONObject;
+import org.springframework.format.annotation.DateTimeFormat;
+import pl.edu.pw.bgtTracker.db.entities.base.NamedEntity;
 
 import javax.persistence.*;
 import java.text.DateFormat;
@@ -13,13 +16,15 @@ import java.util.Date;
 @Entity
 @Data
 @NoArgsConstructor
-public class Income {
-    private @Id @GeneratedValue long id;
-    private long amount;
-    private Date date;
-    private String name;
-    private String note;
+@EqualsAndHashCode(callSuper = true)
+public class Income extends NamedEntity {
 
+    private long amount;
+
+    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
+    private Date date;
+
+    private String note;
 
     @ManyToOne(optional = false)
     @JoinColumn(name = "user_id", referencedColumnName = "id")
@@ -28,7 +33,6 @@ public class Income {
 
     @ManyToOne(optional = false)
     @JoinColumn(name = "category_id", referencedColumnName = "id")
-    @JsonIgnore
     private IncomeCategory category;
 
     public JSONObject toJSON(){

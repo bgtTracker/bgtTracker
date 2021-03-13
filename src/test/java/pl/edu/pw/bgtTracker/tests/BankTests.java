@@ -81,7 +81,7 @@ public class BankTests {
         mvc.perform(get("/api/banks/" + acc.getId()))
                 .andExpect(matchAll(
                         status().isOk(),
-                        jsonPath("$.id", is((int) acc.getId()))
+                        jsonPath("$.id", is(acc.getId().intValue()))
                 ));
     }
 

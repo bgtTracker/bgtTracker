@@ -2,17 +2,23 @@ package pl.edu.pw.bgtTracker.db.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import pl.edu.pw.bgtTracker.db.entities.base.BaseEntity;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 
 @Entity
 @Data
 @NoArgsConstructor
-public class Bank {
-    private @Id @GeneratedValue long id;
+@EqualsAndHashCode(callSuper = true)
+public class Bank extends BaseEntity {
+
+    @Column(unique = true, nullable = false)
+    @NotNull(message = "Name must not be null")
     private String name;
 
     @OneToMany(mappedBy = "bank")

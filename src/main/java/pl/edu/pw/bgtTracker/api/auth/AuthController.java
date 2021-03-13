@@ -24,7 +24,7 @@ public class AuthController {
     public ResponseEntity<String> register(@RequestBody AppUser user) {
         if (repository.findByEmail(user.getEmail()) != null)
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("User already exists");
-        user.setId(0);
+        user.setId(null);
         user.setPassword(encoder.encode(user.getPassword()));
         repository.save(user);
         return ResponseEntity.ok().body("");

@@ -37,6 +37,8 @@ public class UserTests {
 
         testUser.setEmail("another.test@test.test");
         testUser.setPassword(encoder.encode("test123"));
+        testUser.setFirstName("Another");
+        testUser.setLastName("Test");
 
         users.save(testUser);
     }

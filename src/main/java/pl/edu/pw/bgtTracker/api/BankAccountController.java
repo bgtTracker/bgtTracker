@@ -6,11 +6,13 @@ import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import pl.edu.pw.bgtTracker.db.entities.BankAccount;
 import pl.edu.pw.bgtTracker.db.repos.BankAccountRepository;
+import pl.edu.pw.bgtTracker.db.repos.BankRepository;
 import pl.edu.pw.bgtTracker.db.repos.UserRepository;
 
 @RestController
 @RequestMapping("/api/bank-accounts")
 public class BankAccountController {
+    @Autowired private BankRepository banks;
     @Autowired private BankAccountRepository repository;
     @Autowired private UserRepository users;
 
@@ -23,12 +25,12 @@ public class BankAccountController {
     @PostMapping
     public BankAccount create(Authentication auth, @RequestBody BankAccount account) {
         var user = users.findByEmail(auth.getName());
-        account.setId(0);
+        account.setId(null);
         account.setUser(user);
         if (account.getBank() != null) {
             account.getBank().setUser(user);
         }
-        return repository.save(account);
+        return save(account);
     }
 
     @GetMapping("/{id}")
@@ -47,7 +49,7 @@ public class BankAccountController {
         if (oldBankAccount.isPresent() && oldBankAccount.get().getUser().getEmail().equals(auth.getName())) {
             account.setId(id);
             account.setUser(oldBankAccount.get().getUser());
-            return repository.save(account);
+            return save(account);
         } else {
             throw new AccessDeniedException("Access denied");
         }
@@ -61,5 +63,15 @@ public class BankAccountController {
         } else {
             throw new AccessDeniedException("Access denied");
         }
+    }
+
+    // TODO: replace with proper Service
+    private BankAccount save(BankAccount account) {
+        var bank = banks.findByName(account.getBank().getName());
+        if (bank == null) {
+            account.getBank().setId(null);
+            account.setBank(banks.save(account.getBank()));
+        }
+        return repository.save(account);
     }
 }

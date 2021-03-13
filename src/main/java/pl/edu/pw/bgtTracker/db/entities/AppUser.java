@@ -2,25 +2,41 @@ package pl.edu.pw.bgtTracker.db.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
+import pl.edu.pw.bgtTracker.db.entities.base.BaseEntity;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 
 @Entity
 @Data
-@ToString(exclude = "password")
 @NoArgsConstructor
-public class AppUser {
-    private @Id @GeneratedValue long id;
-    @Column(unique = true)
+@ToString(exclude = "password")
+@EqualsAndHashCode(callSuper = true)
+public class AppUser extends BaseEntity {
+
+    @Column(unique = true, nullable = false)
+    @NotNull(message = "Email must not be null")
     private String email;
+
+    @Column(nullable = false)
+    @NotNull(message = "Password must not be null")
     private String password;
+
+    @Column(nullable = false)
+    @NotNull(message = "First name must not be null")
     private String firstName;
+
+    @Column(nullable = false)
+    @NotNull(message = "Last name must not be null")
     private String lastName;
+
     private long balance;
+
     @Column(columnDefinition = "int8 default 250000")
     private long userLimit = 250000;
 
@@ -33,6 +49,7 @@ public class AppUser {
     private List<BankAccount> accounts = new ArrayList<>();
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    @JsonIgnore
     private List<Bank> banks = new ArrayList<>();
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
@@ -66,10 +83,6 @@ public class AppUser {
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     @JsonIgnore
     private List<Currency> userCurrencies = new ArrayList<>();
-    
-    // public String toString() {
-    //     return id + " " + firstName + " " + lastName;
-    // }
 
     public AppUser(String email, String password, String firstName, String lastName) {
         this.email = email;

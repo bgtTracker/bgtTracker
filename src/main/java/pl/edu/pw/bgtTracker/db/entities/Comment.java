@@ -1,22 +1,31 @@
 package pl.edu.pw.bgtTracker.db.entities;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import net.minidev.json.JSONObject;
+import org.springframework.format.annotation.DateTimeFormat;
+import pl.edu.pw.bgtTracker.db.entities.base.BaseEntity;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.util.Date;
 
 @Entity
 @Data
 @NoArgsConstructor
-public class Comment {
-    private @Id @GeneratedValue long id;
+@EqualsAndHashCode(callSuper = true)
+public class Comment extends BaseEntity {
+
+    @Column(nullable = false)
+    @NotNull(message = "Title must not be null")
     private String title;
+
+    @Column(columnDefinition = "varchar (10000)")
     private String content;
-    @JsonFormat(pattern = "yyyy-MM-dd")
+
+    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
     private Date date;
 
     @ManyToOne

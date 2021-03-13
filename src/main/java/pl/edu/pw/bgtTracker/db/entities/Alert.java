@@ -2,20 +2,28 @@ package pl.edu.pw.bgtTracker.db.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import net.minidev.json.JSONObject;
 import lombok.NoArgsConstructor;
-import lombok.ToString;
+import pl.edu.pw.bgtTracker.db.entities.base.BaseEntity;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 
 @Entity
 @Data
 @NoArgsConstructor
-public class Alert {
-    private @Id @GeneratedValue long id;
+@EqualsAndHashCode(callSuper = true)
+public class Alert extends BaseEntity {
+
+    @Column(nullable = false)
+    @NotNull(message = "Title must not be null")
     private String title;
+
     private String content;
+
     private String level;
+
     private boolean read;
 
     @ManyToOne(optional = false)

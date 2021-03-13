@@ -1,18 +1,19 @@
 package pl.edu.pw.bgtTracker.db.entities;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import net.minidev.json.JSONObject;
 import lombok.NoArgsConstructor;
+import pl.edu.pw.bgtTracker.db.entities.base.NamedEntity;
 
 import javax.persistence.*;
 
 @Entity
 @Data
 @NoArgsConstructor
-public class Currency {
-  private @Id @GeneratedValue long id;
-  private String name;
-
+@EqualsAndHashCode(callSuper = true)
+public class Currency extends NamedEntity {
   @ManyToOne(optional = false)
   @JoinColumn(name = "user_id", referencedColumnName = "id")
   @JsonIgnore

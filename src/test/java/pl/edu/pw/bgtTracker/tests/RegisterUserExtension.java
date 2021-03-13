@@ -17,6 +17,8 @@ public class RegisterUserExtension implements BeforeAllCallback {
             AppUser user = new AppUser();
             user.setEmail("test@test.test");
             user.setPassword("test");
+            user.setFirstName("Test");
+            user.setLastName("Test");
 
             var users = (UserRepository) SpringExtension.getApplicationContext(context).getBean(UserRepository.class);
             users.save(user);

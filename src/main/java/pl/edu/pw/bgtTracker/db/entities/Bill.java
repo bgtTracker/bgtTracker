@@ -1,10 +1,12 @@
 package pl.edu.pw.bgtTracker.db.entities;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import net.minidev.json.JSONObject;
+import org.springframework.format.annotation.DateTimeFormat;
+import pl.edu.pw.bgtTracker.db.entities.base.NamedEntity;
 
 import javax.persistence.*;
 import java.text.DateFormat;
@@ -14,22 +16,25 @@ import java.util.Date;
 @Entity
 @Data
 @NoArgsConstructor
-public class Bill {
-    private @Id @GeneratedValue long id;
+@EqualsAndHashCode(callSuper = true)
+public class Bill extends NamedEntity {
+
     private long amount;
-    private String name;
-    @JsonFormat(pattern = "yyyy-MM-dd")
+
+    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
     private Date dueDate;
-    @JsonFormat(pattern = "yyyy-MM-dd")
+
+    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
     private Date paymentDate;
+
     private String bankNumber;
 
     private boolean paid;
+
     private String note;
 
     @ManyToOne(optional = false)
     @JoinColumn(name = "category_id", referencedColumnName = "id")
-    @JsonIgnore
     private ExpenseCategory category;
 
     @ManyToOne(optional = false)

@@ -23,7 +23,7 @@ public class BankController {
     @PostMapping
     public Bank create(Authentication auth, @RequestBody Bank bank) {
         var user = users.findByEmail(auth.getName());
-        bank.setId(0);
+        bank.setId(null);
         bank.setUser(user);
         return repository.save(bank);
     }

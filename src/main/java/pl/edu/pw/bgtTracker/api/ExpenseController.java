@@ -21,7 +21,7 @@ public class ExpenseController {
 
     @PostMapping
     public void create(Authentication auth, @RequestBody Expense expense) {
-        expense.setId(0);
+        expense.setId(null);
         expense.setUser(users.findByEmail(auth.getName()));
         repository.save(expense);
     }
